@@ -25,6 +25,8 @@ export interface IRedisClient {
   set: (key: string, value: unknown, options?: { ex?: number }) => Promise<string | null>
   /** Elimina una o más claves */
   del: (...keys: string[]) => Promise<number>
+  /** Devuelve la cardinalidad total de un sorted set */
+  zcard: (key: string) => Promise<number>
   /** Ping de comprobación de salud */
   ping: () => Promise<string>
 }
@@ -108,6 +110,10 @@ export class InMemoryRedisClient implements IRedisClient {
     return count
   }
 
+  async zcard(key: string): Promise<number> {
+    return this.zsets.get(key)?.length ?? 0
+  }
+
   async ping(): Promise<string> {
     return 'PONG'
   }
@@ -157,6 +163,7 @@ const redisPluginFn: FastifyPluginAsync<RedisPluginOptions> = async (
           return typeof res === 'string' ? res : 'OK'
         },
         del: (...keys) => upstashClient.del(...keys),
+        zcard: (key) => upstashClient.zcard(key),
         ping: () => upstashClient.ping(),
       }
 

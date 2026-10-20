@@ -143,8 +143,8 @@
 - [x] Implementar rate limiting en `/api/session/hint` (máx. 60 req/min por IP)
 
 ### 2.4 Endpoint de estadísticas
-- [ ] `GET /api/stats/today/distribution`: histograma de tiempos desde Redis (ZCOUNT)
-- [ ] Calcular y devolver el percentil del jugador en `/api/session/complete`
+- [x] `GET /api/stats/today/distribution`: histograma de tiempos desde Redis (ZCOUNT)
+- [x] Calcular y devolver el percentil del jugador en `/api/session/complete`
 
 ### 2.5 Conectar apps/web con apps/api
 - [ ] Llamar a `POST /api/session/start` al cargar el puzle

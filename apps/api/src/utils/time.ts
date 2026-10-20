@@ -56,3 +56,11 @@ export function getSecondsUntilMidnightMadrid(now: Date = new Date()): number {
   // Garantizar un valor entre 60 s y 86400 s
   return Math.max(60, Math.min(totalSecondsInDay, secondsRemaining))
 }
+
+/**
+ * Genera la clave canónica de Redis para el sorted set de tiempos de resolución
+ * de una edición diaria (p. ej. 'stats:edition:2026-10-20:times').
+ */
+export function getTimesRedisKey(dateStr: string = getTodayDateMadrid()): string {
+  return `stats:edition:${dateStr}:times`
+}

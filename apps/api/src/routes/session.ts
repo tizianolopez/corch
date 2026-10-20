@@ -3,7 +3,7 @@ import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { eq } from 'drizzle-orm'
 import { playSessions, puzzles } from '@corchetes/db'
-import { getTodayDateMadrid } from '../utils/time'
+import { getTodayDateMadrid, getTimesRedisKey } from '../utils/time'
 
 // ── Esquemas de validación con Zod ──────────────────────────────────────────
 
@@ -284,24 +284,25 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
 
     // 3. Registrar puntuación en Redis con ZADD y calcular percentil
     const today = getTodayDateMadrid()
-    const redisKey = `leaderboard:${today}`
+    const redisKey = getTimesRedisKey(today)
+    const durationSec = Math.max(1, Math.floor(durationMs / 1000))
 
     await fastify.redis.zadd(redisKey, {
-      score: durationMs,
+      score: durationSec,
       member: sessionId,
     })
 
     // Calcular percentil: jugadores con tiempo mayor (más lentos) / total de jugadores
-    let percentile = 50
+    let percentile = 99
     try {
       const totalPlayers = await fastify.redis.zcount(redisKey, '-inf', '+inf')
-      const slowerPlayers = await fastify.redis.zcount(redisKey, durationMs, '+inf')
+      const slowerPlayers = await fastify.redis.zcount(redisKey, durationSec + 1, '+inf')
 
       if (totalPlayers > 1) {
-        // Porcentaje de jugadores superados
+        // Porcentaje de lectores superados (más lentos)
         percentile = Math.min(
           99,
-          Math.max(1, Math.round((slowerPlayers / totalPlayers) * 100)),
+          Math.max(1, Math.round((slowerPlayers / (totalPlayers - 1)) * 100)),
         )
       } else {
         percentile = 99 // Primer jugador del día

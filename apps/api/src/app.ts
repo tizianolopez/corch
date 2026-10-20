@@ -8,6 +8,7 @@ import { errorHandlerPlugin } from './plugins/error-handler'
 import { healthRoutes } from './routes/health'
 import { puzzleRoutes } from './routes/puzzle'
 import { sessionRoutes } from './routes/session'
+import { statsRoutes } from './routes/stats'
 
 export interface BuildAppOptions {
   /** Sobrescribe valores de configuración para tests o entornos específicos */
@@ -73,6 +74,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   await app.register(healthRoutes)
   await app.register(puzzleRoutes)
   await app.register(sessionRoutes)
+  await app.register(statsRoutes)
 
   return app
 }
