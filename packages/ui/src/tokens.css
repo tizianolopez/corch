@@ -1,0 +1,95 @@
+/**
+ * Corchetes — Sistema de Diseño Editorial
+ * Fuente de verdad: arquitectura_corchetes.md §2 y §3
+ *
+ * REGLAS:
+ * - Sin Tailwind CSS. CSS Modules + CSS Custom Properties.
+ * - Modo día/noche activado por data-theme="day"|"night" según la hora del reloj.
+ * - No usar valores hex directos en componentes; siempre var(--color-...).
+ */
+
+:root,
+[data-theme='day'] {
+  /* ─── Paleta Modo Día (Edición Matutina) ─── */
+  --color-paper: #f7f4ef;
+  --color-paper-alt: #efece6;
+  --color-ink: #1a1917;
+  --color-ink-muted: #6e6a63;
+  --color-active: #1b4d3e;
+  --color-active-bg: rgba(27, 77, 62, 0.08);
+  --color-alert: #9e2a2b;
+  --color-border: #c8c4bb;
+  --color-border-heavy: #1a1917;
+
+  /* ─── Sombras y relieves sutiles ─── */
+  --shadow-subtle: 0 1px 2px rgba(26, 25, 23, 0.05);
+}
+
+[data-theme='night'] {
+  /* ─── Paleta Modo Noche (Edición Nocturna) ─── */
+  --color-paper: #141413;
+  --color-paper-alt: #1e1e1c;
+  --color-ink: #eae6df;
+  --color-ink-muted: #8c877e;
+  --color-active: #52b788;
+  --color-active-bg: rgba(82, 183, 136, 0.1);
+  --color-alert: #e06d53;
+  --color-border: #3a3834;
+  --color-border-heavy: #eae6df;
+
+  /* ─── Sombras nocturnas ─── */
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+:root {
+  /* ─── Familias Tipográficas ─── */
+  --font-serif: var(--font-newsreader, 'Newsreader', 'Georgia', serif);
+  --font-sans: var(--font-inter, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  --font-mono: var(--font-jetbrains, 'JetBrains Mono', 'Courier New', monospace);
+
+  /* ─── Escala Tipográfica ─── */
+  --text-xs: 12px;
+  --leading-xs: 1.4;
+
+  --text-sm: 14px;
+  --leading-sm: 1.5;
+
+  --text-base: 16px;
+  --leading-base: 1.6;
+
+  --text-lg: 18px;
+  --leading-lg: 1.5;
+
+  --text-xl: 20px;
+  --leading-xl: 1.4;
+
+  --text-2xl: 26px;
+  --leading-2xl: 1.3;
+
+  --text-3xl: 36px;
+  --leading-3xl: 1.1;
+
+  --text-4xl: 48px;
+  --leading-4xl: 1.0;
+
+  /* ─── Escala de Espaciado (múltiplos de 4px) ─── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ─── Layout y Proporción ─── */
+  --max-width-column: 640px;
+  --max-width-page: 720px;
+
+  /* ─── Animación y Movimiento (Linotipia) ─── */
+  --ease-editorial: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --duration-collapse: 200ms;
+  --duration-appear: 300ms;
+  --duration-cursiva: 1500ms;
+  --duration-fuse: 400ms;
+}

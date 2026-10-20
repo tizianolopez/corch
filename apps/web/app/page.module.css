@@ -1,0 +1,80 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-3) var(--space-8);
+  box-sizing: border-box;
+}
+
+.contentWrapper {
+  width: 100%;
+  max-width: var(--max-width-column, 640px);
+  margin: var(--space-6) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.quoteCard {
+  background-color: var(--color-paper-alt);
+  border: 1px solid var(--color-border);
+  padding: var(--space-6) var(--space-5);
+  box-shadow: var(--shadow-subtle);
+  border-radius: 2px;
+}
+
+.demoControls {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.demoHint {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.demoButton {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  background-color: var(--color-active);
+  color: #ffffff;
+  border: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 150ms var(--ease-editorial), transform 150ms var(--ease-editorial);
+}
+
+.demoButton:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.resetButton {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  background-color: transparent;
+  color: var(--color-ink-muted);
+  border: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-editorial), color 150ms var(--ease-editorial);
+}
+
+.resetButton:hover {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}

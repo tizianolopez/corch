@@ -1,0 +1,127 @@
+.treeRoot {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: var(--leading-xl);
+  color: var(--color-ink);
+  transition: opacity 150ms var(--ease-editorial);
+  word-break: break-word;
+}
+
+/* Fragmento de texto fijo de la cita (Newsreader) */
+.fixedText {
+  font-family: var(--font-serif);
+  color: var(--color-ink);
+  transition: opacity 150ms var(--ease-editorial);
+}
+
+/* Corchete genérico */
+.bracketContainer {
+  display: inline;
+  vertical-align: baseline;
+  transition: opacity 150ms var(--ease-editorial), background-color 200ms var(--ease-editorial), color 200ms var(--ease-editorial);
+}
+
+/* Estado: BLOQUEADO (gris, tiene hijos sin resolver) */
+.bracketBlocked {
+  color: var(--color-ink-muted);
+  cursor: default;
+  user-select: none;
+}
+
+/* Estado: ACTIVO (verde inglés, hoja resoluble) */
+.bracketActive {
+  color: var(--color-active);
+  background-color: var(--color-active-bg);
+  cursor: pointer;
+  padding: 1px 4px;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  user-select: none;
+  transition: all 150ms var(--ease-editorial);
+}
+
+.bracketActive:hover,
+.bracketActive.selected {
+  background-color: rgba(27, 77, 62, 0.16);
+  outline: 1px solid var(--color-active);
+  outline-offset: 1px;
+}
+
+/* Estado ACTIVO nocturno hover */
+:global([data-theme='night']) .bracketActive:hover,
+:global([data-theme='night']) .bracketActive.selected {
+  background-color: rgba(82, 183, 136, 0.22);
+}
+
+/* Animación de destello al desbloquearse el padre (Cascade en 400ms) */
+.unlockedFlash {
+  animation: unlockPulse 400ms var(--ease-editorial);
+}
+
+@keyframes unlockPulse {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(27, 77, 62, 0.28);
+    transform: scale(1.02);
+  }
+  100% {
+    background-color: var(--color-active-bg);
+    transform: scale(1);
+  }
+}
+
+/* Estado: RESUELTO (texto integrado a la cita) */
+.resolvedWord {
+  display: inline;
+  font-family: var(--font-serif);
+  color: var(--color-ink);
+  font-weight: 400;
+  transition: opacity 150ms var(--ease-editorial), font-style 400ms var(--ease-editorial);
+}
+
+/* Fase 1 y 2 de linotipia: cursiva y subrayado punteado durante 1500ms */
+.resolvedFresh {
+  font-style: italic;
+  text-decoration: underline dashed var(--color-border);
+  text-underline-offset: 4px;
+  animation: linotipiaAppear 300ms var(--ease-editorial) forwards;
+}
+
+/* Fusión final: se retira el subrayado suavemente hacia serif regular */
+.resolvedFused {
+  font-style: normal;
+  text-decoration: none;
+  transition: all 400ms var(--ease-editorial);
+}
+
+/* Resuelto mediante "Revelar término" con ayuda */
+.revealedWithHint {
+  color: var(--color-alert);
+}
+
+.dagger {
+  font-size: 0.6em;
+  vertical-align: super;
+  margin-left: 1px;
+  color: var(--color-alert);
+}
+
+/* Dimming contextual: opacidad reducida al hacer hover en otro elemento */
+.dimmed {
+  opacity: 0.35 !important;
+  transition: opacity 150ms var(--ease-editorial);
+}
+
+@keyframes linotipiaAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

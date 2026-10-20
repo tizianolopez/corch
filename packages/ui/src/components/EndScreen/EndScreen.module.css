@@ -1,0 +1,181 @@
+/*
+ * EndScreen — Pantalla de cierre de edición
+ * Tarea 1.8 de arquitectura_corchetes.md
+ *
+ * Se transforma desde la zona inferior del juego cuando completedAt !== null.
+ * Muestra: cita completa, autor/obra/año, nota editorial, métricas y «Copiar crónica».
+ */
+
+/* ── Contenedor principal ─────────────────────────────────────────────────── */
+.endScreen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6) 0 var(--space-7);
+  border-top: 3px solid var(--color-border-heavy);
+  animation: slideUp 400ms var(--ease-editorial) both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Sección de la cita completa ──────────────────────────────────────────── */
+.quoteSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.quoteText {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: var(--leading-xl);
+  color: var(--color-ink);
+  font-style: italic;
+  margin: 0;
+}
+
+.quoteAttribution {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+/* ── Nota editorial ─────────────────────────────────────────────────────── */
+.editorialNote {
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  color: var(--color-ink);
+  margin: 0;
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Sección de métricas ─────────────────────────────────────────────────── */
+.metricsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.metricsTitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+/* ── Fila de métrica individual ──────────────────────────────────────────── */
+.metricRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.metricLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+}
+
+.metricValue {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* ── Barra de progreso tipográfica (1px) ────────────────────────────────── */
+.metricBar {
+  height: 1px;
+  background-color: var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.metricBarFill {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  background-color: var(--color-active);
+  transition: width 800ms var(--ease-editorial);
+  /* La anchura se controla inline como style={{ width: `${pct}%` }} */
+}
+
+/* Barra de rango con acento editorial */
+.metricBarFillRank {
+  background-color: var(--color-ink);
+}
+
+/* ── Rango con sello ─────────────────────────────────────────────────────── */
+.rankBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.rankIcon {
+  font-size: var(--text-lg);
+  line-height: 1;
+}
+
+/* ── Placeholder de percentil ────────────────────────────────────────────── */
+.percentilePlaceholder {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ── Botón «Copiar crónica» ─────────────────────────────────────────────── */
+.copyBtn {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-ink);
+  background: transparent;
+  border: 1px solid var(--color-border-heavy);
+  border-radius: 3px;
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 150ms var(--ease-editorial),
+              transform 80ms var(--ease-editorial);
+  letter-spacing: 0.03em;
+}
+
+.copyBtn:hover {
+  background-color: var(--color-paper-alt);
+}
+
+.copyBtn:active {
+  transform: scale(0.97);
+}
+
+/* Estado «Copiado» */
+.copyBtnDone {
+  color: var(--color-active);
+  border-color: var(--color-active);
+}
