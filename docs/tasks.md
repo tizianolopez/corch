@@ -137,10 +137,10 @@
 - [x] Test: la respuesta no contiene ningún campo `solution` en texto plano
 
 ### 2.3 Endpoints de sesión
-- [ ] `POST /api/session/start`: crear `play_session`, devolver `sessionId`
-- [ ] `POST /api/session/complete`: guardar resultado, ejecutar ZADD en Redis
-- [ ] `POST /api/session/hint`: para tipo `'reveal'`, devolver solución en claro
-- [ ] Implementar rate limiting en `/api/session/hint` (máx. 60 req/min por IP)
+- [x] `POST /api/session/start`: crear `play_session`, devolver `sessionId`
+- [x] `POST /api/session/complete`: guardar resultado, ejecutar ZADD en Redis
+- [x] `POST /api/session/hint`: para tipo `'reveal'`, devolver solución en claro
+- [x] Implementar rate limiting en `/api/session/hint` (máx. 60 req/min por IP)
 
 ### 2.4 Endpoint de estadísticas
 - [ ] `GET /api/stats/today/distribution`: histograma de tiempos desde Redis (ZCOUNT)
