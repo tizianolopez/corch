@@ -125,10 +125,10 @@
 ## Fase 2 — API Backend (apps/api)
 
 ### 2.1 Setup de apps/api
-- [ ] Inicializar Fastify 5 con TypeScript en `apps/api`
-- [ ] Configurar conexión a Supabase (Drizzle ORM desde `packages/db`)
-- [ ] Configurar conexión a Upstash Redis
-- [ ] Implementar manejo de errores global y logging con Pino
+- [x] Inicializar Fastify 5 con TypeScript en `apps/api`
+- [x] Configurar conexión a Supabase (Drizzle ORM desde `packages/db`)
+- [x] Configurar conexión a Upstash Redis
+- [x] Implementar manejo de errores global y logging con Pino
 
 ### 2.2 Endpoint: puzzle del día
 - [ ] `GET /api/puzzle/today`: devuelve el `client_payload` (sin soluciones en claro)
