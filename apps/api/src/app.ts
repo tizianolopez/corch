@@ -6,6 +6,7 @@ import { dbPlugin } from './plugins/db'
 import { redisPlugin, type IRedisClient } from './plugins/redis'
 import { errorHandlerPlugin } from './plugins/error-handler'
 import { healthRoutes } from './routes/health'
+import { puzzleRoutes } from './routes/puzzle'
 
 export interface BuildAppOptions {
   /** Sobrescribe valores de configuración para tests o entornos específicos */
@@ -69,6 +70,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
 
   // ── Rutas ─────────────────────────────────────────────────────────────────
   await app.register(healthRoutes)
+  await app.register(puzzleRoutes)
 
   return app
 }

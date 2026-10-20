@@ -131,10 +131,10 @@
 - [x] Implementar manejo de errores global y logging con Pino
 
 ### 2.2 Endpoint: puzzle del día
-- [ ] `GET /api/puzzle/today`: devuelve el `client_payload` (sin soluciones en claro)
-- [ ] Implementar la selección del puzle por `publish_date = TODAY`
-- [ ] Añadir cabeceras `Cache-Control` para Cloudflare (TTL hasta 00:00 h)
-- [ ] Test: la respuesta no contiene ningún campo `solution` en texto plano
+- [x] `GET /api/puzzle/today`: devuelve el `client_payload` (sin soluciones en claro)
+- [x] Implementar la selección del puzle por `publish_date = TODAY`
+- [x] Añadir cabeceras `Cache-Control` para Cloudflare (TTL hasta 00:00 h)
+- [x] Test: la respuesta no contiene ningún campo `solution` en texto plano
 
 ### 2.3 Endpoints de sesión
 - [ ] `POST /api/session/start`: crear `play_session`, devolver `sessionId`
