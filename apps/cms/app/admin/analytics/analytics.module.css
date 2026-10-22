@@ -1,0 +1,457 @@
+/* ─── Analíticas y Biblioteca del CMS (Fase 4.5) ─────────────────────────── */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--color-border, #e2ded4);
+  padding-bottom: 1.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.title {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--color-ink, #1a1918);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--color-subtle, #767064);
+  margin: 0;
+}
+
+/* ── Selector de Pestañas ───────────────────────────────────────────────────── */
+
+.tabsNav {
+  display: flex;
+  background: var(--color-paper-subtle, #f0ece1);
+  padding: 0.25rem;
+  border-radius: 6px;
+  gap: 0.25rem;
+  border: 1px solid var(--color-border, #e2ded4);
+}
+
+.tabBtn {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--color-subtle, #767064);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tabBtnActive {
+  background: var(--color-surface, #ffffff);
+  color: var(--color-ink, #1a1918);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tabBtn:hover:not(.tabBtnActive) {
+  color: var(--color-ink, #1a1918);
+}
+
+/* ── KPIs Principales ───────────────────────────────────────────────────────── */
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+}
+
+.kpiCard {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2ded4);
+  border-radius: 6px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.kpiLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-subtle, #767064);
+  font-weight: 600;
+}
+
+.kpiValueRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.kpiValue {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: var(--color-ink, #1a1918);
+  line-height: 1;
+}
+
+.kpiHint {
+  font-size: 0.8rem;
+  color: var(--color-subtle, #767064);
+}
+
+/* ── Barra de Filtros (Biblioteca) ─────────────────────────────────────────── */
+
+.filterBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2ded4);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 240px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-size: 0.88rem;
+  color: var(--color-ink, #1a1918);
+  background: var(--color-paper, #f7f4ee);
+  border: 1px solid var(--color-border, #e2ded4);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-ink, #1a1918);
+  background: #ffffff;
+}
+
+.filterControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+  padding: 0.55rem 0.85rem;
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-size: 0.85rem;
+  color: var(--color-ink, #1a1918);
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2ded4);
+  border-radius: 4px;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: var(--color-ink, #1a1918);
+}
+
+/* ── Tablas Editoriales ─────────────────────────────────────────────────────── */
+
+.tableContainer {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2ded4);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.editorialTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: var(--font-inter, 'Inter', sans-serif);
+}
+
+.editorialTable th {
+  background: var(--color-paper-subtle, #fcfbf8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-subtle, #767064);
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--color-border, #e2ded4);
+}
+
+.editorialTable td {
+  padding: 1rem 1.25rem;
+  font-size: 0.88rem;
+  color: var(--color-ink, #1a1918);
+  border-bottom: 1px solid var(--color-border, #e2ded4);
+  vertical-align: middle;
+}
+
+.editorialTable tr:last-child td {
+  border-bottom: none;
+}
+
+.editorialTable tr:hover td {
+  background: var(--color-paper, #fbf9f4);
+}
+
+.editionNum {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.dateCol {
+  color: var(--color-subtle, #767064);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.authorCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.authorName {
+  font-weight: 600;
+  color: var(--color-ink, #1a1918);
+}
+
+.workName {
+  font-size: 0.78rem;
+  color: var(--color-subtle, #767064);
+}
+
+/* ── Badges de Estado y Fuente ─────────────────────────────────────────────── */
+
+.badgeDraft {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  background: #fdf5e6;
+  color: #92540c;
+}
+
+.badgeScheduled {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.badgePublished {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  background: #eaf4ed;
+  color: #1e633d;
+}
+
+.badgeRejected {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  background: #fdf0ed;
+  color: #a82a17;
+}
+
+.badgeSourceAi {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  background: #f0f4f8;
+  color: #2b4c7e;
+  border: 1px solid #d0dce8;
+}
+
+.badgeSourceManual {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  background: #fdfaf3;
+  color: #6e5837;
+  border: 1px solid #ebdcc5;
+}
+
+.btnActionSmall {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--color-border, #e2ded4);
+  background: #ffffff;
+  color: var(--color-ink, #1a1918);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnActionSmall:hover {
+  background: var(--color-paper-subtle, #f0ece1);
+  border-color: var(--color-ink, #1a1918);
+}
+
+/* ── Histogramas Tipográficos de Distribución ──────────────────────────────── */
+
+.card {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2ded4);
+  border-radius: 6px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cardTitle {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--color-ink, #1a1918);
+  margin: 0;
+}
+
+.cardSubtitle {
+  font-size: 0.85rem;
+  color: var(--color-subtle, #767064);
+  margin: 0;
+}
+
+.histogramList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.histogramRow {
+  display: grid;
+  grid-template-columns: 90px 1fr 60px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.histogramLabel {
+  font-size: 0.82rem;
+  color: var(--color-subtle, #767064);
+  white-space: nowrap;
+}
+
+.histogramTrack {
+  height: 12px;
+  background: var(--color-paper-subtle, #f0ece1);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.histogramFill {
+  height: 100%;
+  background: var(--color-ink, #1a1918);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.histogramCount {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: right;
+  color: var(--color-ink, #1a1918);
+}
+
+/* ── Diagnóstico de Nodos ───────────────────────────────────────────────────── */
+
+.errorRateTrack {
+  width: 80px;
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+  display: inline-block;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.errorRateFill {
+  height: 100%;
+  background: #c94a29;
+  border-radius: 3px;
+}
+
+/* ── Panel de Rendimiento del Agente ────────────────────────────────────────── */
+
+.agentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .agentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feedbackList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feedbackItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--color-paper, #f7f4ee);
+  border-radius: 4px;
+  border-left: 3px solid #d97706;
+  font-size: 0.85rem;
+}
+
+.feedbackCount {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-weight: 600;
+  color: #92400e;
+}

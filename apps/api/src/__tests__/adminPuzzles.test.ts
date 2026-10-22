@@ -236,4 +236,108 @@ describe('Admin Puzzles Endpoints (CMS Fase 4.2)', () => {
     expect(body.status).toBe('DRAFT')
     expect(body.rawMarkup).toContain('[con pista [anidada]]')
   })
+
+  // ── 5. Creación Manual (Fase 4.4) ──────────────────────────────────────────
+
+  it('POST /api/admin/puzzles/manual crea exitosamente un puzle manual válido con source MANUAL y status DRAFT', async () => {
+    const validManualPayload = {
+      originalQuote: 'En 1969 el ser humano pisó la Luna por primera vez.',
+      markup: 'En [1969] la [misión [espacial norteamericana]] pisó la Luna.',
+      nodes: [
+        { id: 'n1', solution: '1969', type: 'historical', reasoning: 'Año del alunizaje' },
+        { id: 'n2', solution: 'misión', type: 'charade', reasoning: 'Operación espacial' },
+        { id: 'n3', solution: 'Apolo 11', type: 'nested', reasoning: 'Vehículo tripulado' },
+      ],
+      quoteAuthor: 'Neil Armstrong',
+      quoteWork: 'Crónica del Apolo 11',
+      quoteYear: 1969,
+      editorialNote: 'Creación manual para efeméride lunar.',
+      publishDate: '2026-10-28',
+      editionNumber: 150,
+    }
+
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/admin/puzzles/manual',
+      headers: {
+        'x-admin-token': adminSecret,
+      },
+      payload: validManualPayload,
+    })
+
+    expect(res.statusCode).toBe(201)
+    const body = res.json<{
+      success: boolean
+      source: string
+      status: string
+      puzzleId: string
+      editionNumber: number
+      publishDate: string
+      clientPayload: { nodes: Record<string, unknown> }
+      meta: { totalNodes: number; initialLeaves: number; maxDepth: number }
+    }>()
+
+    expect(body.success).toBe(true)
+    expect(body.source).toBe('MANUAL')
+    expect(body.status).toBe('DRAFT')
+    expect(body.editionNumber).toBe(150)
+    expect(body.publishDate).toBe('2026-10-28')
+    expect(body.meta.totalNodes).toBe(3)
+    expect(body.meta.initialLeaves).toBe(2)
+    expect(body.meta.maxDepth).toBe(2)
+    expect(body.clientPayload.nodes['n1']).toBeDefined()
+  })
+
+  it('POST /api/admin/puzzles/manual rechaza puzles con corchetes desbalanceados o profundidad insuficiente', async () => {
+    const invalidMarkupPayload = {
+      originalQuote: 'Frase de prueba',
+      markup: 'Texto con corchete sin cerrar [pista uno y [pista dos]',
+      nodes: [
+        { id: 'n1', solution: 'sol1', type: 'definition' },
+        { id: 'n2', solution: 'sol2', type: 'definition' },
+      ],
+      quoteYear: 2000,
+    }
+
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/admin/puzzles/manual',
+      headers: {
+        'x-admin-token': adminSecret,
+      },
+      payload: invalidMarkupPayload,
+    })
+
+    expect(res.statusCode).toBe(400)
+    const body = res.json<{ statusCode: number; error: string; errors: string[] }>()
+    expect(body.error).toBe('Validation Error')
+    expect(body.errors.some((e) => e.includes('corchete'))).toBe(true)
+  })
+
+  it('POST /api/admin/puzzles/manual rechaza puzles con soluciones duplicadas', async () => {
+    const duplicatePayload = {
+      originalQuote: 'Frase con palabras duplicadas.',
+      markup: 'En [primera [segunda]] y [tercera].',
+      nodes: [
+        { id: 'n1', solution: 'madrid', type: 'definition' },
+        { id: 'n2', solution: 'madrid', type: 'definition' },
+        { id: 'n3', solution: 'barcelona', type: 'definition' },
+      ],
+      quoteYear: 2020,
+    }
+
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/admin/puzzles/manual',
+      headers: {
+        'x-admin-token': adminSecret,
+      },
+      payload: duplicatePayload,
+    })
+
+    expect(res.statusCode).toBe(400)
+    const body = res.json<{ statusCode: number; error: string; errors: string[] }>()
+    expect(body.errors.some((e) => e.includes('Solución duplicada'))).toBe(true)
+  })
 })
+

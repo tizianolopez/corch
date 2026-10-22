@@ -217,16 +217,16 @@
 - [x] Cron job en `apps/api` (00:00 h): publicar puzles `SCHEDULED` + invalidar caché Cloudflare
 
 ### 4.4 Editor manual (flujo alternativo)
-- [ ] Textarea de markup con sintaxis de corchetes + vista previa interactiva en tiempo real
-- [ ] Analizador de complejidad en tiempo real: profundidad máxima, nodos hoja iniciales
-- [ ] Alertas: «Solo 1 nodo activo inicial» / «2 nodos con solución idéntica»
-- [ ] Formulario de metadatos: autor, obra, año, nota editorial
-- [ ] Guardar → compila el markup → guarda con `status: 'DRAFT'` y `source: 'MANUAL'`
+- [x] Textarea de markup con sintaxis de corchetes + vista previa interactiva en tiempo real
+- [x] Analizador de complejidad en tiempo real: profundidad máxima, nodos hoja iniciales
+- [x] Alertas: «Solo 1 nodo activo inicial» / «2 nodos con solución idéntica»
+- [x] Formulario de metadatos: autor, obra, año, nota editorial
+- [x] Guardar → compila el markup → guarda con `status: 'DRAFT'` y `source: 'MANUAL'`
 
 ### 4.5 Analytics del CMS
-- [ ] Vista de analíticas por edición: distribución de tiempos, errores por nodo, tasa de abandono
-- [ ] Biblioteca: listado de todas las ediciones con búsqueda y filtro por estado y fuente (`AI` / `MANUAL`)
-- [ ] Panel de rendimiento del agente: tasa de éxito en la generación, reintentos promedio, rechazos
+- [x] Vista de analíticas por edición: distribución de tiempos, errores por nodo, tasa de abandono
+- [x] Biblioteca: listado de todas las ediciones con búsqueda y filtro por estado y fuente (`AI` / `MANUAL`)
+- [x] Panel de rendimiento del agente: tasa de éxito en la generación, reintentos promedio, rechazos
 
 ---
 
