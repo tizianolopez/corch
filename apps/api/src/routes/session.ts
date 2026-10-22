@@ -72,11 +72,15 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
     const sessionId = randomUUID()
     const now = new Date()
 
+    const effectiveAnonymousId = body.userId
+      ? null
+      : body.anonymousId || randomUUID()
+
     const newSession: SessionRecord = {
       id: sessionId,
       puzzleId: body.puzzleId,
       userId: body.userId ?? null,
-      anonymousId: body.anonymousId ?? null,
+      anonymousId: effectiveAnonymousId,
       startedAt: now,
       completedAt: null,
       durationMs: null,
@@ -97,7 +101,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
           id: sessionId,
           puzzleId: body.puzzleId,
           userId: body.userId ?? null,
-          anonymousId: body.anonymousId ?? null,
+          anonymousId: effectiveAnonymousId,
           startedAt: now,
           isComplete: false,
           mistakesCount: 0,
@@ -115,6 +119,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
       sessionId,
       puzzleId: body.puzzleId,
       startedAt: now.toISOString(),
+      anonymousId: effectiveAnonymousId,
     })
   }
 

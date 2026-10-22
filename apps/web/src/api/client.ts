@@ -1,9 +1,11 @@
 import type { ClientPayload } from '@corchetes/core'
+import { getOrCreateAnonymousId } from '../lib/anonymousSession'
 
 export interface StartSessionResponse {
   sessionId: string
   puzzleId: string
   startedAt: string
+  anonymousId?: string
 }
 
 export interface HintRevealResponse {
@@ -90,6 +92,9 @@ export const apiClient = {
     puzzleId: string,
     anonymousId?: string,
   ): Promise<StartSessionResponse> {
+    const effectiveAnonymousId =
+      anonymousId || (typeof window !== 'undefined' ? getOrCreateAnonymousId() : undefined)
+
     const res = await fetch(`${getBaseUrl()}/api/session/start`, {
       method: 'POST',
       headers: {
@@ -97,7 +102,7 @@ export const apiClient = {
       },
       body: JSON.stringify({
         puzzleId,
-        ...(anonymousId ? { anonymousId } : {}),
+        ...(effectiveAnonymousId ? { anonymousId: effectiveAnonymousId } : {}),
       }),
     })
 

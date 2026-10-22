@@ -6,6 +6,7 @@ import { sha256, aesGcmDecrypt } from '@corchetes/crypto'
 import { usePuzzleStore } from '../store/usePuzzleStore'
 import { usePuzzlePersistence, restoreTodayState } from '../store/usePuzzlePersistence'
 import { apiClient } from '../src/api/client'
+import { getOrCreateAnonymousId } from '../src/lib/anonymousSession'
 import styles from './page.module.css'
 import type { ClientPayload } from '@corchetes/core'
 
@@ -98,6 +99,18 @@ export function InteractiveTreeDemo(): ReactElement {
 
   // ── Inicializar puzle y sesión de juego ─────────────────────────────
   const initializeGame = useCallback(async () => {
+    // Sincronizar identidad anónima en localStorage y cookie HttpOnly
+    const anonId = getOrCreateAnonymousId()
+    try {
+      void fetch('/api/auth/anonymous-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anonymousId: anonId }),
+      })
+    } catch {
+      // Ignorar fallo de red en sincronización de cookie
+    }
+
     // 1. Intentar restaurar sesión guardada de hoy
     const saved = restoreTodayState()
     if (saved && saved.state) {
@@ -106,7 +119,7 @@ export function InteractiveTreeDemo(): ReactElement {
       // Si no tenía sessionId asignado (guardado previo), crear uno nuevo
       if (!currentSessionId) {
         try {
-          const sessionRes = await apiClient.startSession(saved.state.puzzleId)
+          const sessionRes = await apiClient.startSession(saved.state.puzzleId, anonId)
           currentSessionId = sessionRes.sessionId
         } catch (err) {
           console.warn('No se pudo registrar sesión para el estado restaurado:', err)
@@ -138,7 +151,7 @@ export function InteractiveTreeDemo(): ReactElement {
     // 3. Crear play_session en backend (POST /api/session/start)
     let newSessionId: string | null = null
     try {
-      const sessionRes = await apiClient.startSession(payload.puzzleId)
+      const sessionRes = await apiClient.startSession(payload.puzzleId, anonId)
       newSessionId = sessionRes.sessionId
     } catch (err) {
       console.warn('No se pudo iniciar sesión en backend:', err)

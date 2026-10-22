@@ -233,9 +233,9 @@
 ## Fase 5 — Usuarios y autenticación
 
 ### 4.1 Sesión anónima
-- [ ] Generar y persistir `anonymousId` (UUID) en `localStorage` y cookie `HttpOnly`
-- [ ] Enviar `anonymousId` en las llamadas a la API de sesión
-- [ ] Registrar la `play_session` con `anonymous_id` cuando no hay `user_id`
+- [x] Generar y persistir `anonymousId` (UUID) en `localStorage` y cookie `HttpOnly`
+- [x] Enviar `anonymousId` en las llamadas a la API de sesión
+- [x] Registrar la `play_session` con `anonymous_id` cuando no hay `user_id`
 
 ### 4.2 Registro y login
 - [ ] Implementar Magic Link por email con Supabase Auth

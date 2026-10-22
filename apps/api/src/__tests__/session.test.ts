@@ -37,6 +37,7 @@ describe('Endpoints de Sesión (Tarea 2.3)', () => {
       sessionId: string
       puzzleId: string
       startedAt: string
+      anonymousId?: string
     }>()
 
     expect(body.sessionId).toBeDefined()
@@ -46,9 +47,36 @@ describe('Endpoints de Sesión (Tarea 2.3)', () => {
     )
     expect(body.puzzleId).toBe('puzzle-demo-123')
     expect(body.startedAt).toBeDefined()
+    expect(body.anonymousId).toBe('anon-user-uuid-456')
 
     // Comprobar que está en memoria
-    expect(memorySessions.has(body.sessionId)).toBe(true)
+    const saved = memorySessions.get(body.sessionId)
+    expect(saved).toBeDefined()
+    expect(saved?.anonymousId).toBe('anon-user-uuid-456')
+  })
+
+  it('POST /api/session/start genera automáticamente un anonymousId si se omite en la petición', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/session/start',
+      payload: {
+        puzzleId: 'puzzle-demo-123',
+      },
+    })
+
+    expect(response.statusCode).toBe(201)
+    const body = response.json<{
+      sessionId: string
+      puzzleId: string
+      anonymousId?: string
+    }>()
+
+    expect(body.anonymousId).toBeDefined()
+    expect(body.anonymousId).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+    )
+    const saved = memorySessions.get(body.sessionId)
+    expect(saved?.anonymousId).toBe(body.anonymousId)
   })
 
   it('POST /api/session/start falla con 400 si falta puzzleId', async () => {
