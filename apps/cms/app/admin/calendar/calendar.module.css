@@ -1,0 +1,204 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.title {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text, #1a1612);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 14px;
+  color: var(--color-text-muted, #766e65);
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.btnPrimary {
+  padding: 10px 18px;
+  background-color: var(--color-active, #c35a38);
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
+
+.btnPublishNow {
+  padding: 10px 18px;
+  background-color: var(--color-success, #1e4d2b);
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btnPublishNow:hover {
+  opacity: 0.9;
+}
+
+.notification {
+  padding: 12px 18px;
+  background-color: rgba(30, 77, 43, 0.08);
+  border-left: 3px solid var(--color-success, #1e4d2b);
+  color: var(--color-success, #1e4d2b);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.dayCard {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5dec9);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 240px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.dayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(229, 222, 201, 0.6);
+  padding-bottom: 10px;
+}
+
+.dayName {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text, #1a1612);
+  text-transform: capitalize;
+}
+
+.dayDate {
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 12px;
+  color: var(--color-text-muted, #766e65);
+}
+
+.todayIndicator {
+  display: inline-block;
+  padding: 2px 6px;
+  background-color: var(--color-active, #c35a38);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+
+.puzzleContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statusScheduled {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 2px 8px;
+  background-color: #dbeafe;
+  color: #1e40af;
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statusPublished {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 2px 8px;
+  background-color: #dcfce7;
+  color: #166534;
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.puzzleQuote {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--color-text, #1a1612);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.puzzleAuthor {
+  font-size: 12px;
+  color: var(--color-text-muted, #766e65);
+}
+
+.emptyDay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px dashed var(--color-border, #e5dec9);
+  padding: 20px 14px;
+  background-color: var(--color-bg, #fbf7ee);
+}
+
+.emptyLabel {
+  font-size: 12px;
+  color: var(--color-text-muted, #766e65);
+  margin-bottom: 10px;
+}
+
+.btnAssign {
+  padding: 6px 12px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5dec9);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnAssign:hover {
+  border-color: var(--color-active, #c35a38);
+  color: var(--color-active, #c35a38);
+}

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { initPuzzleState } from '@corchetes/core'
-import type { ClientPayload } from '@corchetes/core'
+import type { ClientPayload, ClientClueNode } from '@corchetes/core'
 import type { DraftPuzzleItem } from '../../app/admin/page'
 
 describe('Cola de Borradores y Vista Previa (Fase 4.2)', () => {
@@ -110,7 +110,7 @@ describe('Cola de Borradores y Vista Previa (Fase 4.2)', () => {
     expect(targetNode).toBeDefined()
     if (!targetNode) return
 
-    const updatedNodes = {
+    const updatedNodes: Record<string, ClientClueNode> = {
       ...sampleClientPayload.nodes,
       n2: {
         ...targetNode,

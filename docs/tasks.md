@@ -212,9 +212,9 @@
 - [x] Botón «Editar pista» → edición iníline de una pista sin regenerar todo el puzle
 
 ### 4.3 Cola de publicación
-- [ ] Vista de calendario de semana con las ediciones programadas
-- [ ] Asignación de `publish_date` y cambio de estado a `SCHEDULED`
-- [ ] Cron job en `apps/api` (00:00 h): publicar puzles `SCHEDULED` + invalidar caché Cloudflare
+- [x] Vista de calendario de semana con las ediciones programadas
+- [x] Asignación de `publish_date` y cambio de estado a `SCHEDULED`
+- [x] Cron job en `apps/api` (00:00 h): publicar puzles `SCHEDULED` + invalidar caché Cloudflare
 
 ### 4.4 Editor manual (flujo alternativo)
 - [ ] Textarea de markup con sintaxis de corchetes + vista previa interactiva en tiempo real

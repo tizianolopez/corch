@@ -21,6 +21,9 @@ import {
   runGeneratePipeline,
   type PipelineResultSuccess,
 } from '../services/puzzleCompiler'
+import { executePublishJob } from '../services/publishJob'
+import { getTodayDateMadrid } from '../utils/time'
+import { config } from '../config'
 import type { ILlmModel } from '../services/puzzleGenerator'
 
 // ─── Esquemas de validación ───────────────────────────────────────────────────
@@ -36,6 +39,13 @@ export const updateStatusSchema = z.object({
 export const updateClueSchema = z.object({
   nodeId: z.string().min(1, 'nodeId es obligatorio'),
   newClueText: z.string().min(1, 'El texto de la pista no puede estar vacío'),
+})
+
+export const schedulePuzzleSchema = z.object({
+  publishDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato YYYY-MM-DD requerido'),
+  status: z.enum(['SCHEDULED', 'DRAFT']).default('SCHEDULED'),
 })
 
 // ─── Plugin de rutas ──────────────────────────────────────────────────────────
@@ -306,4 +316,71 @@ export const adminPuzzlesRoutes: FastifyPluginAsync<AdminPuzzlesOptions> = async
       return reply.status(200).send(result)
     },
   )
+
+  // ── 5. POST /api/admin/publish-scheduled ────────────────────────────────────
+  fastify.post('/api/admin/publish-scheduled', async (_request, reply: FastifyReply) => {
+    const todayDate = getTodayDateMadrid()
+
+    const result = await executePublishJob({
+      todayDate,
+      db: fastify.db,
+      memoryStore: memoryGeneratedPuzzles,
+      cloudflare: {
+        zoneId: config.CLOUDFLARE_ZONE_ID,
+        apiToken: config.CLOUDFLARE_API_TOKEN,
+      },
+    })
+
+    return reply.status(200).send(result)
+  })
+
+  // ── 6. PATCH /api/admin/puzzles/:id/schedule ────────────────────────────────
+  fastify.patch(
+    '/api/admin/puzzles/:id/schedule',
+    async (
+      request: FastifyRequest<{ Params: { id: string } }>,
+      reply: FastifyReply,
+    ) => {
+      const { id } = request.params
+      const body = schedulePuzzleSchema.parse(request.body ?? {})
+      const { publishDate, status } = body
+
+      let found = false
+
+      if (fastify.db) {
+        try {
+          await fastify.db
+            .update(puzzles)
+            .set({ publishDate, status })
+            .where(eq(puzzles.id, id))
+          found = true
+        } catch (err) {
+          fastify.log.error({ err }, 'Error al programar puzle en DB')
+        }
+      }
+
+      const inMemory = memoryGeneratedPuzzles.get(id)
+      if (inMemory) {
+        inMemory.publishDate = publishDate
+        inMemory.status = status as 'DRAFT'
+        found = true
+      }
+
+      if (!found && !inMemory) {
+        return reply.status(404).send({
+          statusCode: 404,
+          error: 'Not Found',
+          message: `No se encontró el puzle con ID '${id}'.`,
+        })
+      }
+
+      return reply.status(200).send({
+        success: true,
+        id,
+        publishDate,
+        status,
+      })
+    },
+  )
 }
+
