@@ -1,0 +1,237 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.title {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text, #1a1612);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 14px;
+  color: var(--color-text-muted, #766e65);
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.btnPrimary {
+  padding: 10px 18px;
+  background-color: var(--color-active, #c35a38);
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
+
+.btnSecondary {
+  padding: 10px 18px;
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-text, #1a1612);
+  border: 1px solid var(--color-border, #e5dec9);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnSecondary:hover {
+  border-color: var(--color-text, #1a1612);
+}
+
+.notification {
+  padding: 12px 18px;
+  background-color: rgba(30, 77, 43, 0.08);
+  border-left: 3px solid var(--color-success, #1e4d2b);
+  color: var(--color-success, #1e4d2b);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5dec9);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.15s ease;
+}
+
+.card:hover {
+  border-color: #d1c7ae;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(229, 222, 201, 0.5);
+  padding-bottom: 12px;
+}
+
+.metaGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dateBadge {
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #1a1612);
+}
+
+.editionTag {
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 11px;
+  color: var(--color-text-muted, #766e65);
+  background: var(--color-bg, #fbf7ee);
+  padding: 2px 8px;
+  border: 1px solid var(--color-border, #e5dec9);
+}
+
+.sourceBadge {
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  background-color: #ede9fe;
+  color: #6d28d9;
+}
+
+.metrics {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--color-text-muted, #766e65);
+}
+
+.metrics strong {
+  color: var(--color-text, #1a1612);
+}
+
+.quoteBlock {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--color-text, #1a1612);
+  background-color: var(--color-bg, #fbf7ee);
+  border: 1px solid var(--color-border, #e5dec9);
+  padding: 18px 20px;
+}
+
+.authorLine {
+  font-size: 13px;
+  color: var(--color-text-muted, #766e65);
+  margin-top: 4px;
+}
+
+.markupSnippet {
+  font-family: var(--font-jetbrains, 'JetBrains Mono', monospace);
+  font-size: 12px;
+  color: var(--color-active, #c35a38);
+  background-color: rgba(195, 90, 56, 0.04);
+  padding: 10px 14px;
+  border-left: 2px solid var(--color-active, #c35a38);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+}
+
+.actionGroupLeft {
+  display: flex;
+  gap: 10px;
+}
+
+.btnAction {
+  padding: 8px 14px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5dec9);
+  color: var(--color-text, #1a1612);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnAction:hover {
+  border-color: var(--color-text, #1a1612);
+}
+
+.btnApprove {
+  padding: 8px 20px;
+  background-color: var(--color-success, #1e4d2b);
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btnApprove:hover {
+  opacity: 0.9;
+}
+
+.emptyState {
+  background: var(--color-surface, #ffffff);
+  border: 1px dashed var(--color-border, #e5dec9);
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.emptyTitle {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text, #1a1612);
+  margin-bottom: 8px;
+}
+
+.emptyText {
+  color: var(--color-text-muted, #766e65);
+  font-size: 14px;
+  max-width: 480px;
+  margin: 0 auto 24px auto;
+  line-height: 1.6;
+}

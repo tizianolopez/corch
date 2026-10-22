@@ -205,11 +205,11 @@
 - [x] Implementar middleware de autenticación que protege todas las rutas de `/admin`
 
 ### 4.2 Cola de borradores (panel principal)
-- [ ] Lista de puzles en estado `DRAFT` generados por IA, ordenados por `publish_date`
-- [ ] Vista previa interactiva de cada borrador usando `<ClueTree />` (jugable antes de aprobar)
-- [ ] Botón «Aprobar» → cambia estado a `SCHEDULED`
-- [ ] Botón «Regenerarr» → llama a `POST /api/generate` con el mismo evento y genera un nuevo borrador
-- [ ] Botón «Editar pista» → edición iníline de una pista sin regenerar todo el puzle
+- [x] Lista de puzles en estado `DRAFT` generados por IA, ordenados por `publish_date`
+- [x] Vista previa interactiva de cada borrador usando `<ClueTree />` (jugable antes de aprobar)
+- [x] Botón «Aprobar» → cambia estado a `SCHEDULED`
+- [x] Botón «Regenerarr» → llama a `POST /api/generate` con el mismo evento y genera un nuevo borrador
+- [x] Botón «Editar pista» → edición iníline de una pista sin regenerar todo el puzle
 
 ### 4.3 Cola de publicación
 - [ ] Vista de calendario de semana con las ediciones programadas

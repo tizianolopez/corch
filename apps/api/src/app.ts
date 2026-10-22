@@ -10,6 +10,7 @@ import { puzzleRoutes } from './routes/puzzle'
 import { sessionRoutes } from './routes/session'
 import { statsRoutes } from './routes/stats'
 import { generateRoutes } from './routes/generate'
+import { adminPuzzlesRoutes } from './routes/adminPuzzles'
 import type { ILlmModel } from './services/puzzleGenerator'
 
 export interface BuildAppOptions {
@@ -80,6 +81,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   await app.register(sessionRoutes)
   await app.register(statsRoutes)
   await app.register(generateRoutes, { injectedModel: options.injectedModel })
+  await app.register(adminPuzzlesRoutes, { injectedModel: options.injectedModel })
 
   return app
 }
