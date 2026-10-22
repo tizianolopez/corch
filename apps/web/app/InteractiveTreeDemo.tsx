@@ -1,12 +1,15 @@
 'use client'
 
-import { useEffect, useCallback, type ReactElement } from 'react'
+import { useEffect, useState, useCallback, type ReactElement } from 'react'
 import { ClueTree, InputBar, EndScreen } from '@corchetes/ui'
 import { sha256, aesGcmDecrypt } from '@corchetes/crypto'
+import type { User } from '@supabase/supabase-js'
 import { usePuzzleStore } from '../store/usePuzzleStore'
 import { usePuzzlePersistence, restoreTodayState } from '../store/usePuzzlePersistence'
 import { apiClient } from '../src/api/client'
 import { getOrCreateAnonymousId } from '../src/lib/anonymousSession'
+import { getCurrentUser, onAuthStateChange } from '../src/lib/supabase'
+import { AuthDrawer } from '../src/components/AuthDrawer'
 import styles from './page.module.css'
 import type { ClientPayload } from '@corchetes/core'
 
@@ -80,6 +83,24 @@ async function appDecryptFn(cipher: string, key: string): Promise<string> {
 export function InteractiveTreeDemo(): ReactElement {
   // ── Activar persistencia en localStorage ─────────────────────────────
   usePuzzlePersistence()
+
+  const [isAuthOpen, setIsAuthOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+
+  // Escuchar estado del usuario autenticado
+  useEffect(() => {
+    let mounted = true
+    void getCurrentUser().then((user) => {
+      if (mounted) setCurrentUser(user)
+    })
+    const { unsubscribe } = onAuthStateChange((_event, session) => {
+      if (mounted) setCurrentUser(session?.user ?? null)
+    })
+    return () => {
+      mounted = false
+      unsubscribe()
+    }
+  }, [])
 
   const {
     puzzleState,
@@ -223,6 +244,25 @@ export function InteractiveTreeDemo(): ReactElement {
 
   return (
     <section className={styles.quoteCard}>
+      {/* ── Barra de lector / Identificación ─────────────────────────── */}
+      <div className={styles.readerBar}>
+        <button
+          type="button"
+          className={styles.readerButton}
+          onClick={() => setIsAuthOpen(true)}
+          aria-label={currentUser ? 'Ver perfil de lector' : 'Acceder o guardar racha'}
+        >
+          {currentUser ? (
+            <>
+              <span className={styles.readerActiveDot}>·</span>
+              <span>{currentUser.email}</span>
+            </>
+          ) : (
+            <span>[Guardar racha / Identifícate]</span>
+          )}
+        </button>
+      </div>
+
       {/* ── ClueTree ──────────────────────────────────────────────────── */}
       <ClueTree
         rootTemplate={puzzleState.rootTemplate}
@@ -248,6 +288,15 @@ export function InteractiveTreeDemo(): ReactElement {
             >
               Jugar de nuevo
             </button>
+            {!currentUser && (
+              <button
+                type="button"
+                className={styles.demoButton}
+                onClick={() => setIsAuthOpen(true)}
+              >
+                Guardar racha en tu cuenta
+              </button>
+            )}
           </div>
         </>
       ) : (
@@ -283,7 +332,7 @@ export function InteractiveTreeDemo(): ReactElement {
       {!isCompleted && (
         <div className={styles.demoControls}>
           <p className={styles.demoHint}>
-            💡 <em>Escribe la respuesta en el campo inferior o usa los atajos de demo:</em>
+            <em>Escribe la respuesta en el campo inferior o usa los atajos de demostración:</em>
           </p>
           <div className={styles.buttonGroup}>
             {!puzzleState.nodes['n3']?.isResolved && (
@@ -323,6 +372,13 @@ export function InteractiveTreeDemo(): ReactElement {
           </div>
         </div>
       )}
+
+      {/* ── Drawer de identificación y guardado de racha ─────────────── */}
+      <AuthDrawer
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onUserChange={setCurrentUser}
+      />
     </section>
   )
 }

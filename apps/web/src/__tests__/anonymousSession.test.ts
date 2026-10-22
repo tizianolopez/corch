@@ -54,11 +54,8 @@ describe('Anonymous Session Management (Fase 5.1)', () => {
   })
 
   afterAll(() => {
-    // @ts-expect-error Restoring globals
     globalThis.window = originalWindow
-    // @ts-expect-error Restoring globals
     globalThis.document = originalDocument
-    // @ts-expect-error Restoring globals
     globalThis.localStorage = originalLocalStorage
   })
 

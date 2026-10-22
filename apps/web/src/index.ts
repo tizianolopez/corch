@@ -13,3 +13,16 @@ export type {
   CompleteSessionPayload,
   CompleteSessionResponse,
 } from './api/client'
+
+export { AuthDrawer } from './components/AuthDrawer'
+export type { AuthDrawerProps } from './components/AuthDrawer'
+
+export {
+  supabase,
+  signInWithMagicLink,
+  signInWithGoogle,
+  signOutUser,
+  getCurrentUser,
+  onAuthStateChange,
+} from './lib/supabase'
+

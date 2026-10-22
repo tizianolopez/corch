@@ -232,22 +232,22 @@
 
 ## Fase 5 — Usuarios y autenticación
 
-### 4.1 Sesión anónima
+### 5.1 Sesión anónima
 - [x] Generar y persistir `anonymousId` (UUID) en `localStorage` y cookie `HttpOnly`
 - [x] Enviar `anonymousId` en las llamadas a la API de sesión
 - [x] Registrar la `play_session` con `anonymous_id` cuando no hay `user_id`
 
-### 4.2 Registro y login
-- [ ] Implementar Magic Link por email con Supabase Auth
-- [ ] Implementar Google OAuth con Supabase Auth
-- [ ] UI de login/registro integrada sin abandonar el juego (drawer o modal minimalista)
+### 5.2 Registro y login
+- [x] Implementar Magic Link por email con Supabase Auth
+- [x] Implementar Google OAuth con Supabase Auth
+- [x] UI de login/registro integrada sin abandonar el juego (drawer o modal minimalista)
 
-### 4.3 Fusión de sesión anónima → cuenta
+### 5.3 Fusión de sesión anónima → cuenta
 - [ ] Al registrarse, enviar `anonymousId` al backend
 - [ ] El backend ejecuta una transacción que vincula todas las `play_sessions` del `anonymous_id` al nuevo `user_id`
 - [ ] Actualizar racha y estadísticas acumuladas del usuario
 
-### 4.4 Estadísticas de usuario
+### 5.4 Estadísticas de usuario
 - [ ] Racha diaria (`streak_current`, `streak_max`) actualizada al completar cada partida
 - [ ] Historial de partidas: lista de ediciones jugadas con puntuación y rango
 
@@ -255,12 +255,12 @@
 
 ## Fase 6 — Compartición y comunidad
 
-### 5.1 Ficha hemerográfica (imagen OG)
+### 6.1 Ficha hemerográfica (imagen OG)
 - [ ] Implementar `/api/og/[editionNumber]` con `@vercel/og` (Satori)
 - [ ] Diseño de la ficha: número de edición, fecha, autor de la cita, árbol minimalista, rango con sello tipográfico
 - [ ] Configurar `og:image` en los meta tags del juego
 
-### 5.2 Creador de retos (UGC)
+### 6.2 Creador de retos (UGC)
 - [ ] Página `/crear`: textarea de markup + vista previa interactiva
 - [ ] Al publicar, llamar a `POST /api/community/create`
 - [ ] El backend devuelve `{ shortId, url }` — guardar en `community_puzzles`
@@ -271,25 +271,25 @@
 
 ## Fase 7 — Pulido y lanzamiento
 
-### 6.1 PWA
+### 7.1 PWA
 - [ ] Configurar Service Worker con Next.js (next-pwa o Workbox)
 - [ ] Caché offline del puzle del día (disponible sin conexión una vez cargado)
 - [ ] Manifiesto de la app (icono, nombre, color de tema, `display: standalone`)
 
-### 6.2 SEO y accesibilidad
+### 7.2 SEO y accesibilidad
 - [ ] Meta tags dinámicos por página (título, descripción, og:image)
 - [ ] Schema.org markup para el juego
 - [ ] Auditoría de accesibilidad WCAG 2.1 AA (navegación por teclado, contraste, ARIA)
 - [ ] Sitemap estático
 
-### 6.3 Tests e2e
+### 7.3 Tests e2e
 - [ ] Test Playwright: juego completo sin ayudas (Gran Maestro)
 - [ ] Test Playwright: juego con ayudas (Cronista)
 - [ ] Test Playwright: error de respuesta y animación de shake
 - [ ] Test Playwright: flujo de registro y fusión de sesión anónima
 - [ ] Test Playwright: creador de retos → URL compartible → juego del reto
 
-### 6.4 Lanzamiento
+### 7.4 Lanzamiento
 - [ ] Deploy de `apps/web` en Vercel
 - [ ] Deploy de `apps/api` en Railway
 - [ ] Configurar dominio `corchetes.es` en Cloudflare

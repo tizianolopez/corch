@@ -1,0 +1,374 @@
+/**
+ * AuthDrawer.module.css — Estilos para el panel de autenticación de lectores.
+ * Sistema tipográfico y cromático editorial de Corchetes.
+ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: rgba(26, 25, 23, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 200ms var(--ease-editorial) forwards;
+}
+
+[data-theme='night'] .overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.drawer {
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  background-color: var(--color-paper);
+  border-left: 1px solid var(--color-border);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  animation: slideIn 250ms var(--ease-editorial) forwards;
+  overflow-y: auto;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ── Cabecera ────────────────────────────────────────────────────────── */
+
+.header {
+  padding: var(--space-6) var(--space-6) var(--space-4);
+  background-color: var(--color-paper-alt);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.doubleRuleTop {
+  border-top: 3px solid var(--color-ink);
+  border-bottom: 1px solid var(--color-ink);
+  height: 2px;
+  margin-bottom: var(--space-3);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categoryLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+}
+
+.closeButton {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
+  background: none;
+  border: none;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 2px;
+  transition: color 150ms var(--ease-editorial), background-color 150ms var(--ease-editorial);
+}
+
+.closeButton:hover {
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+  line-height: var(--leading-2xl);
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-sm);
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+/* ── Contenido ───────────────────────────────────────────────────────── */
+
+.content {
+  flex: 1;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.authForms {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* ── Botón de Google OAuth ───────────────────────────────────────────── */
+
+.googleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-border);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: var(--shadow-subtle);
+  transition:
+    background-color 150ms var(--ease-editorial),
+    border-color 150ms var(--ease-editorial),
+    transform 150ms var(--ease-editorial);
+}
+
+.googleButton:hover:not(:disabled) {
+  background-color: var(--color-paper-alt);
+  border-color: var(--color-ink-muted);
+  transform: translateY(-1px);
+}
+
+.googleButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.googleIcon {
+  flex-shrink: 0;
+}
+
+/* ── Separador editorial ─────────────────────────────────────────────── */
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-1) 0;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.dividerText {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
+}
+
+/* ── Formulario Magic Link ───────────────────────────────────────────── */
+
+.magicForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.input {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  padding: var(--space-3);
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-ink);
+  transition: border-color 150ms var(--ease-editorial);
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-active);
+  box-shadow: 0 0 0 2px var(--color-active-bg);
+}
+
+.submitButton {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-active);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 150ms var(--ease-editorial), transform 150ms var(--ease-editorial);
+}
+
+.submitButton:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Mensajes de estado ──────────────────────────────────────────────── */
+
+.messageSuccess {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-active);
+  background-color: var(--color-active-bg);
+  border: 1px solid var(--color-active);
+  padding: var(--space-3);
+  border-radius: 4px;
+  line-height: var(--leading-sm);
+}
+
+.messageError {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-alert);
+  background-color: rgba(158, 42, 43, 0.08);
+  border: 1px solid var(--color-alert);
+  padding: var(--space-3);
+  border-radius: 4px;
+  line-height: var(--leading-sm);
+}
+
+/* ── Sección de usuario conectado ────────────────────────────────────── */
+
+.loggedInSection {
+  background-color: var(--color-paper-alt);
+  border: 1px solid var(--color-border);
+  padding: var(--space-5);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sessionStatusBadge {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-active);
+  font-weight: 600;
+}
+
+.statusBullet {
+  font-weight: bold;
+}
+
+.userEmail {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  font-weight: 600;
+  word-break: break-all;
+  margin: 0;
+}
+
+.userNote {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-sm);
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+.signOutButton {
+  margin-top: var(--space-2);
+  align-self: flex-start;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-ink);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-editorial);
+}
+
+.signOutButton:hover:not(:disabled) {
+  background-color: var(--color-paper);
+}
+
+/* ── Pie del panel ───────────────────────────────────────────────────── */
+
+.footer {
+  padding: var(--space-4) var(--space-6) var(--space-6);
+  background-color: var(--color-paper-alt);
+  border-top: 1px solid var(--color-border);
+}
+
+.doubleRuleBottom {
+  border-top: 1px solid var(--color-ink);
+  border-bottom: 3px solid var(--color-ink);
+  height: 2px;
+  margin-bottom: var(--space-3);
+}
+
+.privacyNote {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--leading-xs);
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+/* ── Adaptación a pantallas estrechas (móviles) ──────────────────────── */
+
+@media (max-width: 640px) {
+  .drawer {
+    max-width: 100%;
+  }
+}
