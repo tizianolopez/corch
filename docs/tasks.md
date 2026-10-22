@@ -243,9 +243,9 @@
 - [x] UI de login/registro integrada sin abandonar el juego (drawer o modal minimalista)
 
 ### 5.3 Fusión de sesión anónima → cuenta
-- [ ] Al registrarse, enviar `anonymousId` al backend
-- [ ] El backend ejecuta una transacción que vincula todas las `play_sessions` del `anonymous_id` al nuevo `user_id`
-- [ ] Actualizar racha y estadísticas acumuladas del usuario
+- [x] Al registrarse, enviar `anonymousId` al backend
+- [x] El backend ejecuta una transacción que vincula todas las `play_sessions` del `anonymous_id` al nuevo `user_id`
+- [x] Actualizar racha y estadísticas acumuladas del usuario
 
 ### 5.4 Estadísticas de usuario
 - [ ] Racha diaria (`streak_current`, `streak_max`) actualizada al completar cada partida

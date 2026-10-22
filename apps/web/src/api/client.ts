@@ -46,6 +46,20 @@ export interface CompleteSessionResponse {
   percentile: number
 }
 
+export interface MergeSessionResponse {
+  success: boolean
+  userId: string
+  anonymousId: string
+  mergedSessionsCount: number
+  stats: {
+    totalPlays: number
+    totalWins: number
+    streakCurrent: number
+    streakMax: number
+  }
+}
+
+
 export class ApiClientError extends Error {
   statusCode?: number
   constructor(message: string, statusCode?: number) {
@@ -171,4 +185,37 @@ export const apiClient = {
 
     return (await res.json()) as CompleteSessionResponse
   },
+
+  /**
+   * Vincula las partidas de una sesión anónima a una cuenta de usuario registrada (POST /api/auth/merge)
+   */
+  async mergeAnonymousSession(
+    anonymousId: string,
+    userId: string,
+    email?: string,
+    displayName?: string,
+  ): Promise<MergeSessionResponse> {
+    const res = await fetch(`${getBaseUrl()}/api/auth/merge`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        anonymousId,
+        userId,
+        ...(email ? { email } : {}),
+        ...(displayName ? { displayName } : {}),
+      }),
+    })
+
+    if (!res.ok) {
+      throw new ApiClientError(
+        `Error al fusionar sesión anónima con la cuenta: ${res.statusText}`,
+        res.status,
+      )
+    }
+
+    return (await res.json()) as MergeSessionResponse
+  },
 }
+

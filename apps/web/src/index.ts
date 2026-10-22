@@ -12,6 +12,7 @@ export type {
   HintResponse,
   CompleteSessionPayload,
   CompleteSessionResponse,
+  MergeSessionResponse,
 } from './api/client'
 
 export { AuthDrawer } from './components/AuthDrawer'

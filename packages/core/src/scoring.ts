@@ -112,3 +112,111 @@ export function getRank(score: number): PlayerRank {
   if (score >= 40) return 'Escriba'
   return 'Aprendiz'
 }
+
+// ─── Cálculo de racha diaria ──────────────────────────────────────────────────
+
+export interface StreakResult {
+  /** Racha activa de días consecutivos completados */
+  streakCurrent: number
+  /** Racha máxima histórica alcanzada */
+  streakMax: number
+}
+
+function toDateKey(dateInput: string | Date): string {
+  if (typeof dateInput === 'string') {
+    return dateInput.slice(0, 10)
+  }
+  const y = dateInput.getFullYear()
+  const m = String(dateInput.getMonth() + 1).padStart(2, '0')
+  const d = String(dateInput.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+
+function parseDateKey(key: string): Date {
+  const parts = key.split('-')
+  const y = Number(parts[0]) || 2026
+  const m = Number(parts[1]) || 1
+  const d = Number(parts[2]) || 1
+  return new Date(y, m - 1, d)
+}
+
+function diffInDays(aKey: string, bKey: string): number {
+  const msA = parseDateKey(aKey).getTime()
+  const msB = parseDateKey(bKey).getTime()
+  return Math.round((msB - msA) / (1000 * 60 * 60 * 24))
+}
+
+/**
+ * Calcula la racha actual y máxima de partidas completadas.
+ *
+ * @param completedDates - Lista de fechas (string YYYY-MM-DD o Date) de partidas completadas
+ * @param referenceDateInput - Fecha de referencia (hoy). Por defecto fecha actual
+ * @returns { streakCurrent, streakMax }
+ */
+export function calculateStreak(
+  completedDates: (string | Date)[],
+  referenceDateInput?: string | Date,
+): StreakResult {
+  if (completedDates.length === 0) {
+    return { streakCurrent: 0, streakMax: 0 }
+  }
+
+  // Normalizar y ordenar fechas únicas YYYY-MM-DD
+  const dateSet = new Set<string>()
+  for (const d of completedDates) {
+    dateSet.add(toDateKey(d))
+  }
+  const sortedDates = Array.from(dateSet).sort()
+  if (sortedDates.length === 0) {
+    return { streakCurrent: 0, streakMax: 0 }
+  }
+
+  // 1. Racha máxima histórica
+  let streakMax = 1
+  let currentRun = 1
+
+  for (let i = 1; i < sortedDates.length; i++) {
+    const prev = sortedDates[i - 1]
+    const curr = sortedDates[i]
+    if (!prev || !curr) continue
+
+    const diff = diffInDays(prev, curr)
+    if (diff === 1) {
+      currentRun++
+      if (currentRun > streakMax) {
+        streakMax = currentRun
+      }
+    } else if (diff > 1) {
+      currentRun = 1
+    }
+  }
+
+  // 2. Racha actual
+  const todayKey = toDateKey(referenceDateInput ?? new Date())
+  const todayDate = parseDateKey(todayKey)
+  const yesterdayKey = toDateKey(new Date(todayDate.getTime() - 86400000))
+
+  const hasToday = dateSet.has(todayKey)
+  const hasYesterday = dateSet.has(yesterdayKey)
+
+  let streakCurrent = 0
+  if (hasToday || hasYesterday) {
+    let checkDateKey = hasToday ? todayKey : yesterdayKey
+    streakCurrent = 1
+    while (true) {
+      const prevDayKey = toDateKey(new Date(parseDateKey(checkDateKey).getTime() - 86400000))
+      if (dateSet.has(prevDayKey)) {
+        streakCurrent++
+        checkDateKey = prevDayKey
+      } else {
+        break
+      }
+    }
+  }
+
+  return {
+    streakCurrent,
+    streakMax: Math.max(streakMax, streakCurrent),
+  }
+}
+

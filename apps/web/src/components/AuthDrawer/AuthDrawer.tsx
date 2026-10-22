@@ -15,7 +15,10 @@ import {
   getCurrentUser,
   onAuthStateChange,
 } from '../../lib/supabase'
+import { apiClient } from '../../api/client'
+import { getOrCreateAnonymousId } from '../../lib/anonymousSession'
 import styles from './AuthDrawer.module.css'
+
 
 export interface AuthDrawerProps {
   /** Indica si el drawer/modal está visible */
@@ -36,6 +39,12 @@ export function AuthDrawer({
   onUserChange,
 }: AuthDrawerProps): ReactElement | null {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [userStats, setUserStats] = useState<{
+    totalPlays: number
+    totalWins: number
+    streakCurrent: number
+    streakMax: number
+  } | null>(null)
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [statusMessage, setStatusMessage] = useState<{
@@ -43,26 +52,44 @@ export function AuthDrawer({
     text: string
   } | null>(null)
 
-  // Cargar usuario actual y suscribir a cambios de sesión
+  // Cargar usuario actual, suscribir a cambios de sesión y sincronizar/fusionar racha
   useEffect(() => {
     let mounted = true
 
-    void getCurrentUser().then((user) => {
-      if (mounted) {
-        setCurrentUser(user)
-        onUserChange?.(user)
+    const syncUserAndMerge = (u: User | null) => {
+      if (!mounted) return
+      setCurrentUser(u)
+      onUserChange?.(u)
+
+      if (u) {
+        setStatusMessage(null)
+        const anonId = getOrCreateAnonymousId()
+        void apiClient
+          .mergeAnonymousSession(
+            anonId,
+            u.id,
+            u.email ?? undefined,
+            typeof u.user_metadata?.['name'] === 'string'
+              ? u.user_metadata['name']
+              : undefined,
+          )
+          .then((res) => {
+            if (mounted && res.success) {
+              setUserStats(res.stats)
+            }
+          })
+          .catch((err) => {
+            console.warn('Error al fusionar sesión anónima:', err)
+          })
+      } else {
+        setUserStats(null)
       }
-    })
+    }
+
+    void getCurrentUser().then(syncUserAndMerge)
 
     const { unsubscribe } = onAuthStateChange((_event, session) => {
-      const u = session?.user ?? null
-      if (mounted) {
-        setCurrentUser(u)
-        onUserChange?.(u)
-        if (u) {
-          setStatusMessage(null)
-        }
-      }
+      syncUserAndMerge(session?.user ?? null)
     })
 
     return () => {
@@ -70,6 +97,7 @@ export function AuthDrawer({
       unsubscribe()
     }
   }, [onUserChange])
+
 
   // Cierre con la tecla Escape
   const handleKeyDown = useCallback(
@@ -164,6 +192,7 @@ export function AuthDrawer({
         })
       } else {
         setCurrentUser(null)
+        setUserStats(null)
         onUserChange?.(null)
       }
     } finally {
@@ -216,6 +245,24 @@ export function AuthDrawer({
               <p className={styles.userNote}>
                 Tus crónicas y estadísticas quedan asociadas a esta dirección.
               </p>
+
+              {userStats && (
+                <div className={styles.statsSummary}>
+                  <div className={styles.statItem}>
+                    <span className={styles.statNumber}>{userStats.streakCurrent}</span>
+                    <span className={styles.statLabel}>Racha actual</span>
+                  </div>
+                  <div className={styles.statItem}>
+                    <span className={styles.statNumber}>{userStats.streakMax}</span>
+                    <span className={styles.statLabel}>Racha máxima</span>
+                  </div>
+                  <div className={styles.statItem}>
+                    <span className={styles.statNumber}>{userStats.totalWins}</span>
+                    <span className={styles.statLabel}>Victorias</span>
+                  </div>
+                </div>
+              )}
+
               <button
                 type="button"
                 className={styles.signOutButton}

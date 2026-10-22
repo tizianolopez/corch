@@ -237,4 +237,49 @@ describe('Conexión apps/web con apps/api (Fase 2.5)', () => {
     expect(restored?.sessionId).toBe('persisted-session-123')
     expect(restored?.percentile).toBe(85)
   })
+
+  it('apiClient.mergeAnonymousSession envía POST /api/auth/merge y devuelve estadísticas', async () => {
+    const mockMergeResponse = {
+      success: true,
+      userId: 'usr-abc-123',
+      anonymousId: 'anon-xyz-789',
+      mergedSessionsCount: 3,
+      stats: {
+        totalPlays: 3,
+        totalWins: 2,
+        streakCurrent: 2,
+        streakMax: 2,
+      },
+    }
+
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockMergeResponse,
+    } as Response)
+
+    const res = await apiClient.mergeAnonymousSession(
+      'anon-xyz-789',
+      'usr-abc-123',
+      'lector@corchetes.es',
+      'Lector',
+    )
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining('/api/auth/merge'),
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          anonymousId: 'anon-xyz-789',
+          userId: 'usr-abc-123',
+          email: 'lector@corchetes.es',
+          displayName: 'Lector',
+        }),
+      }),
+    )
+
+    expect(res.success).toBe(true)
+    expect(res.mergedSessionsCount).toBe(3)
+    expect(res.stats.streakCurrent).toBe(2)
+  })
 })
+

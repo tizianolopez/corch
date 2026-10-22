@@ -267,4 +267,93 @@ describe('Endpoints de Sesión (Tarea 2.3)', () => {
       hintRes.headers['ratelimit-remaining']
     expect(Number(remainingHeader)).toBeLessThanOrEqual(59)
   })
+
+  // ── 5. POST /api/auth/merge (Fase 5.3) ────────────────────────────────────
+  describe('POST /api/auth/merge (Fase 5.3)', () => {
+    it('vincula las sesiones de un anonymousId al userId y calcula estadísticas', async () => {
+      const anonId = '00000000-1111-2222-3333-444444444444'
+      const targetUserId = '99999999-8888-7777-6666-555555555555'
+
+      // Iniciar 2 sesiones con el anonymousId
+      const res1 = await app.inject({
+        method: 'POST',
+        url: '/api/session/start',
+        payload: { puzzleId: 'puz-1', anonymousId: anonId },
+      })
+      const s1 = res1.json<{ sessionId: string }>().sessionId
+
+      const res2 = await app.inject({
+        method: 'POST',
+        url: '/api/session/start',
+        payload: { puzzleId: 'puz-2', anonymousId: anonId },
+      })
+      const s2 = res2.json<{ sessionId: string }>().sessionId
+
+      // Completar la primera sesión
+      await app.inject({
+        method: 'POST',
+        url: '/api/session/complete',
+        payload: {
+          sessionId: s1,
+          durationMs: 90000,
+          mistakesCount: 0,
+          score: 100,
+          rankAchieved: 'Gran Maestro',
+        },
+      })
+
+      // Ejecutar fusión
+      const mergeRes = await app.inject({
+        method: 'POST',
+        url: '/api/auth/merge',
+        payload: {
+          anonymousId: anonId,
+          userId: targetUserId,
+          email: 'lector@corchetes.es',
+          displayName: 'Lector Astuto',
+        },
+      })
+
+      expect(mergeRes.statusCode).toBe(200)
+      const body = mergeRes.json<{
+        success: boolean
+        userId: string
+        anonymousId: string
+        mergedSessionsCount: number
+        stats: {
+          totalPlays: number
+          totalWins: number
+          streakCurrent: number
+          streakMax: number
+        }
+      }>()
+
+      expect(body.success).toBe(true)
+      expect(body.userId).toBe(targetUserId)
+      expect(body.anonymousId).toBe(anonId)
+      expect(body.mergedSessionsCount).toBe(2)
+      expect(body.stats.totalPlays).toBe(2)
+      expect(body.stats.totalWins).toBe(1)
+      expect(body.stats.streakCurrent).toBeGreaterThanOrEqual(1)
+      expect(body.stats.streakMax).toBeGreaterThanOrEqual(1)
+
+      // Verificar que las sesiones en memoria ahora tienen userId
+      expect(memorySessions.get(s1)?.userId).toBe(targetUserId)
+      expect(memorySessions.get(s2)?.userId).toBe(targetUserId)
+    })
+
+    it('rechaza con 400 si faltan campos obligatorios', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/auth/merge',
+        payload: {
+          anonymousId: 'anon-id',
+          // falta userId
+        },
+      })
+
+      expect(res.statusCode).toBe(400)
+    })
+  })
 })
+

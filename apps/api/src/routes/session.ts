@@ -2,7 +2,8 @@ import { randomUUID } from 'crypto'
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { eq } from 'drizzle-orm'
-import { playSessions, puzzles } from '@corchetes/db'
+import { playSessions, puzzles, users } from '@corchetes/db'
+import { calculateStreak } from '@corchetes/core'
 import { getTodayDateMadrid, getTimesRedisKey } from '../utils/time'
 
 // ── Esquemas de validación con Zod ──────────────────────────────────────────
@@ -34,6 +35,13 @@ export const completeSessionSchema = z.object({
     .default([]),
   score: z.number().int().min(0).max(100),
   rankAchieved: z.string().min(1),
+})
+
+export const mergeSessionSchema = z.object({
+  anonymousId: z.string().min(1),
+  userId: z.string().min(1),
+  email: z.string().email().optional().nullable(),
+  displayName: z.string().optional().nullable(),
 })
 
 // ── Tipos y Almacén en memoria (Fallback para offline/demo) ────────────────
@@ -326,6 +334,145 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
     })
   }
 
+  // ── 4. POST /api/auth/merge ──────────────────────────────────────────────
+  const mergeHandler = async (request: FastifyRequest, reply: FastifyReply) => {
+    const body = mergeSessionSchema.parse(request.body)
+    const { anonymousId, userId, email, displayName } = body
+
+    let mergedCount = 0
+
+    // 1. Fusión en memoria (para modo desarrollo/test y persistencia local)
+    for (const session of memorySessions.values()) {
+      if (session.anonymousId === anonymousId) {
+        session.userId = userId
+        mergedCount++
+      }
+    }
+
+    let stats = {
+      totalPlays: 0,
+      totalWins: 0,
+      streakCurrent: 0,
+      streakMax: 0,
+    }
+
+    // 2. Fusión y cálculo en PostgreSQL si hay base de datos conectada
+    if (fastify.db) {
+      try {
+        // Asegurar que el usuario existe en users
+        const existingUsers = await fastify.db
+          .select()
+          .from(users)
+          .where(eq(users.id, userId))
+          .limit(1)
+
+        if (existingUsers.length === 0) {
+          await fastify.db.insert(users).values({
+            id: userId,
+            email: email ?? null,
+            displayName: displayName ?? null,
+            anonymousId: anonymousId,
+          })
+        }
+
+        // Obtener sesiones anónimas a fusionar
+        const anonSessions = await fastify.db
+          .select()
+          .from(playSessions)
+          .where(eq(playSessions.anonymousId, anonymousId))
+
+        // Obtener sesiones ya existentes del usuario para evitar violar unique(puzzle_id, user_id)
+        const userExistingSessions = await fastify.db
+          .select()
+          .from(playSessions)
+          .where(eq(playSessions.userId, userId))
+
+        const existingPuzzleIds = new Set(userExistingSessions.map((s) => s.puzzleId))
+
+        let dbMerged = 0
+        for (const anonSess of anonSessions) {
+          if (!existingPuzzleIds.has(anonSess.puzzleId)) {
+            await fastify.db
+              .update(playSessions)
+              .set({ userId: userId })
+              .where(eq(playSessions.id, anonSess.id))
+            dbMerged++
+          }
+        }
+        if (dbMerged > 0) {
+          mergedCount = Math.max(mergedCount, dbMerged)
+        }
+
+        // Consultar todas las sesiones completas del usuario para calcular racha y estadísticas
+        const allUserSessions = await fastify.db
+          .select()
+          .from(playSessions)
+          .where(eq(playSessions.userId, userId))
+
+        const totalPlays = allUserSessions.length
+        const totalWins = allUserSessions.filter((s) => s.isComplete).length
+        const completedDates: string[] = []
+        for (const s of allUserSessions) {
+          if (s.isComplete && s.completedAt) {
+            completedDates.push(s.completedAt.toISOString().slice(0, 10))
+          }
+        }
+
+        const streak = calculateStreak(completedDates, getTodayDateMadrid())
+        stats = {
+          totalPlays,
+          totalWins,
+          streakCurrent: streak.streakCurrent,
+          streakMax: streak.streakMax,
+        }
+
+        // Actualizar estadísticas acumuladas en la tabla users
+        await fastify.db
+          .update(users)
+          .set({
+            streakCurrent: stats.streakCurrent,
+            streakMax: stats.streakMax,
+            totalPlays: stats.totalPlays,
+            totalWins: stats.totalWins,
+          })
+          .where(eq(users.id, userId))
+      } catch (err) {
+        fastify.log.warn({ err }, 'Error durante la transacción de fusión en PostgreSQL')
+      }
+    }
+
+    // Si no había DB, calcular estadísticas a partir de memorySessions
+    if (!fastify.db) {
+      const userSessions = Array.from(memorySessions.values()).filter(
+        (s) => s.userId === userId,
+      )
+      const totalPlays = userSessions.length
+      const totalWins = userSessions.filter((s) => s.isComplete).length
+      const completedDates: string[] = []
+      for (const s of userSessions) {
+        if (s.isComplete && s.completedAt) {
+          completedDates.push(s.completedAt.toISOString().slice(0, 10))
+        }
+      }
+
+      const streak = calculateStreak(completedDates, getTodayDateMadrid())
+      stats = {
+        totalPlays,
+        totalWins,
+        streakCurrent: streak.streakCurrent,
+        streakMax: streak.streakMax,
+      }
+    }
+
+    return reply.send({
+      success: true,
+      userId,
+      anonymousId,
+      mergedSessionsCount: mergedCount,
+      stats,
+    })
+  }
+
   // ── Registro de endpoints y aliases ───────────────────────────────────────
   fastify.post('/api/session/start', startHandler)
   fastify.post('/session/start', startHandler)
@@ -345,4 +492,8 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
 
   fastify.post('/api/session/complete', completeHandler)
   fastify.post('/session/complete', completeHandler)
+
+  fastify.post('/api/auth/merge', mergeHandler)
+  fastify.post('/auth/merge', mergeHandler)
 }
+

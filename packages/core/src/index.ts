@@ -43,4 +43,5 @@ export { onSubmit, applyHint, generateCronica } from './engine'
 export type { HashFn, DecryptFn } from './engine'
 
 // Puntuación y rangos
-export { calculateScore, getRank, applyMistakePenalty, SCORING } from './scoring'
+export { calculateScore, getRank, applyMistakePenalty, calculateStreak, SCORING } from './scoring'
+export type { StreakResult } from './scoring'

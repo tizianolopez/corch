@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateScore, getRank, applyMistakePenalty } from '../scoring.js'
+import { calculateScore, getRank, applyMistakePenalty, calculateStreak } from '../scoring.js'
 import type { PuzzleState } from '../types.js'
 
 function makeMockState(overrides: Partial<PuzzleState> = {}): PuzzleState {
@@ -130,3 +130,83 @@ describe('getRank', () => {
     expect(getRank(0)).toBe('Aprendiz')
   })
 })
+
+describe('calculateStreak', () => {
+  const refDate = '2026-10-22'
+
+  it('devuelve 0 para lista de fechas vacía', () => {
+    expect(calculateStreak([], refDate)).toEqual({
+      streakCurrent: 0,
+      streakMax: 0,
+    })
+  })
+
+  it('partida completada hoy da racha de 1', () => {
+    expect(calculateStreak(['2026-10-22'], refDate)).toEqual({
+      streakCurrent: 1,
+      streakMax: 1,
+    })
+  })
+
+  it('partida completada ayer mantiene racha activa de 1 si hoy aún no se juega', () => {
+    expect(calculateStreak(['2026-10-21'], refDate)).toEqual({
+      streakCurrent: 1,
+      streakMax: 1,
+    })
+  })
+
+  it('partida completada anteayer sin partida ayer ni hoy da racha actual 0 y max 1', () => {
+    expect(calculateStreak(['2026-10-20'], refDate)).toEqual({
+      streakCurrent: 0,
+      streakMax: 1,
+    })
+  })
+
+  it('tres días consecutivos hasta hoy dan racha actual 3 y max 3', () => {
+    expect(
+      calculateStreak(['2026-10-20', '2026-10-21', '2026-10-22'], refDate),
+    ).toEqual({
+      streakCurrent: 3,
+      streakMax: 3,
+    })
+  })
+
+  it('tres días consecutivos hasta ayer dan racha actual 3 y max 3', () => {
+    expect(
+      calculateStreak(['2026-10-19', '2026-10-20', '2026-10-21'], refDate),
+    ).toEqual({
+      streakCurrent: 3,
+      streakMax: 3,
+    })
+  })
+
+  it('deduplica múltiples partidas del mismo día sin inflar la racha', () => {
+    expect(
+      calculateStreak(
+        ['2026-10-21', '2026-10-21', '2026-10-22', '2026-10-22'],
+        refDate,
+      ),
+    ).toEqual({
+      streakCurrent: 2,
+      streakMax: 2,
+    })
+  })
+
+  it('conserva la racha máxima histórica tras una interrupción', () => {
+    const dates = [
+      '2026-10-01',
+      '2026-10-02',
+      '2026-10-03',
+      '2026-10-04',
+      '2026-10-05', // 5 días de racha
+      // hueco
+      '2026-10-21',
+      '2026-10-22', // racha actual 2
+    ]
+    expect(calculateStreak(dates, refDate)).toEqual({
+      streakCurrent: 2,
+      streakMax: 5,
+    })
+  })
+})
+
