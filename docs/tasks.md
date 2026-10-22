@@ -182,11 +182,11 @@
 - [x] Si supera 3 reintentos fallidos: marcar evento como `REJECTED` y continuar con el siguiente
 
 ### 3.4 Compilador y guardado en BD
-- [ ] Invocar `compilePuzzlePayload()` de `@corchetes/crypto` sobre el AST validado
-- [ ] Endpoint `POST /api/generate` (requiere token `admin`) que ejecuta el pipeline completo
-- [ ] Guardar el puzle en BD con `status: 'DRAFT'` y fuente `source: 'AI'`
-- [ ] Endpoint `POST /api/generate/batch` para generar puzles para los próximos N días
-- [ ] Tests de integración del pipeline completo (extractor → generador → validador → BD)
+- [x] Invocar `compilePuzzlePayload()` de `@corchetes/crypto` sobre el AST validado
+- [x] Endpoint `POST /api/generate` (requiere token `admin`) que ejecuta el pipeline completo
+- [x] Guardar el puzle en BD con `status: 'DRAFT'` y fuente `source: 'AI'`
+- [x] Endpoint `POST /api/generate/batch` para generar puzles para los próximos N días
+- [x] Tests de integración del pipeline completo (extractor → generador → validador → BD)
 
 ### 3.5 Fichero de reglas del agente IA
 - [x] Crear `docs/prompt_enigma.md` con el prompt del sistema completo

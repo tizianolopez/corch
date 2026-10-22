@@ -9,6 +9,8 @@ import { healthRoutes } from './routes/health'
 import { puzzleRoutes } from './routes/puzzle'
 import { sessionRoutes } from './routes/session'
 import { statsRoutes } from './routes/stats'
+import { generateRoutes } from './routes/generate'
+import type { ILlmModel } from './services/puzzleGenerator'
 
 export interface BuildAppOptions {
   /** Sobrescribe valores de configuración para tests o entornos específicos */
@@ -17,6 +19,8 @@ export interface BuildAppOptions {
   logger?: FastifyServerOptions['logger']
   /** Cliente Redis específico (mock o preconfigurado) */
   redisClient?: IRedisClient
+  /** Modelo LLM inyectable para tests de generación */
+  injectedModel?: ILlmModel
 }
 
 /**
@@ -75,6 +79,7 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   await app.register(puzzleRoutes)
   await app.register(sessionRoutes)
   await app.register(statsRoutes)
+  await app.register(generateRoutes, { injectedModel: options.injectedModel })
 
   return app
 }
