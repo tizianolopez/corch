@@ -30,16 +30,27 @@ function getToday(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
+export interface PersistedGameData {
+  state: PuzzleState
+  sessionId: string | null
+  percentile: number | null
+}
+
 function storageKey(publishDate: string): string {
   return `${PREFIX}${publishDate}`
 }
 
-function saveState(state: PuzzleState): void {
+export function saveState(
+  state: PuzzleState,
+  sessionId: string | null,
+  percentile: number | null,
+): void {
   if (typeof localStorage === 'undefined') return
 
   try {
     const key = storageKey(state.publishDate)
-    localStorage.setItem(key, JSON.stringify(state))
+    const payload: PersistedGameData = { state, sessionId, percentile }
+    localStorage.setItem(key, JSON.stringify(payload))
 
     // Actualizar el índice de ediciones guardadas
     const raw = localStorage.getItem(EDITIONS_KEY)
@@ -64,16 +75,35 @@ function saveState(state: PuzzleState): void {
 }
 
 /**
- * Intenta recuperar el estado guardado para la fecha de hoy.
- * Devuelve null si no hay estado guardado o si está corrompido.
+ * Intenta recuperar el estado y metadatos guardados para la fecha de hoy.
+ * Devuelve null si no hay datos guardados o si están corrompidos.
  */
-export function loadSavedState(publishDate: string): PuzzleState | null {
+export function loadSavedState(publishDate: string): PersistedGameData | null {
   if (typeof localStorage === 'undefined') return null
 
   try {
     const raw = localStorage.getItem(storageKey(publishDate))
     if (!raw) return null
-    return JSON.parse(raw) as PuzzleState
+    const parsed = JSON.parse(raw) as Record<string, unknown>
+
+    if (parsed.state && typeof parsed.state === 'object') {
+      return {
+        state: parsed.state as PuzzleState,
+        sessionId: (parsed.sessionId as string) ?? null,
+        percentile: typeof parsed.percentile === 'number' ? parsed.percentile : null,
+      }
+    }
+
+    // Compatibilidad retroactiva: formato anterior que guardaba directamente el PuzzleState
+    if (parsed.nodes && typeof parsed.nodes === 'object') {
+      return {
+        state: parsed as unknown as PuzzleState,
+        sessionId: null,
+        percentile: null,
+      }
+    }
+
+    return null
   } catch {
     return null
   }
@@ -109,7 +139,7 @@ export function clearOldEditions(keepDate: string): void {
  *
  * Al montar:
  * 1. Limpia ediciones de más de MAX_EDITIONS días
- * 2. Se suscribe al store y serializa en cada cambio de puzzleState
+ * 2. Se suscribe al store y serializa en cada cambio de puzzleState, sessionId o percentile
  */
 export function usePuzzlePersistence(): void {
   useEffect(() => {
@@ -118,12 +148,16 @@ export function usePuzzlePersistence(): void {
     // Limpiar ediciones antiguas al arrancar
     clearOldEditions(today)
 
-    // Suscripción granular: solo reacciona cuando puzzleState cambia
+    // Suscripción granular: serializa cuando cambia puzzleState, sessionId o percentile
     const unsub = usePuzzleStore.subscribe(
-      (state) => state.puzzleState,
-      (puzzleState) => {
+      (state) => ({
+        puzzleState: state.puzzleState,
+        sessionId: state.sessionId,
+        percentile: state.percentile,
+      }),
+      ({ puzzleState, sessionId, percentile }) => {
         if (puzzleState) {
-          saveState(puzzleState)
+          saveState(puzzleState, sessionId, percentile)
         }
       },
     )
@@ -134,12 +168,9 @@ export function usePuzzlePersistence(): void {
 
 /**
  * Restaura el estado de hoy desde localStorage e inicializa el store.
- * Devuelve true si se restauró un estado previo, false en caso contrario.
- *
- * Debe llamarse desde el servidor o en el useEffect inicial del componente
- * de juego, ANTES de llamar a loadPuzzle si el estado ya existe.
+ * Devuelve el registro guardado o null si no existe.
  */
-export function restoreTodayState(): PuzzleState | null {
+export function restoreTodayState(): PersistedGameData | null {
   const today = getToday()
   return loadSavedState(today)
 }

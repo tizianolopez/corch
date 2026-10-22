@@ -73,9 +73,18 @@ describe('EndScreen', () => {
     expect(html).toContain('Copiar crónica')
   })
 
-  it('muestra el placeholder del percentil', () => {
+  it('muestra el placeholder del percentil si no se proporciona', () => {
     const html = renderToStaticMarkup(<EndScreen state={makeCompletedState()} />)
     expect(html).toContain('pr\u00f3ximamente')
+  })
+
+  it('muestra el percentil real y el mensaje de comparación si se proporciona', () => {
+    const html = renderToStaticMarkup(
+      <EndScreen state={makeCompletedState()} percentile={84} />,
+    )
+    expect(html).toContain('84 %')
+    expect(html).toContain('m\u00e1s r\u00e1pido que el')
+    expect(html).not.toContain('pr\u00f3ximamente')
   })
 
   it('muestra métricas: Tiempo, Precisión, Rango', () => {

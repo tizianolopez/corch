@@ -147,10 +147,10 @@
 - [x] Calcular y devolver el percentil del jugador en `/api/session/complete`
 
 ### 2.5 Conectar apps/web con apps/api
-- [ ] Llamar a `POST /api/session/start` al cargar el puzle
-- [ ] Llamar a `POST /api/session/complete` al terminar la partida
-- [ ] Mostrar el percentil real en la pantalla de cierre de edición
-- [ ] Llamar a `POST /api/session/hint` al usar «Revelar término» (tipo `'reveal'`)
+- [x] Llamar a `POST /api/session/start` al cargar el puzle
+- [x] Llamar a `POST /api/session/complete` al terminar la partida
+- [x] Mostrar el percentil real en la pantalla de cierre de edición
+- [x] Llamar a `POST /api/session/hint` al usar «Revelar término» (tipo `'reveal'`)
 
 ---
 

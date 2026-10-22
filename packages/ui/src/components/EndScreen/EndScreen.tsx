@@ -49,6 +49,8 @@ export interface EndScreenProps {
   state: PuzzleState
   /** Texto de la cita completa (si se quiere mostrar diferente del rootTemplate) */
   quoteText?: string
+  /** Percentil del jugador devuelto por la API al completar sesión (0-100) */
+  percentile?: number | null
 }
 
 /**
@@ -56,7 +58,7 @@ export interface EndScreenProps {
  * Se muestra cuando state.completedAt !== null.
  * Muestra la cita completa, metadata, métricas y el botón «Copiar crónica».
  */
-export function EndScreen({ state, quoteText }: EndScreenProps): ReactElement {
+export function EndScreen({ state, quoteText, percentile }: EndScreenProps): ReactElement {
   const [copied, setCopied] = useState(false)
 
   const rank = getRank(state.score)
@@ -162,10 +164,28 @@ export function EndScreen({ state, quoteText }: EndScreenProps): ReactElement {
           </div>
         </div>
 
-        {/* Placeholder percentil (Fase 3) */}
-        <p className={styles.percentilePlaceholder} aria-live="polite">
-          Comparativa con otros jugadores disponible próximamente.
-        </p>
+        {/* Percentil frente a otros lectores */}
+        {percentile !== undefined && percentile !== null ? (
+          <div className={styles.percentileRow} aria-live="polite">
+            <div className={styles.metricLabel}>
+              <span>Percentil</span>
+              <span className={styles.metricValue}>{percentile} %</span>
+            </div>
+            <div className={styles.metricBar} role="presentation">
+              <div
+                className={[styles.metricBarFill, styles.metricBarFillRank].join(' ')}
+                style={{ width: `${percentile}%` }}
+              />
+            </div>
+            <p className={styles.percentileText}>
+              Has sido más rápido que el <strong>{percentile} %</strong> de los lectores de hoy.
+            </p>
+          </div>
+        ) : (
+          <p className={styles.percentilePlaceholder} aria-live="polite">
+            Comparativa con otros jugadores disponible próximamente.
+          </p>
+        )}
       </div>
 
       {/* ── Copiar crónica ────────────────────────────────────────────── */}

@@ -19,6 +19,7 @@ import {
   recalculateActiveNodes,
   getActiveNodes,
   initPuzzleState,
+  getRank,
   type PuzzleState,
   type ClueNode,
   type ClientPayload,
@@ -26,6 +27,7 @@ import {
   type DecryptFn,
   type SubmitResult,
 } from '@corchetes/core'
+import { apiClient } from '../src/api/client'
 
 // ── Contexto criptográfico (inyectado al cargar el puzzle) ─────────────────
 
@@ -43,6 +45,12 @@ export interface GameStore {
 
   /** Contexto criptográfico del día (salt + funciones) */
   cryptoCtx: CryptoCtx | null
+
+  /** ID de la sesión de juego en el backend (UUID) */
+  sessionId: string | null
+
+  /** Percentil del jugador frente a otros lectores (0-100) */
+  percentile: number | null
 
   /** ID del nodo actualmente seleccionado por el jugador */
   selectedNodeId: string | null
@@ -62,7 +70,19 @@ export interface GameStore {
    * Carga un puzzle desde el ClientPayload recibido del servidor.
    * Inicializa el estado con los nodos activos calculados.
    */
-  loadPuzzle: (payload: ClientPayload, hashFn: HashFn, decryptFn: DecryptFn) => void
+  loadPuzzle: (
+    payload: ClientPayload,
+    hashFn: HashFn,
+    decryptFn: DecryptFn,
+    sessionId?: string | null,
+    percentile?: number | null,
+  ) => void
+
+  /** Establece el sessionId de la partida */
+  setSessionId: (sessionId: string | null) => void
+
+  /** Establece el percentil de la partida */
+  setPercentile: (percentile: number | null) => void
 
   /**
    * Valida la respuesta del jugador para el nodo seleccionado.
@@ -72,10 +92,13 @@ export interface GameStore {
 
   /**
    * Solicita una ayuda para el nodo seleccionado.
-   * 'matrix' → letra inicial (se conectará al backend en Fase 2)
+   * 'matrix' → letra inicial
    * 'reveal' → revela el término con penalización; requiere resolvedText del backend
    */
   requestHint: (type: 'matrix' | 'reveal', resolvedText?: string) => void
+
+  /** Notifica la compleción de la partida a apps/api y obtiene el percentil */
+  completeCurrentSession: () => Promise<void>
 
   /** Reinicia el juego a estado vacío */
   resetGame: () => void
@@ -87,6 +110,31 @@ export interface GameStore {
   clearAnimationFlags: () => void
 }
 
+// ── Helper para reportar compleción de sesión ──────────────────────────────
+
+async function syncSessionComplete(
+  sessionId: string,
+  state: PuzzleState,
+  set: (partial: Partial<GameStore>) => void,
+): Promise<void> {
+  if (state.completedAt == null) return
+  try {
+    const res = await apiClient.completeSession({
+      sessionId,
+      durationMs: state.completedAt - state.startedAt,
+      mistakesCount: state.mistakesCount,
+      hintsUsed: state.hintsUsed,
+      score: state.score,
+      rankAchieved: getRank(state.score),
+    })
+    if (res && typeof res.percentile === 'number') {
+      set({ percentile: res.percentile })
+    }
+  } catch (err) {
+    console.warn('No se pudo reportar la compleción de sesión al backend:', err)
+  }
+}
+
 // ── Store ──────────────────────────────────────────────────────────────────
 
 export const usePuzzleStore = create<GameStore>()(
@@ -94,13 +142,15 @@ export const usePuzzleStore = create<GameStore>()(
     // ── Estado inicial ───────────────────────────────────────────────────
     puzzleState: null,
     cryptoCtx: null,
+    sessionId: null,
+    percentile: null,
     selectedNodeId: null,
     justResolvedId: null,
     justUnlockedId: null,
     lastAnswerWrong: false,
 
     // ── loadPuzzle ───────────────────────────────────────────────────────
-    loadPuzzle: (payload, hashFn, decryptFn) => {
+    loadPuzzle: (payload, hashFn, decryptFn, sessionId, percentile) => {
       const initialState = initPuzzleState(payload)
       const withActive = recalculateActiveNodes(initialState)
       const activeNodes = getActiveNodes(withActive)
@@ -109,12 +159,17 @@ export const usePuzzleStore = create<GameStore>()(
       set({
         puzzleState: withActive,
         cryptoCtx: { dailySalt: payload.dailySalt, hashFn, decryptFn },
+        sessionId: sessionId ?? null,
+        percentile: percentile ?? null,
         selectedNodeId: firstActive,
         justResolvedId: null,
         justUnlockedId: null,
         lastAnswerWrong: false,
       })
     },
+
+    setSessionId: (sessionId) => set({ sessionId }),
+    setPercentile: (percentile) => set({ percentile }),
 
     // ── submitAnswer ─────────────────────────────────────────────────────
     submitAnswer: async (input) => {
@@ -154,6 +209,14 @@ export const usePuzzleStore = create<GameStore>()(
           selectedNodeId: nextSelected,
           lastAnswerWrong: false,
         })
+
+        // Notificar compleción al backend si se resolvió el último nodo
+        if (nextState.completedAt !== null) {
+          const currentSessionId = get().sessionId
+          if (currentSessionId) {
+            void syncSessionComplete(currentSessionId, nextState, set)
+          }
+        }
 
         setTimeout(() => set({ justResolvedId: null, justUnlockedId: null }), 2000)
       } else {
@@ -197,10 +260,26 @@ export const usePuzzleStore = create<GameStore>()(
           selectedNodeId: nextSelected,
         })
 
+        // Si al revelar se completó el puzzle, sincronizar compleción
+        if (nextState.completedAt !== null) {
+          const currentSessionId = get().sessionId
+          if (currentSessionId) {
+            void syncSessionComplete(currentSessionId, nextState, set)
+          }
+        }
+
         setTimeout(() => set({ justResolvedId: null, justUnlockedId: null }), 2000)
       } else {
         // 'matrix': solo actualiza el contador de ayudas
         set({ puzzleState: nextState })
+      }
+    },
+
+    // ── completeCurrentSession ───────────────────────────────────────────
+    completeCurrentSession: async () => {
+      const { sessionId, puzzleState } = get()
+      if (sessionId && puzzleState && puzzleState.completedAt !== null) {
+        await syncSessionComplete(sessionId, puzzleState, set)
       }
     },
 
@@ -209,6 +288,8 @@ export const usePuzzleStore = create<GameStore>()(
       set({
         puzzleState: null,
         cryptoCtx: null,
+        sessionId: null,
+        percentile: null,
         selectedNodeId: null,
         justResolvedId: null,
         justUnlockedId: null,

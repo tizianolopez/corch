@@ -140,6 +140,25 @@
   line-height: 1;
 }
 
+/* ── Fila de percentil real ──────────────────────────────────────────────── */
+.percentileRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.percentileText {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+  margin: var(--space-1) 0 0;
+}
+
+.percentileText strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
 /* ── Placeholder de percentil ────────────────────────────────────────────── */
 .percentilePlaceholder {
   font-family: var(--font-sans);
