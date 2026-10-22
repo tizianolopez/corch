@@ -1,0 +1,43 @@
+@import '@corchetes/ui/tokens.css';
+
+/* ─── Reset y configuración base del CMS ──────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--color-bg, #fbf7ee);
+  color: var(--color-text, #1a1612);
+  font-family: var(--font-sans, 'Inter', -apple-system, sans-serif);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* ─── Clases utilitarias tipográficas con tokens de diseño ────────────────── */
+
+.font-serif {
+  font-family: var(--font-serif, 'Newsreader', Georgia, serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans, 'Inter', -apple-system, sans-serif);
+}
+
+.font-mono {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}

@@ -200,9 +200,9 @@
 > Panel de revisión y aprobación de los borradores generados por el agente IA. La creación manual es posible como flujo alternativo.
 
 ### 4.1 Setup de apps/cms
-- [ ] Inicializar Next.js 15 con App Router en `apps/cms`
-- [ ] Configurar Supabase Auth con rol `admin`
-- [ ] Implementar middleware de autenticación que protege todas las rutas de `/admin`
+- [x] Inicializar Next.js 15 con App Router en `apps/cms`
+- [x] Configurar Supabase Auth con rol `admin`
+- [x] Implementar middleware de autenticación que protege todas las rutas de `/admin`
 
 ### 4.2 Cola de borradores (panel principal)
 - [ ] Lista de puzles en estado `DRAFT` generados por IA, ordenados por `publish_date`

@@ -1,0 +1,134 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: var(--color-bg, #fbf7ee);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e5dec9);
+  padding: 36px 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.masthead {
+  font-family: var(--font-newsreader, 'Newsreader', Georgia, serif);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text, #1a1612);
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 13px;
+  color: var(--color-text-muted, #766e65);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text, #1a1612);
+}
+
+.input {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #e5dec9);
+  background: var(--color-surface, #ffffff);
+  color: var(--color-text, #1a1612);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.input:focus {
+  border-color: var(--color-active, #c35a38);
+}
+
+.btnPrimary {
+  margin-top: 8px;
+  padding: 12px;
+  background-color: var(--color-text, #1a1612);
+  color: var(--color-bg, #fbf7ee);
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
+
+.btnDev {
+  margin-top: 4px;
+  padding: 10px;
+  background: transparent;
+  color: var(--color-active, #c35a38);
+  border: 1px dashed var(--color-active, #c35a38);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btnDev:hover {
+  background-color: rgba(195, 90, 56, 0.06);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 8px 0;
+  color: var(--color-text-muted, #766e65);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--color-border, #e5dec9);
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+.errorMessage {
+  padding: 10px 12px;
+  background-color: #fdf2f2;
+  border-left: 3px solid #d9383a;
+  color: #981b1c;
+  font-size: 13px;
+}
