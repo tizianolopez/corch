@@ -1,5 +1,5 @@
 # Corchetes — Arquitectura Técnica del Monorepo
-*Versión 1.0 · 20 de octubre de 2026*
+*Versión 1.1 · 22 de octubre de 2026 — Actualización: Pipeline de generación automática con IA*
 
 > Este documento describe **cómo está organizado** el proyecto: estructura de directorios, responsabilidad de cada paquete, dependencias entre capas y decisiones de diseño técnico. Para el diseño integral (visual, UX, motor, base de datos, seguridad), ver `arquitectura_corchetes.md`.
 
@@ -19,11 +19,11 @@ corchetes/
 │
 ├── apps/
 │   ├── web/                        ← Aplicación pública (juego)
-│   ├── api/                        ← Servidor de API
-│   └── cms/                        ← Back-office editorial (privado)
+│   ├── api/                        ← Servidor de API + Pipeline de generación IA
+│   └── cms/                        ← Panel de supervisión editorial (privado)
 │
 ├── packages/
-│   ├── core/                       ← Motor de juego (lógica pura)
+│   ├── core/                       ← Motor de juego (lógica pura + validador de puzles)
 │   ├── ui/                         ← Componentes de interfaz compartidos
 │   ├── db/                         ← Esquemas de base de datos y migraciones
 │   └── crypto/                     ← Utilidades criptográficas (hash + cifrado)
@@ -69,17 +69,66 @@ Es el servidor backend que no ve el jugador. Responsabilidades:
 
 Tecnologías: **Fastify 5**, **Node.js 22 LTS**, **TypeScript 5**, **Upstash Redis**, **Drizzle ORM**.
 
-### `apps/cms` — Back-office editorial (Next.js 15, ruta privada)
+### `apps/cms` — Panel de supervisión editorial (Next.js 15, ruta privada)
 
-Es el panel de administración que usa el equipo editorial. Responsabilidades:
+Es el panel de administración y supervisión de los puzles generados por IA. La creación manual es posible pero no es el flujo principal. Responsabilidades:
 
-- Permitir al editor escribir la frase con corchetes y ver la vista previa interactiva en tiempo real.
-- Ejecutar el analizador de complejidad automático (profundidad, nodos hoja, alertas).
-- Detectar colisiones entre pistas activas con la misma solución.
+- **Revisar y aprobar borradores** generados automáticamente por el agente IA (ver pipeline más abajo).
+- Probar el puzle de forma interactiva en tiempo real usando `<ClueTree />` antes de aprobarlo.
+- Pulsar «Regenerar» para pedir al agente IA otra efeméride o una reescritura del puzle con el mismo evento.
+- Editar puntualmente el texto de una pista sin regenerar todo el puzle.
 - Gestionar la cola de publicación (calendario de ediciones programadas).
 - Mostrar las analíticas de cada edición (distribución de tiempos, errores por nodo).
+- Permitir al editor crear puzles manualmente si lo desea (flujo alternativo).
 
 Tecnologías: **Next.js 15 (App Router)**, **TypeScript 5**, **CSS Modules**, **Supabase Auth** (rol `admin`).
+
+---
+
+### Pipeline de Generación Automática de Puzles (IA)
+
+Este es el flujo principal de producción de contenido. Se ejecuta en `apps/api` (triggered por cron o desde el CMS) y sigue 4 etapas deterministas:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. EXTRACTOR     Wikipedia Wikimedia API (On This Day)          │
+│     GET /feed/v1/wikipedia/es/onthisday/selected/{MM}/{DD}       │
+│     → Lista de hechos históricos del día en español             │
+│     → Filtro por score editorial (relevancia cultural)           │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │  frase_semilla: «Un día como hoy,
+                           │  pero en {year}, {text}»
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  2. AGENTE GENERADOR     Google Gemini (Structured Outputs)      │
+│     System Prompt → Reglas de Corchetes + reglesIA.md            │
+│     responseSchema → JSON con markup de corchetes anidados       │
+│     → Genera la frase con [pistas|soluciones] anidadas           │
+│     → Genera nota editorial de 2-3 líneas de contexto cultural   │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │  markup: «Un día como hoy, en 1962,
+                           │  el [gobernante de [país de JFK|EE.UU]|Kennedy]
+                           │  anunció el [medida naval|bloqueo] a [isla caribeña|Cuba]»
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  3. VALIDADOR DETERMINISTA  @corchetes/core                      │
+│     parsePuzzleMarkup()  → ¿Markup sintácticamente correcto?     │
+│     getActiveNodes()     → ¿≥ 2 nodos iniciales activos?         │
+│     → ¿Profundidad entre 2 y 5 niveles?                         │
+│     → ¿Sin soluciones duplicadas?                               │
+│     Si falla → reenvía el error al Agente (máx. 3 reintentos)    │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │  AST validado
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  4. COMPILADOR + GUARDADO   @corchetes/crypto + PostgreSQL       │
+│     compilePuzzlePayload() → SHA-256 + AES-GCM por nodo          │
+│     → Guarda en BD con status: 'DRAFT'                          │
+│     → CMS muestra el borrador para supervisión y aprobación      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Regla de seguridad del pipeline:** El validador determinista (`@corchetes/core`) es la última línea de defensa. La IA puede generar markup incorrecto; el validador siempre detecta y rechaza puzles con errores estructurales antes de que lleguen a producción.
 
 ### `packages/core` — Motor de juego
 
@@ -141,6 +190,8 @@ apps/api  ───────────────────────�
 apps/api  ───────────────────────────────────────────► packages/db
 apps/api  ─── Supabase Client ───────────────────────► PostgreSQL (Supabase)
 apps/api  ─── Upstash Client ────────────────────────► Redis (Upstash)
+apps/api  ─── HTTPS ─────────────────────────────────► Wikimedia API (On This Day)
+apps/api  ─── Google AI SDK ─────────────────────────► Google Gemini API
 ```
 
 **Regla:** Los paquetes en `packages/` **nunca** importan de `apps/`. El flujo de dependencias es siempre unidireccional: de apps hacia packages.
@@ -152,12 +203,14 @@ apps/api  ─── Upstash Client ───────────────
 | Componente | Plataforma | Notas |
 |---|---|---|
 | `apps/web` | **Vercel** | Edge Network nativo con Next.js |
-| `apps/api` | **Railway** | Servidor Node.js dedicado |
-| `apps/cms` | **Vercel** (ruta `/admin` protegida) | O subdominio `cms.corchetes.es` |
+| `apps/api` | **Railway** | Servidor Node.js dedicado (+ pipeline IA) |
+| `apps/cms` | **Vercel** (subdominio `cms.corchetes.es`) | Acceso exclusivo con rol `admin` |
 | Base de datos | **Supabase** (PostgreSQL 16) | RLS habilitado |
 | Caché / Stats | **Upstash Redis** | Serverless, sin instancia dedicada |
 | CDN / WAF | **Cloudflare** | Caché del payload diario + Rate limiting |
 | Imágenes OG | **`@vercel/og`** (Satori) | Genera fichas en el edge |
+| **Efemérides** | **Wikimedia REST API** | Gratuita, sin API key, `onthisday/selected` |
+| **Agente IA** | **Google Gemini API** | `gemini-2.0-flash` con `responseSchema` JSON |
 
 ---
 
@@ -173,6 +226,7 @@ UPSTASH_REDIS_TOKEN=   # Upstash REST Token
 CLOUDFLARE_ZONE_ID=    # Para invalidación de caché
 CLOUDFLARE_API_TOKEN=  # Para invalidación de caché
 ADMIN_JWT_SECRET=      # Firma de tokens de admin del CMS
+GEMINI_API_KEY=        # Google AI Studio API key (pipeline de generación)
 ```
 
 ### `apps/web`
@@ -208,3 +262,6 @@ NEXT_PUBLIC_SUPABASE_ANON= # Anon key pública de Supabase
 - **Drizzle en lugar de Prisma:** más ligero en bundle; tipado estricto sin generación de código separada; ideal para Edge/Node.
 - **Validación en cliente (sin servidor):** el payload llega cifrado con SHA-256 + AES-GCM; el cliente valida instantáneamente sin latencia de red. Ver `arquitectura_corchetes.md` §9.
 - **Monorepo con Turborepo:** el motor de juego (`packages/core`) es compartido entre el cliente (web), el servidor (api) y el CMS, garantizando que la lógica de validación es idéntica en todos los contextos.
+- **IA generativa + validador determinista:** el agente Gemini produce el contenido creativo, pero `@corchetes/core` actúa como árbitro final; ningún puzle structuralmente inválido puede llegar a producción independientemente de lo que genere el modelo.
+- **Wikimedia API como fuente de contenido:** gratuita, abierta, multilingüe, con cobertura exhaustiva de historia, ciencia, literatura y cultura. El formato «Un día como hoy» encaja a la perfección con la identidad hemerográfica del juego.
+- **Supervisión humana obligatoria (modo híbrido):** el CMS requiere aprobación explícita antes de publicar cualquier borrador generado por IA. La automatización total es posible pero no es el flujo por defecto; el editor siempre tiene la última palabra.

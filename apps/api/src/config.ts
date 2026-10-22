@@ -47,6 +47,12 @@ export const envSchema = z.object({
 
   /** Secreto para firmar tokens de administración (CMS) */
   ADMIN_JWT_SECRET: z.string().default('corchetes-admin-secret-dev-only'),
+
+  /** Clave API de Google AI Studio / Gemini */
+  GEMINI_API_KEY: z.string().optional(),
+
+  /** Modelo de Gemini a usar para la generación de puzles */
+  GEMINI_MODEL: z.string().default('gemini-2.0-flash'),
 })
 
 export type AppConfig = z.infer<typeof envSchema>

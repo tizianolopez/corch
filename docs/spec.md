@@ -1,5 +1,5 @@
 # Corchetes — Especificación Funcional
-*Versión 1.0 · 20 de octubre de 2026*
+*Versión 1.1 · 22 de octubre de 2026 — Actualización: Generación automática de puzles con IA*
 
 > Este documento describe **qué** debe hacer el sistema. No menciona tecnologías concretas, nombres de archivos ni implementaciones. Solo describe el comportamiento esperado desde el punto de vista del jugador y del editor.
 
@@ -150,14 +150,44 @@ Para reducir la fricción al máximo, **no es necesario registrarse para jugar**
 
 ---
 
-## CMS Editorial (back-office)
+## Contenido: «Un día como hoy»
 
-El creador de puzles dispone de un panel privado con las siguientes funcionalidades:
+El contenido de Corchetes no se inventa ni se escribe manualmente. Se deriva de la historia real, recuperando cada día un hecho histórico que ocurrió en esa misma fecha pero en otro año.
 
-1. **Editor en vivo:** El editor escribe la cita con corchetes anidados y ve en tiempo real la vista previa exacta de cómo se jugará.
-2. **Analizador de complejidad automático:** El sistema calcula la profundidad máxima, el número de nodos hoja iniciales y emite alertas si el puzle puede bloquear al jugador desde el primer segundo.
-3. **Detector de colisiones:** Alerta si dos pistas activas simultáneamente tienen la misma solución.
-4. **Cola de publicación:** Permite programar ediciones con semanas de antelación. El sistema las publica automáticamente a medianoche.
+### Fuente de contenido
+
+El sistema consulta la **Wikimedia API** (`onthisday/selected`) para obtener los eventos históricos destacados de cada día. Esta API es gratuita, sin registro, y devuelve eventos en español (y otros idiomas) en formato JSON.
+
+```
+URL: https://api.wikimedia.org/feed/v1/wikipedia/es/onthisday/selected/{MM}/{DD}
+```
+
+Ejemplo de evento para el 22 de octubre: «En 1962, el presidente Kennedy anuncia el bloqueo naval a Cuba durante la Crisis de los Misiles.»
+
+### Transformación en puzle
+
+Un agente de IA (Google Gemini) recibe el evento histórico y lo transforma en una frase con corchetes anidados, siguiendo las reglas del juego. El resultado es un puzle con la forma:
+
+```
+Un día como hoy, en [año de la crisis de los misiles|1962], el [líder de [país de Kennedy|EE.UU]|Kennedy]
+anunció el [medida naval|bloqueo] a [isla caribeña|Cuba].
+```
+
+El sistema valida el puzle automáticamente antes de guardarlo. Solo los puzles estructuralmente correctos llegan al panel de supervisión.
+
+---
+
+## CMS de Supervisión Editorial (back-office)
+
+El panel de administración no es una herramienta de escritura, sino de **revisión y aprobación** de los puzles generados automáticamente por la IA. Funcionalidades:
+
+1. **Cola de borradores:** Lista de puzles generados por IA pendientes de revisión. El editor puede jugarlos en tiempo real antes de decidir.
+2. **Aprobar en 1 clic:** Cambia el estado del borrador a `PROGRAMADO` y lo añade a la cola de publicación.
+3. **Regenerar:** Si el puzle no convence, el editor puede pedir al agente IA que genere uno nuevo con el mismo evento histórico, o con uno diferente del mismo día.
+4. **Editar puntualmente:** El editor puede ajustar el texto de una pista sin regenerar todo el puzle.
+5. **Analizador de complejidad automático:** El sistema calcula la profundidad máxima, el número de nodos hoja iniciales y emite alertas si el puzle puede bloquear al jugador.
+6. **Cola de publicación:** Permite programar ediciones con semanas de antelación. El sistema las publica automáticamente a medianoche.
+7. **Editor manual (flujo alternativo):** Para fechas especiales o contenido de redacción propia, el editor puede escribir el puzle manualmente con el markup de corchetes.
 
 ---
 

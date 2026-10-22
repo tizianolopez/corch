@@ -154,36 +154,83 @@
 
 ---
 
-## Fase 3 — CMS Editorial (apps/cms)
+## Fase 3 — Agente Generador de Puzles (IA)
 
-### 3.1 Setup de apps/cms
+> Este es el flujo principal de producción de contenido. El CMS (Fase 4) es el panel de supervisión que aprueba los borradores generados aquí.
+
+### 3.1 Extractor de efemérides (Wikimedia API)
+- [x] Crear servicio `apps/api/src/services/ephemeris.ts`
+- [x] `GET /feed/v1/wikipedia/es/onthisday/selected/{MM}/{DD}` → lista de eventos históricos
+- [x] Filtro de relevancia editorial: descartar eventos muy cortos o con títulos ambiguos
+- [x] Cachar la respuesta en Redis (TTL 24 h) para no repetir llamadas innecesarias
+- [x] Tests unitarios con respuesta mockeada de la API
+
+### 3.2 Agente Gemini (Structured Outputs)
+- [x] Instalar `@google/generative-ai` en `apps/api`
+- [x] Crear `apps/api/src/services/puzzleGenerator.ts`
+- [x] Diseñar el `system prompt` con las reglas del juego (desde `docs/prompt_enigma.md`)
+- [x] Definir el `responseSchema` JSON (markup de corchetes + metadatos editoriales)
+- [x] Llamar a `gemini-2.0-flash` con `responseMimeType: "application/json"` y schema
+- [x] Mecanismo de reintentos: si el markup falla la validación, reenvía el error al modelo (máx. 3 intentos)
+- [x] Tests con prompt real usando respuesta mockeada de Gemini
+
+### 3.3 Validador determinista
+- [x] Crear `apps/api/src/services/puzzleValidator.ts`
+- [x] Invocar `parsePuzzleMarkup()` de `@corchetes/core` sobre el markup generado
+- [x] Verificar: ≥ 2 nodos iniciales activos, profundidad entre 2 y 5, sin soluciones duplicadas
+- [x] Si falla: construir mensaje de error descriptivo para retroalimentar al agente
+- [x] Si supera 3 reintentos fallidos: marcar evento como `REJECTED` y continuar con el siguiente
+
+### 3.4 Compilador y guardado en BD
+- [ ] Invocar `compilePuzzlePayload()` de `@corchetes/crypto` sobre el AST validado
+- [ ] Endpoint `POST /api/generate` (requiere token `admin`) que ejecuta el pipeline completo
+- [ ] Guardar el puzle en BD con `status: 'DRAFT'` y fuente `source: 'AI'`
+- [ ] Endpoint `POST /api/generate/batch` para generar puzles para los próximos N días
+- [ ] Tests de integración del pipeline completo (extractor → generador → validador → BD)
+
+### 3.5 Fichero de reglas del agente IA
+- [x] Crear `docs/prompt_enigma.md` con el prompt del sistema completo
+- [x] Incluir: ejemplos de markup correcto, tipología de pistas, restricciones de profundidad
+- [x] Incluir: instruccción de formato específica («Un día como hoy, en {year}...»)
+
+---
+
+## Fase 4 — CMS de Supervisión Editorial (apps/cms)
+
+> Panel de revisión y aprobación de los borradores generados por el agente IA. La creación manual es posible como flujo alternativo.
+
+### 4.1 Setup de apps/cms
 - [ ] Inicializar Next.js 15 con App Router en `apps/cms`
 - [ ] Configurar Supabase Auth con rol `admin`
 - [ ] Implementar middleware de autenticación que protege todas las rutas de `/admin`
 
-### 3.2 Editor de puzles
-- [ ] Textarea de markup con sintaxis de corchetes
-- [ ] Vista previa interactiva en tiempo real (a la derecha del textarea) usando `<ClueTree />`
-- [ ] Analizador de complejidad en tiempo real: profundidad máxima, nodos hoja iniciales
-- [ ] Alertas: «Solo 1 nodo activo inicial» / «2 nodos con solución idéntica»
+### 4.2 Cola de borradores (panel principal)
+- [ ] Lista de puzles en estado `DRAFT` generados por IA, ordenados por `publish_date`
+- [ ] Vista previa interactiva de cada borrador usando `<ClueTree />` (jugable antes de aprobar)
+- [ ] Botón «Aprobar» → cambia estado a `SCHEDULED`
+- [ ] Botón «Regenerarr» → llama a `POST /api/generate` con el mismo evento y genera un nuevo borrador
+- [ ] Botón «Editar pista» → edición iníline de una pista sin regenerar todo el puzle
 
-### 3.3 Compilación y guardado
-- [ ] Al guardar, el CMS llama a la API para compilar el markup → AST → `client_payload` cifrado
-- [ ] Guardar en base de datos con `status: 'DRAFT'`
-- [ ] Formulario de metadatos: autor, obra, año, nota editorial
-
-### 3.4 Cola de publicación
+### 4.3 Cola de publicación
 - [ ] Vista de calendario de semana con las ediciones programadas
 - [ ] Asignación de `publish_date` y cambio de estado a `SCHEDULED`
 - [ ] Cron job en `apps/api` (00:00 h): publicar puzles `SCHEDULED` + invalidar caché Cloudflare
 
-### 3.5 Analytics del CMS
+### 4.4 Editor manual (flujo alternativo)
+- [ ] Textarea de markup con sintaxis de corchetes + vista previa interactiva en tiempo real
+- [ ] Analizador de complejidad en tiempo real: profundidad máxima, nodos hoja iniciales
+- [ ] Alertas: «Solo 1 nodo activo inicial» / «2 nodos con solución idéntica»
+- [ ] Formulario de metadatos: autor, obra, año, nota editorial
+- [ ] Guardar → compila el markup → guarda con `status: 'DRAFT'` y `source: 'MANUAL'`
+
+### 4.5 Analytics del CMS
 - [ ] Vista de analíticas por edición: distribución de tiempos, errores por nodo, tasa de abandono
-- [ ] Biblioteca: listado de todas las ediciones con búsqueda y filtro por estado
+- [ ] Biblioteca: listado de todas las ediciones con búsqueda y filtro por estado y fuente (`AI` / `MANUAL`)
+- [ ] Panel de rendimiento del agente: tasa de éxito en la generación, reintentos promedio, rechazos
 
 ---
 
-## Fase 4 — Usuarios y autenticación
+## Fase 5 — Usuarios y autenticación
 
 ### 4.1 Sesión anónima
 - [ ] Generar y persistir `anonymousId` (UUID) en `localStorage` y cookie `HttpOnly`
@@ -206,7 +253,7 @@
 
 ---
 
-## Fase 5 — Compartición y comunidad
+## Fase 6 — Compartición y comunidad
 
 ### 5.1 Ficha hemerográfica (imagen OG)
 - [ ] Implementar `/api/og/[editionNumber]` con `@vercel/og` (Satori)
@@ -222,7 +269,7 @@
 
 ---
 
-## Fase 6 — Pulido y lanzamiento
+## Fase 7 — Pulido y lanzamiento
 
 ### 6.1 PWA
 - [ ] Configurar Service Worker con Next.js (next-pwa o Workbox)
