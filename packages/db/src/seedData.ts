@@ -2,16 +2,18 @@
  * @module seedData
  *
  * Definición canónica de los 7 puzles de la semana de lanzamiento de Corchetes.
- * Obras literarias cumbre en lengua española adaptadas al formato claudàtor.
+ * Basados rigurosamente en el formato histórico oficial: «Un día como hoy, pero en {año}...»
+ * extraídos del archivo hemerográfico de Wikimedia / Wikipedia.
  *
  * Cumplen estrictamente:
+ *  - Formato de efemérides: "Un día como hoy, pero en [año]..."
  *  - Sin definiciones escolares de diccionario
  *  - Profundidad de anidamiento entre 2 y 4 niveles
  *  - Al menos 2 nodos hoja activos al comenzar
  *  - Soluciones únicas normalizadas (preservando 'ñ')
  *  - Criptografía segura (SHA-256 + AES-GCM) sin soluciones en claro en clientPayload
  *
- * Fuente de verdad: docs/tasks.md §7.4
+ * Fuente de verdad: docs/tasks.md §7.4 y docs/prompt_enigma.md
  */
 
 import { parsePuzzleMarkup, normalize, type ClueType } from '@corchetes/core'
@@ -34,127 +36,123 @@ export const LAUNCH_PUZZLES: LaunchPuzzleDefinition[] = [
   {
     editionNumber: 1,
     publishDate: '2026-10-23',
-    quoteAuthor: 'Miguel de Cervantes',
-    quoteWork: 'Don Quijote de la Mancha',
-    quoteYear: 1605,
+    quoteAuthor: 'Efeméride deportiva y cultural',
+    quoteWork: 'Nacimiento de Edson Arantes do Nascimento (Pelé)',
+    quoteYear: 1940,
     editorialNote:
-      'Edición inaugural: el hidalgo manchego y su geografía literaria en la obra cumbre de la novela moderna.',
+      'Un día como hoy en 1940 nace Pelé en Três Corações, coronado como "O Rei" y tricampeón mundial.',
     difficultyScore: 3.5,
     rawMarkup:
-      'En un lugar de la [región histórica donde cabalgaba el [hidalgo que desafió a los [gigantes con aspas de viento]]], de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un caballero con su [escudo de cuero de forma ovalada] y lanza en astillero.',
+      'Un día como hoy, pero en 1940, nace en [la patria de la samba y el carnaval] el [delantero de Santos que alzó tres [campeonatos universales de selecciones de fútbol]], recordado por anotar más de mil [tantos introducidos en la portería].',
     solutions: {
-      n1: { solution: 'Mancha', type: 'definition' },
-      n2: { solution: 'Quijote', type: 'reference' },
-      n3: { solution: 'molinos', type: 'definition' },
-      n4: { solution: 'adarga', type: 'definition' },
+      n1: { solution: 'Brasil', type: 'reference' },
+      n2: { solution: 'Pelé', type: 'reference' },
+      n3: { solution: 'mundiales', type: 'definition' },
+      n4: { solution: 'goles', type: 'definition' },
     },
   },
   {
     editionNumber: 2,
     publishDate: '2026-10-24',
-    quoteAuthor: 'Federico García Lorca',
-    quoteWork: 'Romance Sonámbulo',
-    quoteYear: 1928,
+    quoteAuthor: 'Efeméride de la moda y el arte',
+    quoteWork: 'Fallecimiento de Christian Dior',
+    quoteYear: 1957,
     editorialNote:
-      'El lirismo gitano y surrealista de Lorca condensado en sus versos más universales de verde y mar.',
-    difficultyScore: 3.8,
+      'Un día como hoy en 1957 fallece Christian Dior, el modisto que inauguró la era dorada de la alta costura con el New Look.',
+    difficultyScore: 3.7,
     rawMarkup:
-      '[Tono de la esperanza que baña el [soplo de aire invisible]] que te quiero verde. El [navío de madera que navega la [inmensidad salina]] y el corcel en la montaña.',
+      'Un día como hoy, pero en 1957, fallece en Italia [el modisto francés que revolucionó la [confección artesanal y exclusiva de prendas]], creando una influyente firma de [el arte del diseño de pasarela] que transformó la silueta femenina.',
     solutions: {
-      n1: { solution: 'Verde', type: 'definition' },
-      n2: { solution: 'viento', type: 'definition' },
-      n3: { solution: 'barco', type: 'definition' },
-      n4: { solution: 'mar', type: 'definition' },
+      n1: { solution: 'Dior', type: 'reference' },
+      n2: { solution: 'costura', type: 'definition' },
+      n3: { solution: 'moda', type: 'definition' },
     },
   },
   {
     editionNumber: 3,
     publishDate: '2026-10-25',
-    quoteAuthor: 'Jorge Luis Borges',
-    quoteWork: 'El Aleph',
-    quoteYear: 1949,
+    quoteAuthor: 'Efeméride histórica internacional',
+    quoteWork: 'Pacto de amistad y origen del Eje Roma-Berlín',
+    quoteYear: 1936,
     editorialNote:
-      'El punto del espacio que contiene todos los puntos del universo según el gran maestro de la literatura fantástica.',
-    difficultyScore: 4.2,
+      'Un día como hoy en 1936, Alemania e Italia formalizan su acuerdo diplomático precursor del Pacto del Eje de la Segunda Guerra Mundial.',
+    difficultyScore: 4.0,
     rawMarkup:
-      'Vi el populoso mar, vi el [primer resplandor del día antes de que [despunte el astro rey]] y la tarde, vi en el [monumento funerario de Egipto de [color del carbón]] una plateada telaraña.',
+      'Un día como hoy, pero en 1936, [la potencia germana de Europa central] e Italia sellan el [acuerdo diplomático y militar de [naciones unidas por tratados]] que dio origen al fatídico bloque del [eje de rotación sobre el que gira el planeta].',
     solutions: {
-      n1: { solution: 'alba', type: 'definition' },
-      n2: { solution: 'amanezca', type: 'charade' },
-      n3: { solution: 'pirámide', type: 'reference' },
-      n4: { solution: 'negro', type: 'definition' },
+      n1: { solution: 'Alemania', type: 'reference' },
+      n2: { solution: 'pacto', type: 'definition' },
+      n3: { solution: 'estados', type: 'definition' },
+      n4: { solution: 'Eje', type: 'definition' },
     },
   },
   {
     editionNumber: 4,
     publishDate: '2026-10-26',
-    quoteAuthor: 'Antonio Machado',
-    quoteWork: 'Campos de Castilla (Proverbios y cantares)',
-    quoteYear: 1912,
+    quoteAuthor: 'Efeméride de la diplomacia y la paz',
+    quoteWork: 'Tratado de Paz entre Israel y Jordania',
+    quoteYear: 1994,
     editorialNote:
-      'La meditación filosófica sobre el tiempo, el destino y la creación del propio camino a través del paso.',
-    difficultyScore: 3.6,
+      'Un día como hoy en 1994, Isaac Rabin y el rey Hussein sellaron el histórico acuerdo de paz en el valle de Aravá.',
+    difficultyScore: 3.8,
     rawMarkup:
-      '[Aquel que recorre a pie la [senda que conduce al [santuario gallego de Compostela]]], son tus huellas el camino y nada más; caminante, no hay camino, se hace camino al [desplazar los pasos con el movimiento].',
+      'Un día como hoy, pero en 1994, [el mandatario israelí condecorado con el Nobel tras liderar el [acuerdo diplomático que cesó las hostilidades]] y el monarca jordano firman la histórica concordia en la frontera de [dos pueblos vecinos de Oriente].',
     solutions: {
-      n1: { solution: 'Caminante', type: 'definition' },
-      n2: { solution: 'ruta', type: 'definition' },
-      n3: { solution: 'peregrino', type: 'reference' },
-      n4: { solution: 'andar', type: 'definition' },
+      n1: { solution: 'Rabin', type: 'reference' },
+      n2: { solution: 'pacto', type: 'definition' },
+      n3: { solution: 'naciones', type: 'definition' },
     },
   },
   {
     editionNumber: 5,
     publishDate: '2026-10-27',
-    quoteAuthor: 'Julio Cortázar',
-    quoteWork: 'Rayuela',
-    quoteYear: 1963,
+    quoteAuthor: 'Efeméride de la Guerra de la Independencia',
+    quoteWork: 'Tratado de Fontainebleau (Napoleón y Godoy)',
+    quoteYear: 1807,
     editorialNote:
-      'La búsqueda laberíntica de Oliveira y la Maga por los puentes y adoquines del París contracultural.',
-    difficultyScore: 4.0,
+      'Un día como hoy en 1807, la España borbónica y la Francia napoleónica firman el tratado secreto que permitió la entrada de tropas francesas.',
+    difficultyScore: 4.1,
     rawMarkup:
-      'Andábamos sin buscarnos pero sabiendo que [recorríamos las calles de la [capital francesa bañada por el [río que divide París]]] para encontrarnos. ¡Oh amor, [juego infantil de casillas dibujadas con tiza] sobre la acera!',
+      'Un día como hoy, pero en 1807, [el emperador francés coronado en Notre Dame que lideraba la [gran armada de soldados imperiales]] y Manuel Godoy firman el acuerdo para invadir el [país luso con capital en Lisboa].',
     solutions: {
-      n1: { solution: 'paseábamos', type: 'charade' },
-      n2: { solution: 'ciudad', type: 'definition' },
-      n3: { solution: 'Sena', type: 'reference' },
-      n4: { solution: 'rayuela', type: 'definition' },
+      n1: { solution: 'Napoleón', type: 'reference' },
+      n2: { solution: 'tropa', type: 'definition' },
+      n3: { solution: 'Portugal', type: 'reference' },
     },
   },
   {
     editionNumber: 6,
     publishDate: '2026-10-28',
-    quoteAuthor: 'Francisco de Quevedo',
-    quoteWork: 'Poderoso caballero es don Dinero',
-    quoteYear: 1603,
+    quoteAuthor: 'Efeméride de la poesía española',
+    quoteWork: 'Fallecimiento de Rafael Alberti',
+    quoteYear: 1999,
     editorialNote:
-      'La sátira conceptista del Siglo de Oro español sobre el poder corruptor de las riquezas y el oro colonial.',
-    difficultyScore: 4.4,
+      'Un día como hoy en 1999 fallece en El Puerto de Santa María Rafael Alberti, último gran representante de la Generación del 27.',
+    difficultyScore: 3.6,
     rawMarkup:
-      'Madre, yo al [metal precioso y brillante codiciado por el [monarca con corona de [reino castellano]]] me humillo; que pues doblón o sencillo hace todo cuanto quiero, poderoso caballero es don [moneda de cambio universal].',
+      'Un día como hoy, pero en 1999, fallece en [la bahía andaluza que mira al océano] el [poeta marinero en tierra que perteneció a la [mítica promoción de poetas del veintisiete]], autor de inolvidables [estrofas rimadas con talento lírico].',
     solutions: {
-      n1: { solution: 'oro', type: 'definition' },
-      n2: { solution: 'rey', type: 'reference' },
-      n3: { solution: 'Castilla', type: 'reference' },
-      n4: { solution: 'Dinero', type: 'definition' },
+      n1: { solution: 'Cádiz', type: 'reference' },
+      n2: { solution: 'Alberti', type: 'reference' },
+      n3: { solution: 'generación', type: 'definition' },
+      n4: { solution: 'versos', type: 'definition' },
     },
   },
   {
     editionNumber: 7,
     publishDate: '2026-10-29',
-    quoteAuthor: 'Benito Pérez Galdós',
-    quoteWork: 'Fortunata y Jacinta',
-    quoteYear: 1887,
+    quoteAuthor: 'Efeméride de la exploración espacial',
+    quoteWork: 'La sonda Galileo sobrevuela el asteroide Gaspra',
+    quoteYear: 1991,
     editorialNote:
-      'El retrato realista y magistral del Madrid castizo y decimonónico a través del drama de dos mujeres inolvidables.',
-    difficultyScore: 3.9,
+      'Un día como hoy en 1991, la sonda Galileo de la NASA realiza el primer encuentro cercano de la humanidad con un asteroide.',
+    difficultyScore: 4.3,
     rawMarkup:
-      'Las dos mujeres se miraron frente a frente en las [vías empedradas de la [capital del oso y el [árbol de frutos rojos silvestres]]], reconociéndose como dos [extremos geográficos del planeta] de una misma pasión.',
+      'Un día como hoy, pero en 1991, [la nave espacial bautizada en honor al [sabio astrónomo toscano del telescopio]] sobrevuela por primera vez en la historia un [cuerpo rocoso y menor del sistema solar] en la inmensidad del cosmos.',
     solutions: {
-      n1: { solution: 'calles', type: 'definition' },
-      n2: { solution: 'villa', type: 'definition' },
-      n3: { solution: 'madroño', type: 'reference' },
-      n4: { solution: 'polos', type: 'definition' },
+      n1: { solution: 'Galileo', type: 'reference' },
+      n2: { solution: 'científico', type: 'definition' },
+      n3: { solution: 'asteroide', type: 'definition' },
     },
   },
 ]
