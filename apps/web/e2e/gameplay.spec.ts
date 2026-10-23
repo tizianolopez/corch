@@ -19,23 +19,23 @@ test.describe('E2E: Experiencia de Juego y Resolución (Fase 7.3)', () => {
     const input = page.locator('#corchetes-answer-input')
     await expect(input).toBeVisible()
 
-    // 2. Resolver n1 ("la patria de la samba..." -> "Brasil")
-    await input.fill('Brasil')
+    // 2. Resolver n2 ("lo contrario de fuera..." -> "dentro")
+    await input.fill('dentro')
     await page.locator('#corchetes-submit-btn').click()
     await expect(input).toHaveValue('')
 
-    // 3. Resolver n3 ("campeonatos universales..." -> "mundiales")
-    await input.fill('mundiales')
+    // 3. Resolver n1 ("el destino al que sales desde dentro..." -> "afuera")
+    await input.fill('afuera')
     await page.locator('#corchetes-submit-btn').click()
     await expect(input).toHaveValue('')
 
-    // 4. Resolver n4 ("tantos introducidos..." -> "goles")
-    await input.fill('goles')
+    // 4. Resolver n3 ("misterio que se guarda oculto..." -> "secreto")
+    await input.fill('secreto')
     await page.locator('#corchetes-submit-btn').click()
     await expect(input).toHaveValue('')
 
-    // 5. Resolver n2 ("delantero de Santos..." -> "Pelé")
-    await input.fill('Pelé')
+    // 5. Resolver n4 ("el deshojado y revuelto RAMO..." -> "amor")
+    await input.fill('amor')
     await page.locator('#corchetes-submit-btn').click()
 
     // 6. Verificar cierre de edición
@@ -86,18 +86,18 @@ test.describe('E2E: Experiencia de Juego y Resolución (Fase 7.3)', () => {
     await hintRevealBtn.click()
 
     // Resolver los nodos restantes de forma limpia:
-    // Resolver n3 ("mundiales")
-    await input.fill('mundiales')
+    // Resolver n1 ("afuera")
+    await input.fill('afuera')
     await page.locator('#corchetes-submit-btn').click()
     await expect(input).toHaveValue('')
 
-    // Resolver n4 ("goles")
-    await input.fill('goles')
+    // Resolver n3 ("secreto")
+    await input.fill('secreto')
     await page.locator('#corchetes-submit-btn').click()
     await expect(input).toHaveValue('')
 
-    // Resolver n2 ("Pelé")
-    await input.fill('Pelé')
+    // Resolver n4 ("amor")
+    await input.fill('amor')
     await page.locator('#corchetes-submit-btn').click()
 
     // 5. Verificar pantalla final y rango Cronista (100 - 8 - 15 = 77 pts, entre 65 y 84)

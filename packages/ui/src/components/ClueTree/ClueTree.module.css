@@ -30,27 +30,34 @@
   line-height: inherit;
 }
 
-/* Estado: ACTIVO (verde inglés, hoja resoluble) */
+/* Estado: ACTIVO (verde inglés, hoja resoluble con resaltado editorial suave) */
 .bracketActive {
   color: var(--color-active);
+  background-color: var(--color-active-bg);
   cursor: pointer;
   user-select: none;
   font-size: inherit;
   line-height: inherit;
-  padding: 0;
-  border-radius: 0;
-  border-bottom: 1.5px solid transparent;
-  transition: color 150ms var(--ease-editorial), border-color 150ms var(--ease-editorial);
+  padding: 1px 4px;
+  border-radius: 3px;
+  border-bottom: 1.5px solid var(--color-active);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: color 150ms var(--ease-editorial), background-color 150ms var(--ease-editorial), border-color 150ms var(--ease-editorial);
 }
 
 .bracketActive:hover {
-  border-bottom: 1.5px solid var(--color-active);
+  filter: contrast(1.25);
+  border-bottom: 2px solid var(--color-active);
 }
 
 /* Cuando está seleccionado como foco para la barra de entrada */
 .bracketActive.selected {
   color: var(--color-active);
+  background-color: var(--color-active-bg);
   border-bottom: 2px solid var(--color-active);
+  outline: 1.5px solid var(--color-active);
+  outline-offset: 1px;
 }
 
 /* Animación de destello al desbloquearse el padre (Cascade en 400ms) */
