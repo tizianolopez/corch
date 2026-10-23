@@ -21,11 +21,21 @@
   transition: opacity 150ms var(--ease-editorial), background-color 200ms var(--ease-editorial), color 200ms var(--ease-editorial);
 }
 
-/* Estado: BLOQUEADO (gris, tiene hijos sin resolver) */
+/* Estado: BLOQUEADO (gris, pero seleccionable y resoluble en cualquier momento) */
 .bracketBlocked {
   color: var(--color-ink-muted);
-  cursor: default;
+  cursor: pointer;
   user-select: none;
+  padding: 1px 2px;
+  border-radius: 3px;
+  transition: all 150ms var(--ease-editorial);
+}
+
+.bracketBlocked:hover,
+.bracketBlocked.selected {
+  color: var(--color-ink);
+  outline: 1px dashed var(--color-ink-muted);
+  outline-offset: 1px;
 }
 
 /* Estado: ACTIVO (verde inglés, hoja resoluble) */

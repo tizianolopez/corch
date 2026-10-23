@@ -173,7 +173,7 @@ export const usePuzzleStore = create<GameStore>()(
 
     // ── submitAnswer ─────────────────────────────────────────────────────
     submitAnswer: async (input) => {
-      const { puzzleState, cryptoCtx } = get()
+      const { puzzleState, cryptoCtx, selectedNodeId } = get()
       if (!puzzleState || !cryptoCtx) return { success: false }
 
       const [result, nextState] = await onSubmit(
@@ -182,6 +182,7 @@ export const usePuzzleStore = create<GameStore>()(
         cryptoCtx.dailySalt,
         cryptoCtx.hashFn,
         cryptoCtx.decryptFn,
+        selectedNodeId,
       )
 
       if (result.success) {

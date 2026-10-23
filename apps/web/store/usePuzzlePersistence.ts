@@ -131,6 +131,26 @@ export function clearOldEditions(keepDate: string): void {
   }
 }
 
+/**
+ * Limpia el estado guardado del día actual para permitir reiniciar la partida.
+ */
+export function clearTodayState(): void {
+  if (typeof localStorage === 'undefined') return
+
+  try {
+    const today = getToday()
+    localStorage.removeItem(storageKey(today))
+
+    const raw = localStorage.getItem(EDITIONS_KEY)
+    if (raw) {
+      const editions = (JSON.parse(raw) as string[]).filter((d) => d !== today)
+      localStorage.setItem(EDITIONS_KEY, JSON.stringify(editions))
+    }
+  } catch {
+    // Ignorar
+  }
+}
+
 // ── Hook principal ────────────────────────────────────────────────────────
 
 /**

@@ -375,4 +375,17 @@
 - [ ] **Generador semanal automático de enigmas con IA**:
   - Programar la ejecución dominical del extractor de efemérides + agente Gemini para mantener un colchón mínimo de 7 borradores revisables en el CMS.
 
+### 8.7 Correcciones de Jugabilidad y Experiencia de Usuario (Beta Feedback)
+- [x] **Botón «Jugar de nuevo» funcional**:
+  - Implementado `clearTodayState()` en `apps/web/store/usePuzzlePersistence.ts` para purgar `localStorage` al reiniciar, evitando que `initializeGame()` restaure en bucle la partida terminada.
+- [x] **Resolución libre de pistas en cualquier momento**:
+  - `ClueBracket.tsx`: cualquier corchete sin resolver ahora es clickeable (`cursor: pointer`), permitiendo seleccionar y responder cualquier pista sin forzar un orden lineal estricto.
+  - `packages/core/src/engine.ts`: `onSubmit()` evalúa todas las pistas no resueltas del árbol (priorizando el nodo seleccionado). Si se resuelve un padre directamente, se resuelven en cascada sus hijos.
+- [x] **Eliminación de la cita duplicada y marcadores `{{n1}}`, `{{n2}}`, `{{n4}}`**:
+  - `EndScreen.tsx`: incorporada la prop `hideQuote={true}` para no duplicar la cita ya renderizada con elegancia tipográfica por `<ClueTree />`.
+  - Reconstrucción de texto limpio en `EndScreen`: si la cita se renderiza de forma aislada, `reconstructQuote()` reemplaza dinámicamente los placeholders por las soluciones reales, eliminando los identificadores de nodo crudos.
+- [x] **Protección total contra fugas de texto cifrado**:
+  - `InteractiveTreeDemo.tsx`: `appDecryptFn()` y `handleReveal()` sanitizados para garantizar que nunca se muestre en pantalla una cadena en formato `iv:ciphertext` (`7c6fece1...`), entregando siempre la palabra legible en español.
+
+
 

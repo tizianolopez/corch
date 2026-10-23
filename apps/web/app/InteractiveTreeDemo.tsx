@@ -6,13 +6,20 @@ import { ClueTree, InputBar, EndScreen, Masthead } from '@corchetes/ui'
 import { sha256, aesGcmDecrypt } from '@corchetes/crypto'
 import type { User } from '@supabase/supabase-js'
 import { usePuzzleStore } from '../store/usePuzzleStore'
-import { usePuzzlePersistence, restoreTodayState } from '../store/usePuzzlePersistence'
+import { usePuzzlePersistence, restoreTodayState, clearTodayState } from '../store/usePuzzlePersistence'
 import { apiClient } from '../src/api/client'
 import { getOrCreateAnonymousId } from '../src/lib/anonymousSession'
 import { getCurrentUser, onAuthStateChange } from '../src/lib/supabase'
 import { AuthDrawer } from '../src/components/AuthDrawer'
 import styles from './page.module.css'
 import type { ClientPayload } from '@corchetes/core'
+
+const CANONICAL_SOLUTIONS: Record<string, string> = {
+  n1: 'Brasil',
+  n2: 'Pelé',
+  n3: 'mundiales',
+  n4: 'goles',
+}
 
 // ── Puzzle canónico de lanzamiento (Edición 1: Pelé 1940) ───────────────────
 
@@ -76,9 +83,11 @@ async function appHashFn(candidate: string): Promise<string> {
 async function appDecryptFn(cipher: string, key: string): Promise<string> {
   if (cipher.includes(':')) {
     try {
-      return await aesGcmDecrypt(cipher, key)
+      const decrypted = await aesGcmDecrypt(cipher, key)
+      return decrypted
     } catch {
-      // Si falla AES-GCM, devolver directamente
+      // Si falla AES-GCM, devolver el término en texto legible sin ciphertext
+      return key
     }
   }
   return cipher
@@ -230,14 +239,18 @@ export function InteractiveTreeDemo(): ReactElement {
       }
     }
 
-    // Fallback si la API no está disponible
+    // Fallback limpio si la API no está disponible
     const node = puzzleState.nodes[selectedNodeId]
     if (node) {
-      requestHint('reveal', node.solutionCipher)
+      const cleanFallback =
+        CANONICAL_SOLUTIONS[selectedNodeId] ||
+        (node.solutionCipher.includes(':') ? node.clueText : node.solutionCipher)
+      requestHint('reveal', cleanFallback)
     }
   }, [requestHint, selectedNodeId, puzzleState, sessionId])
 
   const handleReset = useCallback(() => {
+    clearTodayState()
     resetGame()
     void initializeGame()
   }, [resetGame, initializeGame])
@@ -295,7 +308,7 @@ export function InteractiveTreeDemo(): ReactElement {
       {/* ── InputBar o EndScreen ──────────────────────────────────────── */}
       {isCompleted ? (
         <>
-          <EndScreen state={puzzleState} percentile={percentile} />
+          <EndScreen state={puzzleState} percentile={percentile} hideQuote />
           <div className={styles.buttonGroup}>
             <button
               type="button"

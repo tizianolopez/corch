@@ -51,14 +51,31 @@ export interface EndScreenProps {
   quoteText?: string
   /** Percentil del jugador devuelto por la API al completar sesión (0-100) */
   percentile?: number | null
+  /** Oculta la sección de cita y autoría (ideal si ClueTree ya se muestra arriba) */
+  hideQuote?: boolean
+}
+
+/** Reconstruye el texto fluido de la cita sustituyendo los corchetes por sus palabras resueltas */
+function reconstructQuote(state: PuzzleState): string {
+  let text = state.rootTemplate
+  for (const [id, node] of Object.entries(state.nodes)) {
+    const word = node.resolvedText || ''
+    text = text.replace(new RegExp(`{{${id}}}`, 'g'), word)
+  }
+  return text.replace(/{{[^}]+}}/g, '').trim()
 }
 
 /**
  * Pantalla de cierre de edición.
  * Se muestra cuando state.completedAt !== null.
- * Muestra la cita completa, metadata, métricas y el botón «Copiar crónica».
+ * Muestra la nota editorial, métricas y el botón «Copiar crónica».
  */
-export function EndScreen({ state, quoteText, percentile }: EndScreenProps): ReactElement {
+export function EndScreen({
+  state,
+  quoteText,
+  percentile,
+  hideQuote = false,
+}: EndScreenProps): ReactElement {
   const [copied, setCopied] = useState(false)
 
   const rank = getRank(state.score)
@@ -96,17 +113,19 @@ export function EndScreen({ state, quoteText, percentile }: EndScreenProps): Rea
   return (
     <section className={styles.endScreen} aria-label="Resultado de la edición">
 
-      {/* ── Cita completa ─────────────────────────────────────────────── */}
-      <div className={styles.quoteSection}>
-        <p className={styles.quoteText} lang="es">
-          {quoteText ?? state.rootTemplate}
-        </p>
-        <p className={styles.quoteAttribution}>
-          — {state.quoteAuthor},{' '}
-          <em>{state.quoteWork}</em>
-          {state.quoteYear > 0 && ` (${state.quoteYear.toString()})`}
-        </p>
-      </div>
+      {/* ── Cita completa (solo si no está oculta por ClueTree) ────────── */}
+      {!hideQuote && (
+        <div className={styles.quoteSection}>
+          <p className={styles.quoteText} lang="es">
+            {quoteText ?? reconstructQuote(state)}
+          </p>
+          <p className={styles.quoteAttribution}>
+            — {state.quoteAuthor},{' '}
+            <em>{state.quoteWork}</em>
+            {state.quoteYear > 0 && ` (${state.quoteYear.toString()})`}
+          </p>
+        </div>
+      )}
 
       {/* ── Nota editorial ────────────────────────────────────────────── */}
       {state.editorialNote && (

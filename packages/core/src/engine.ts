@@ -62,6 +62,7 @@ export async function onSubmit(
   dailySalt: string,
   hashFn: HashFn,
   decryptFn: DecryptFn,
+  targetNodeId?: string | null,
 ): Promise<[SubmitResult, PuzzleState]> {
   const normalized = normalize(input)
 
@@ -69,18 +70,51 @@ export async function onSubmit(
     return [{ success: false }, state]
   }
 
-  const activeNodes = getActiveNodes(state)
+  // Evaluar todos los nodos no resueltos, priorizando el nodo seleccionado
+  const candidateNodes = Object.values(state.nodes).filter((node) => !node.isResolved)
+  candidateNodes.sort((a, b) => {
+    if (a.id === targetNodeId) return -1
+    if (b.id === targetNodeId) return 1
+    if (a.isActive && !b.isActive) return -1
+    if (!a.isActive && b.isActive) return 1
+    return 0
+  })
 
-  for (const node of activeNodes) {
+  for (const node of candidateNodes) {
     // Construir el candidato de hash igual que el servidor en compilePuzzlePayload
     const candidate = `${normalized}:${state.puzzleId}:${node.id}:${dailySalt}`
     const candidateHash = await hashFn(candidate)
 
     if (candidateHash === node.solutionHash) {
       // ✓ ACIERTO: descifrar el texto original y resolver el nodo
-      const resolvedText = await decryptFn(node.solutionCipher, normalized)
+      let resolvedText = input.trim()
+      try {
+        const decrypted = await decryptFn(node.solutionCipher, normalized)
+        resolvedText = decrypted.includes(':') ? input.trim() : decrypted
+      } catch {
+        resolvedText = input.trim()
+      }
 
       let newState = resolveNode(state, node.id, resolvedText)
+
+      // Si el nodo resuelto tiene hijos sin resolver, resolverlos también en cascada
+      if (node.children.length > 0) {
+        const resolveChildrenRecursively = (parentNodeId: string) => {
+          const parent = newState.nodes[parentNodeId]
+          if (parent) {
+            for (const childId of parent.children) {
+              const child = newState.nodes[childId]
+              if (child && !child.isResolved) {
+                const childFallbackText = child.solutionCipher.includes(':') ? child.clueText : child.solutionCipher
+                newState = resolveNode(newState, childId, childFallbackText)
+                resolveChildrenRecursively(childId)
+              }
+            }
+          }
+        }
+        resolveChildrenRecursively(node.id)
+      }
+
       newState = recalculateActiveNodes(newState)
 
       const isComplete = isPuzzleComplete(newState)
@@ -99,7 +133,7 @@ export async function onSubmit(
     }
   }
 
-  // ✗ ERROR: ningún nodo activo coincide
+  // ✗ ERROR: ningún nodo no resuelto coincide
   const newMistakesCount = state.mistakesCount + 1
   const newScore = applyMistakePenalty(state.score, newMistakesCount)
 

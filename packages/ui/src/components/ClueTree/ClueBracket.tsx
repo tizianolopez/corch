@@ -134,19 +134,20 @@ export function ClueBracket({
     .join(' ')
 
   const handleMouseEnter = () => {
-    if (node.isActive) {
+    if (!node.isResolved) {
       onHoverNode(node.id)
     }
   }
 
   const handleMouseLeave = () => {
-    if (node.isActive) {
+    if (!node.isResolved) {
       onHoverNode(null)
     }
   }
 
-  const handleClick = () => {
-    if (node.isActive && onSelectNode) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!node.isResolved && onSelectNode) {
       onSelectNode(node.id)
     }
   }
@@ -159,12 +160,12 @@ export function ClueBracket({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
-      role={node.isActive ? 'button' : undefined}
-      tabIndex={node.isActive ? 0 : undefined}
+      role={!node.isResolved ? 'button' : undefined}
+      tabIndex={!node.isResolved ? 0 : undefined}
       onKeyDown={(e) => {
-        if (node.isActive && (e.key === 'Enter' || e.key === ' ')) {
+        if (!node.isResolved && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault()
-          handleClick()
+          handleClick(e as unknown as React.MouseEvent)
         }
       }}
     >
