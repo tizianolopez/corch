@@ -19,23 +19,26 @@ test.describe('E2E: Experiencia de Juego y Resolución (Fase 7.3)', () => {
     const input = page.locator('#corchetes-answer-input')
     await expect(input).toBeVisible()
 
-    // 2. Resolver n3 ("gigantes con aspas de viento" -> "molinos")
-    await input.fill('molinos')
-    await page.locator('#corchetes-submit-btn').click()
-
-    // Verificar que n3 se resolvió y el input se limpió
-    await expect(input).toHaveValue('')
-
-    // 3. Resolver n2 ("hidalgo que desafió..." -> "Quijote")
-    await input.fill('Quijote')
+    // 2. Resolver n1 ("la patria de la samba..." -> "Brasil")
+    await input.fill('Brasil')
     await page.locator('#corchetes-submit-btn').click()
     await expect(input).toHaveValue('')
 
-    // 4. Resolver n1 ("región histórica..." -> "Mancha")
-    await input.fill('Mancha')
+    // 3. Resolver n3 ("campeonatos universales..." -> "mundiales")
+    await input.fill('mundiales')
+    await page.locator('#corchetes-submit-btn').click()
+    await expect(input).toHaveValue('')
+
+    // 4. Resolver n4 ("tantos introducidos..." -> "goles")
+    await input.fill('goles')
+    await page.locator('#corchetes-submit-btn').click()
+    await expect(input).toHaveValue('')
+
+    // 5. Resolver n2 ("delantero de Santos..." -> "Pelé")
+    await input.fill('Pelé')
     await page.locator('#corchetes-submit-btn').click()
 
-    // 5. Verificar cierre de edición
+    // 6. Verificar cierre de edición
     const endScreen = page.locator('section[aria-label="Resultado de la edición"]')
     await expect(endScreen).toBeVisible({ timeout: 5000 })
 
@@ -77,19 +80,24 @@ test.describe('E2E: Experiencia de Juego y Resolución (Fase 7.3)', () => {
     await expect(hintMatrixBtn).toBeVisible()
     await hintMatrixBtn.click()
 
-    // 2. Usar pista de revelación para n3 (-15 pts)
+    // 2. Usar pista de revelación para el nodo activo (-15 pts)
     const hintRevealBtn = page.locator('#corchetes-hint-reveal-btn')
     await expect(hintRevealBtn).toBeVisible()
     await hintRevealBtn.click()
 
-    // Comprobar que n3 se resolvió mediante ayuda y el turno avanzó a n2
-    // 3. Resolver n2 de forma limpia ("Quijote")
-    await input.fill('Quijote')
+    // Resolver los nodos restantes de forma limpia:
+    // Resolver n3 ("mundiales")
+    await input.fill('mundiales')
     await page.locator('#corchetes-submit-btn').click()
     await expect(input).toHaveValue('')
 
-    // 4. Resolver n1 de forma limpia ("Mancha")
-    await input.fill('Mancha')
+    // Resolver n4 ("goles")
+    await input.fill('goles')
+    await page.locator('#corchetes-submit-btn').click()
+    await expect(input).toHaveValue('')
+
+    // Resolver n2 ("Pelé")
+    await input.fill('Pelé')
     await page.locator('#corchetes-submit-btn').click()
 
     // 5. Verificar pantalla final y rango Cronista (100 - 8 - 15 = 77 pts, entre 65 y 84)

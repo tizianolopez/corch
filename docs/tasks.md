@@ -300,3 +300,79 @@
 - [x] Pipeline de inteligencia enigmística: ingeniería inversa de Claudàtors (1.827 pistas), escáner de ventana deslizante (`windowScanner.ts`) y dataset de fine-tuning (`data/claudators_tuning.jsonl`)
 - [ ] Revisión de feedback y correcciones de la beta previa a la apertura pública general
 
+---
+
+## Fase 8 — Auditoría de Placeholders y Conexión de Producción Real
+
+> Esta fase resuelve todas las discrepancias entre prototipos locales y el entorno de producción desplegado en Vercel y Supabase Cloud.
+
+### 8.1 Diagnóstico y Desconexión de Fallbacks ("En un lugar de la Mancha")
+- [x] **Causa raíz diagnosticada de la aparición de Don Quijote en Vercel**:
+  1. `apps/web` desplegado en Vercel intentaba consultar `GET /api/puzzle/today`, pero `apps/api` (Fastify) no estaba sirviendo endpoints serverless en Vercel, devolviendo error `404 Not Found`.
+  2. Al recibir 404, `InteractiveTreeDemo.tsx` caía en el bloque `catch` y cargaba el `DEMO_PAYLOAD` hardcodeado (Don Quijote, Mancha, edición 142).
+  3. El masthead en `apps/web/app/page.tsx` tenía `editionNumber={142}` fijo sin vincular al puzle cargado.
+- [x] **Sustitución del payload canónico**: Actualizar `DEMO_PAYLOAD` en `InteractiveTreeDemo.tsx` a la Edición 1 oficial («Un día como hoy, pero en 1940...» Pelé, Brasil, mundiales, goles) con criptografía real Web Crypto SHA-256 y AES-GCM.
+- [x] **Limpieza criptográfica en cliente**: Eliminar los atajos de prefijo mockeados (`molinos:`, `quijote:`, `mancha:`) de `appHashFn` en `InteractiveTreeDemo.tsx`.
+- [x] **Retirada de botones de depuración en frontend**: Eliminar los atajos visuales «Resolver n3 → «molinos»» y «Resolver n2 → «Quijote»» de la interfaz de juego.
+- [x] **Dinamización del Masthead**: Vincular el número de edición del `<Masthead />` directamente a `puzzleState.editionNumber` (muestra N.º 00001).
+- [x] **Actualización de fallbacks del backend**:
+  - `apps/api/src/routes/puzzle.ts`: `getFallbackDailyPayload()` actualizado a Pelé 1940.
+  - `apps/api/src/routes/session.ts`: `DEMO_SOLUTIONS` actualizado a `Brasil`, `Pelé`, `mundiales`, `goles`.
+
+### 8.2 Diagnóstico y Corrección de Autenticación Supabase
+- [x] **Causa raíz diagnosticada del redirect a `placeholder-corchetes.supabase.co`**:
+  1. `apps/web/src/lib/supabase.ts` y `apps/cms/src/lib/supabase.ts` tenían como valor por defecto `'https://placeholder-corchetes.supabase.co'`.
+  2. Next.js incrusta las variables `NEXT_PUBLIC_*` estáticamente durante el build (`next build`). Al desplegar sin variables configuradas en el panel de Vercel, el cliente web compiló la URL de placeholder en el bundle JavaScript.
+- [x] **Actualización de credenciales por defecto**:
+  - `apps/web/src/lib/supabase.ts`: actualizado al proyecto Supabase Cloud activo (`https://zwmvlvzwjypdlyfkngzh.supabase.co`).
+  - `apps/cms/src/lib/supabase.ts`: actualizado al proyecto Supabase Cloud activo y su anon key.
+- [ ] **Habilitación de Google OAuth en Supabase Console**:
+  - Crear credenciales de aplicación web en Google Cloud Console.
+  - Obtener `Client ID` y `Client Secret`.
+  - En Supabase (`Authentication` → `Providers` → `Google`), activar el proveedor e ingresar ambas claves con la callback URI: `https://zwmvlvzwjypdlyfkngzh.supabase.co/auth/v1/callback`.
+- [ ] **Configuración de URLs de redirección permitidas (Whitelist) en Supabase**:
+  - En Supabase (`Authentication` → `URL Configuration`), añadir:
+    - `https://corch.vercel.app/**`
+    - `https://corchetes.es/**`
+    - `http://localhost:3000/**`
+- [ ] **Configuración de envío de correo para Magic Link en producción**:
+  - Configurar proveedor SMTP / Resend en Supabase (`Authentication` → `Email Templates` y `SMTP Settings`) para evitar la tasa límite del servicio gratuito compartido.
+
+### 8.3 Endpoints API Nativos en Next.js (apps/web) para Operación 100% Serverless
+- [x] **`GET /api/puzzle/today` (`apps/web/app/api/puzzle/today/route.ts`)**:
+  - Consulta a Supabase PostgreSQL (`public_puzzles`) por `publish_date = TODAY` y `status = 'PUBLISHED'`.
+  - Fallback garantizado a la Edición 1 canónica («Un día como hoy») si la base de datos está inaccesible.
+  - Cabeceras de caché HTTP para Cloudflare / Vercel Edge Cache (`Cache-Control: public, s-maxage=3600`).
+- [x] **`POST /api/session/start` (`apps/web/app/api/session/start/route.ts`)**:
+  - Creación y registro de sesión en PostgreSQL con soporte para sesiones anónimas y usuarios registrados.
+- [x] **`POST /api/session/complete` (`apps/web/app/api/session/complete/route.ts`)**:
+  - Registro de resolución, puntuación, tiempo y cálculo de percentil.
+- [x] **`POST /api/session/hint` (`apps/web/app/api/session/hint/route.ts`)**:
+  - Entrega de letras iniciales (`matrix`) y soluciones en claro (`reveal`) asegurando que la experiencia de juego funcione de punta a punta en Vercel.
+
+### 8.4 Configuración de Variables de Entorno en el Panel de Vercel
+- [ ] **Configurar las variables de entorno en Vercel (`Project Settings` → `Environment Variables`)**:
+  - `NEXT_PUBLIC_SUPABASE_URL` = `https://zwmvlvzwjypdlyfkngzh.supabase.co`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = `eyJhbGci...`
+  - `DATABASE_URL` = Cadena de conexión PostgreSQL (Session Pooler de Supabase)
+  - `GEMINI_API_KEY` = API Key para generación de enigmas IA
+  - `UPSTASH_REDIS_REST_URL` = URL REST de Upstash Redis
+  - `UPSTASH_REDIS_REST_TOKEN` = Token de Upstash Redis
+  - `ADMIN_JWT_SECRET` = Clave secreta para acceso administrativo al CMS
+- [ ] **Ejecutar Redeploy en Vercel**:
+  - Realizar despliegue limpio (Redeploy sin caché) desde el dashboard de Vercel o mediante git push para incrustar las nuevas variables en el cliente.
+
+### 8.5 Auditoría de CMS y Limpieza de Datos Mocks Restantes
+- [ ] **Sustituir `samplePuzzles` en `apps/cms/app/admin/analytics/page.tsx`**:
+  - Reemplazar el array estático de puzles de prueba (Cervantes, Lorca, Rosalía de Castro) por una consulta directa a la vista analítica de Supabase (`node_analytics`, `play_sessions`, `puzzles`).
+- [ ] **Verificar persistencia en el Editor Manual del CMS**:
+  - Validar que al guardar un puzle desde `/admin/editor` se inserte directamente en la tabla `puzzles` de Supabase con `source: 'MANUAL'` y `status: 'DRAFT'`.
+
+### 8.6 Automatización del Ciclo de Vida Editorial (Cron)
+- [ ] **Cron diario de publicación a medianoche (00:00 h Madrid)**:
+  - Configurar Vercel Cron o GitHub Actions Workflow para cambiar el estado de los puzles de `SCHEDULED` a `PUBLISHED` al cambiar el día.
+  - Purgar la caché de Cloudflare para la ruta `/api/puzzle/today`.
+- [ ] **Generador semanal automático de enigmas con IA**:
+  - Programar la ejecución dominical del extractor de efemérides + agente Gemini para mantener un colchón mínimo de 7 borradores revisables en el CMS.
+
+

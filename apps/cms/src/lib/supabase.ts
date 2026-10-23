@@ -14,11 +14,12 @@ export const ADMIN_ROLE_COOKIE = 'corchetes_admin_role'
 
 /** URL de Supabase (por defecto local o entorno) */
 const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-corchetes.supabase.co'
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://zwmvlvzwjypdlyfkngzh.supabase.co'
 
 /** Anon key de Supabase (pública para cliente) */
 const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key'
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3bXZsdnp3anlwZGx5ZmtuZ3poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NDE5OTAsImV4cCI6MjEwODMxNzk5MH0.tT3ZSO_Ay3nARr8XJZupmhK0bUnnTYPctyRRUtPMDcg'
 
 /** Token secreto de administración para desarrollo o bypass seguro en servidor */
 export const ADMIN_DEV_SECRET =

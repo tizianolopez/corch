@@ -18,10 +18,11 @@ import {
 } from '@supabase/supabase-js'
 
 const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-corchetes.supabase.co'
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://zwmvlvzwjypdlyfkngzh.supabase.co'
 
 const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key'
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3bXZsdnp3anlwZGx5ZmtuZ3poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NDE5OTAsImV4cCI6MjEwODMxNzk5MH0.tT3ZSO_Ay3nARr8XJZupmhK0bUnnTYPctyRRUtPMDcg'
 
 /**
  * Cliente singleton de Supabase para apps/web con persistencia en localStorage.

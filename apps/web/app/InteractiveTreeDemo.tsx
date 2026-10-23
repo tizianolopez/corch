@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, type ReactElement } from 'react'
 import Link from 'next/link'
-import { ClueTree, InputBar, EndScreen } from '@corchetes/ui'
+import { ClueTree, InputBar, EndScreen, Masthead } from '@corchetes/ui'
 import { sha256, aesGcmDecrypt } from '@corchetes/crypto'
 import type { User } from '@supabase/supabase-js'
 import { usePuzzleStore } from '../store/usePuzzleStore'
@@ -14,57 +14,62 @@ import { AuthDrawer } from '../src/components/AuthDrawer'
 import styles from './page.module.css'
 import type { ClientPayload } from '@corchetes/core'
 
-// ── Puzzle de demostración (fallback si la API está desconectada) ───────────
+// ── Puzzle canónico de lanzamiento (Edición 1: Pelé 1940) ───────────────────
 
 const DEMO_PAYLOAD: ClientPayload = {
-  puzzleId: 'demo-001',
-  editionNumber: 142,
-  publishDate: new Date().toISOString().slice(0, 10),
-  rootTemplate: '«En un lugar de la {{n1}} de cuyo nombre no quiero acordarme...»',
-  dailySalt: 'demo-salt',
+  puzzleId: 'corchetes-daily-2026-10-23',
+  editionNumber: 1,
+  publishDate: '2026-10-23',
+  rootTemplate: 'Un día como hoy, pero en 1940, nace en {{n1}} el {{n2}}, recordado por anotar más de mil {{n4}}.',
+  dailySalt: 'salt-2026-10-23',
   nodes: {
     n1: {
       id: 'n1',
-      clueText: 'región histórica española donde cabalgaba el {{n2}}',
-      children: ['n2'],
+      clueText: 'la patria de la samba y el carnaval',
+      children: [],
       parent: null,
-      type: 'definition',
-      solutionHash: 'hash_n1_mancha',
-      solutionCipher: 'Mancha',
+      type: 'reference',
+      solutionHash: '88c1ed0828cfc28d5b785f2c440034c543225dcd9c5da5a7b280e500f862641f',
+      solutionCipher: '6b8cf57d28e3b26686736dca:84BGpbtTaPrXXabFQO1j8NP5RaYhRg==',
     },
     n2: {
       id: 'n2',
-      clueText: 'hidalgo que desafió a los {{n3}}',
+      clueText: 'delantero de Santos que alzó tres {{n3}}',
       children: ['n3'],
-      parent: 'n1',
-      type: 'definition',
-      solutionHash: 'hash_n2_quijote',
-      solutionCipher: 'Quijote',
+      parent: null,
+      type: 'reference',
+      solutionHash: 'ff5a727fd01736936f8f8dc11295de87b1d51051daea35e9a61501eb8eddb202',
+      solutionCipher: 'cf4ecd65555160f27f0b4b6a:avQQfyoJQZqHIjj+YjC9yFcswtSr',
     },
     n3: {
       id: 'n3',
-      clueText: 'gigantes con aspas de viento',
+      clueText: 'campeonatos universales de selecciones de fútbol',
       children: [],
       parent: 'n2',
       type: 'definition',
-      solutionHash: 'hash_n3_molinos',
-      solutionCipher: 'molinos',
+      solutionHash: '184db3b5b3fb585bd5a72c0ab0618bab8ad7df4e9372d889601209a99c19a931',
+      solutionCipher: 'a87b31b603b13b056b53d568:85pBKsEy0xE7WkZmJJZCe+mbDTCMs5Wmng==',
+    },
+    n4: {
+      id: 'n4',
+      clueText: 'tantos introducidos en la portería',
+      children: [],
+      parent: null,
+      type: 'definition',
+      solutionHash: 'be5ef6e06b65b7327fd89c493cd39493c3df89c45c08d86fa0578339b4c22242',
+      solutionCipher: '7c6fece1a5c68f2fe6c8bf5e:tX/uF555J1fOQ0+lA2aQhO1s/9s=',
     },
   },
-  quoteAuthor: 'Miguel de Cervantes',
-  quoteWork: 'Don Quijote de la Mancha',
-  quoteYear: 1605,
+  quoteAuthor: 'Efeméride deportiva y cultural',
+  quoteWork: 'Nacimiento de Edson Arantes do Nascimento (Pelé)',
+  quoteYear: 1940,
   editorialNote:
-    'Primera frase de la novela más influyente de la literatura hispana. ' +
-    'El lugar innominado es hoy reivindicado por varios municipios de Castilla-La Mancha.',
+    'Un día como hoy en 1940 nace Pelé en Três Corações, coronado como "O Rei" y tricampeón mundial.',
 }
 
-// ── Funciones criptográficas seguras (con soporte para fallback demo) ───────
+// ── Funciones criptográficas seguras Web Crypto ─────────────────────────────
 
 async function appHashFn(candidate: string): Promise<string> {
-  if (candidate.startsWith('molinos:')) return 'hash_n3_molinos'
-  if (candidate.startsWith('quijote:')) return 'hash_n2_quijote'
-  if (candidate.startsWith('mancha:')) return 'hash_n1_mancha'
   return sha256(candidate)
 }
 
@@ -244,7 +249,10 @@ export function InteractiveTreeDemo(): ReactElement {
   const activeNode = selectedNodeId ? puzzleState.nodes[selectedNodeId] : null
 
   return (
-    <section className={styles.quoteCard}>
+    <>
+      <Masthead editionNumber={puzzleState.editionNumber ?? 1} />
+
+      <section className={styles.quoteCard}>
       {/* ── Barra de lector / Identificación ─────────────────────────── */}
       <div className={styles.readerBar}>
         <Link
@@ -336,40 +344,10 @@ export function InteractiveTreeDemo(): ReactElement {
         </>
       )}
 
-      {/* ── Demo controls ─────────────────────────────────────────────── */}
+      {/* ── Controles auxiliares ─────────────────────────────────────── */}
       {!isCompleted && (
         <div className={styles.demoControls}>
-          <p className={styles.demoHint}>
-            <em>Escribe la respuesta en el campo inferior o usa los atajos de demostración:</em>
-          </p>
           <div className={styles.buttonGroup}>
-            {!puzzleState.nodes['n3']?.isResolved && (
-              <button
-                type="button"
-                className={styles.demoButton}
-                onClick={() => void handleSubmit('molinos')}
-              >
-                Resolver n3 → «molinos»
-              </button>
-            )}
-            {puzzleState.nodes['n3']?.isResolved && !puzzleState.nodes['n2']?.isResolved && (
-              <button
-                type="button"
-                className={styles.demoButton}
-                onClick={() => void handleSubmit('Quijote')}
-              >
-                Resolver n2 → «Quijote»
-              </button>
-            )}
-            {puzzleState.nodes['n2']?.isResolved && !puzzleState.nodes['n1']?.isResolved && (
-              <button
-                type="button"
-                className={styles.demoButton}
-                onClick={() => void handleSubmit('Mancha')}
-              >
-                Resolver n1 → «Mancha»
-              </button>
-            )}
             <button
               type="button"
               className={styles.resetButton}
@@ -388,5 +366,6 @@ export function InteractiveTreeDemo(): ReactElement {
         onUserChange={setCurrentUser}
       />
     </section>
+    </>
   )
 }
