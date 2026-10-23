@@ -124,7 +124,7 @@ describe('Endpoints de Sesión (Tarea 2.3)', () => {
     expect(body.success).toBe(true)
     expect(body.hintType).toBe('matrix')
     expect(body.nodeId).toBe('n3')
-    expect(body.initialLetter).toBe('M')
+    expect(body.initialLetter).toBe('S')
 
     // Verificar que se registró en hintsUsed de la sesión
     const saved = memorySessions.get(sessionId)
@@ -141,7 +141,7 @@ describe('Endpoints de Sesión (Tarea 2.3)', () => {
     })
     const { sessionId } = startRes.json<{ sessionId: string }>()
 
-    // 2. Revelar término n3 (molinos)
+    // 2. Revelar término n3 (secreto)
     const hintRes = await app.inject({
       method: 'POST',
       url: '/api/session/hint',
@@ -163,7 +163,7 @@ describe('Endpoints de Sesión (Tarea 2.3)', () => {
     expect(body.success).toBe(true)
     expect(body.hintType).toBe('reveal')
     expect(body.nodeId).toBe('n3')
-    expect(body.solution).toBe('mundiales')
+    expect(body.solution).toBe('secreto')
 
     // Verificar registro en hintsUsed
     const saved = memorySessions.get(sessionId)

@@ -77,7 +77,7 @@ import { scanSentence } from './windowScanner'
  * enriquecido con las oportunidades de la ventana deslizante y Few-Shot de Claudàtors.
  */
 export function buildUserPrompt(event: EphemerisEvent): string {
-  let prompt = `Genera un puzle de corchetes anidados de alta dificultad lingüística para la siguiente efeméride:\n\n`
+  let prompt = `Genera un puzle de corchetes concéntricos anidados («claudàtors») de alta dificultad lingüística para la siguiente efeméride:\n\n`
   prompt += `- Año: ${event.year}\n`
   prompt += `- Hecho histórico: ${event.text}\n`
 
@@ -88,56 +88,50 @@ export function buildUserPrompt(event: EphemerisEvent): string {
     prompt += `- Referencia: ${event.wikipediaUrl}\n`
   }
 
-  // 1. Ejecutar escáner algorítmico de ventana deslizante sobre el texto del evento
+  prompt += `\nINSTRUCCIÓN EDITORIAL:
+1. Toma este hecho como semilla histórica y redacta una frase fluida, noble y literaria («originalQuote») que comience con «Un día como hoy, pero en ${event.year}...». Si la descripción original es escueta, expándela con elegancia.
+2. Transforma entre 3 y 5 términos de esa frase en corchetes anidados («markup») de dentro hacia afuera.
+3. Prohibido usar definiciones escolares directas (nada de «país de...», «sinónimo de...», «persona que...»). Emplea pensamiento lateral, juegos morfológicos, dobles sentidos o dependencias reales.
+`
+
+  // 1. Escaneo complementario de ventana deslizante como sugerencias opcionales
   const fullTextToScan = `${event.text} ${event.extract || ''}`
   try {
     const scanResult = scanSentence(fullTextToScan)
     if (scanResult.totalOpportunities > 0) {
-      prompt += `\n--- OPORTUNIDADES LINGÜÍSTICAS DETECTADAS POR LA VENTANA DESLIZANTE ---\n`
-      prompt += `El algoritmo de fuerza bruta ha analizado las letras contiguas del texto y ha descubierto:\n`
-
-      if (scanResult.crossBoundaries.length > 0) {
-        prompt += `• Cruces entre palabras (saltando espacios):\n`
-        for (const item of scanResult.crossBoundaries.slice(0, 4)) {
-          prompt += `  - ${item.explanation} (en el fragmento '${item.context}')\n`
-        }
-      }
-
+      prompt += `\n--- SUGERENCIAS LINGÜÍSTICAS (OPCIONALES) ---
+Si alguna de estas palabras descubiertas por el análisis morfológico encaja de manera natural en tu redacción, puedes aprovecharla para crear pistas de telescopio o anagrama:
+`
       if (scanResult.telescopes.length > 0) {
-        prompt += `• Palabras telescópicas / Inclusiones ocultas:\n`
-        for (const item of scanResult.telescopes.slice(0, 4)) {
-          prompt += `  - ${item.explanation}\n`
+        for (const item of scanResult.telescopes.slice(0, 3)) {
+          prompt += `• Inclusión: '${item.hiddenWord}' dentro de '${item.parentWord}'\n`
         }
       }
-
-      if (scanResult.charades.length > 0) {
-        prompt += `• Charadas morfológicas:\n`
-        for (const item of scanResult.charades.slice(0, 3)) {
-          prompt += `  - ${item.explanation}\n`
-        }
-      }
-
       if (scanResult.anagrams.length > 0) {
-        prompt += `• Anagramas exactos con el diccionario:\n`
-        for (const item of scanResult.anagrams.slice(0, 4)) {
-          prompt += `  - ${item.explanation}\n`
+        for (const item of scanResult.anagrams.slice(0, 3)) {
+          prompt += `• Anagrama: '${item.sourceWord}' ↔ '${item.anagramWord}'\n`
         }
       }
-
-      prompt += `\nREGLA CRUCIAL: Utiliza prioritariamente al menos 2 de estas oportunidades de fragmentos/cruces para construir los corchetes o sub-corchetes de tu puzle. No elijas solo palabras completas obvias ni definiciones de diccionario escolar.\n`
     }
   } catch {
     // Si no se puede escanear, continuar con prompt estándar
   }
 
-  // 2. Ejemplos Few-Shot reales de Claudàtors extraídos del corpus
-  prompt += `\n--- EJEMPLOS REALES DE CLAUDÀTORS (FEW-SHOT LEARNING) ---
-Aprende del ingenio críptico y el tono del referente:
-- Anagrama con indicador de caos: "Han enderrocat Roma com a gest de devoció" -> amor (indicador: enderrocat / derrocar)
-- Anagrama de reversión: "Del dret una poda massiva, del revés un avió o un mussol" -> talà (indicador: del revés)
-- Inclusión / Ocultamiento: "El instrument acordeón esconde en su interior..." -> cor
-- Charada: "La primera mitad de soldado bajo el astro rey" -> sol
-Garantiza EXACTAMENTE entre 3 y 5 corchetes en total (n1 a n3, n4 o n5), entre 2 y 3 niveles de profundidad, al menos 2 nodos hoja iniciales, y que la lista 'nodes' contenga una solución para cada corchete.`
+  // 2. Ejemplos maestros Few-Shot en español
+  prompt += `\n--- EJEMPLOS DE PISTAS MAESTRAS EN ESPAÑOL (FEW-SHOT LEARNING) ---
+Aprende del ingenio críptico y el tono de Claudàtors:
+- Anagrama declarado con caos: "El caótico y revuelto AMOR" -> Roma (indicador: caótico/revuelto)
+- Inclusión / Ocultamiento: "La diabética siempre reflexiona sobre la moral" -> ética (diab-ÉTICA)
+- Charada morfológica: "[Astro rey][pieza de seis caras del parchís]" -> sol + dado = soldado
+- Polisemia / Doble sentido: "Lo que estudian los que no están sentados" -> derecho
+- Dependencia concéntrica: "[El mandatario que ordenó el cerco naval a [la isla gobernada por Fidel]]" -> hoja: Cuba, padre: Kennedy
+
+REQUISITOS ESTRUCTURALES ESTRICTOS:
+- Exactamente entre 3 y 5 corchetes en total (n1 a n3, n4 o n5).
+- Entre 2 y 3 niveles de profundidad concéntrica.
+- Al menos 2 nodos hoja iniciales independientes.
+- Soluciones únicas (sin duplicados tras normalizar, preservando la 'ñ').
+- La lista 'nodes' debe tener una entrada correlativa ("n1", "n2", ...) para cada corchete '[' abierto.`
 
   return prompt
 }

@@ -131,15 +131,15 @@ export function parsePuzzleMarkup(markup: string): ParseResult {
 function buildRootTemplate(markup: string): string {
   let result = ''
   let depth = 0
-  let currentNodeId = 1
+  let totalOpened = 0
 
   for (const char of markup) {
     if (char === '[') {
+      totalOpened++
       depth++
       if (depth === 1) {
-        // Nodo de nivel 0: sustituir por placeholder
-        result += `{{n${currentNodeId.toString()}}}`
-        currentNodeId++
+        // Nodo de nivel 0: sustituir por placeholder con su ID correlativo real
+        result += `{{n${totalOpened.toString()}}}`
       }
     } else if (char === ']') {
       depth--

@@ -66,10 +66,10 @@ export const memorySessions = new Map<string, SessionRecord>()
 
 /** Soluciones de demo conocidas cuando no hay BD */
 const DEMO_SOLUTIONS: Record<string, { solution: string; initialLetter: string }> = {
-  n1: { solution: 'Brasil', initialLetter: 'B' },
-  n2: { solution: 'Pelé', initialLetter: 'P' },
-  n3: { solution: 'mundiales', initialLetter: 'M' },
-  n4: { solution: 'goles', initialLetter: 'G' },
+  n1: { solution: 'afuera', initialLetter: 'A' },
+  n2: { solution: 'dentro', initialLetter: 'D' },
+  n3: { solution: 'secreto', initialLetter: 'S' },
+  n4: { solution: 'amor', initialLetter: 'A' },
 }
 
 // ── Plugin de rutas de sesión ───────────────────────────────────────────────
