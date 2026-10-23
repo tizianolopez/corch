@@ -1,0 +1,48 @@
+.offlineNotice {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-paper, #F7F4EF);
+  color: var(--color-ink, #1A1917);
+  border: 1px solid var(--color-ink, #1A1917);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.12);
+  padding: 8px 18px;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 9999;
+  border-radius: 2px;
+  animation: fadeIn 0.25s ease;
+}
+
+.offlineNoticeOnline {
+  border-color: #2E6B34;
+  color: #2E6B34;
+}
+
+.badgeDot {
+  color: var(--color-accent-ink, #8B2500);
+  font-weight: bold;
+}
+
+.badgeDotOnline {
+  color: #2E6B34;
+  font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

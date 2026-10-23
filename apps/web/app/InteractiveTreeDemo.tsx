@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback, type ReactElement } from 'react'
+import Link from 'next/link'
 import { ClueTree, InputBar, EndScreen } from '@corchetes/ui'
 import { sha256, aesGcmDecrypt } from '@corchetes/crypto'
 import type { User } from '@supabase/supabase-js'
@@ -246,6 +247,13 @@ export function InteractiveTreeDemo(): ReactElement {
     <section className={styles.quoteCard}>
       {/* ── Barra de lector / Identificación ─────────────────────────── */}
       <div className={styles.readerBar}>
+        <Link
+          href="/crear"
+          className={styles.readerButton}
+          style={{ textDecoration: 'none' }}
+        >
+          [+ Crear reto propio]
+        </Link>
         <button
           type="button"
           className={styles.readerButton}

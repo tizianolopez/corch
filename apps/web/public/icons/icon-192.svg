@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <!-- Fondo de papel histórico -->
+  <rect width="192" height="192" rx="24" fill="#F7F4EF" />
+  
+  <!-- Marco doble decimonónico -->
+  <rect x="10" y="10" width="172" height="172" rx="16" fill="none" stroke="#1A1917" stroke-width="2.5" />
+  <rect x="15" y="15" width="162" height="162" rx="12" fill="none" stroke="#C8C4BB" stroke-width="1" />
+  
+  <!-- Corchete izquierdo "[" -->
+  <path d="M 68 52 L 50 52 L 50 140 L 68 140" fill="none" stroke="#1A1917" stroke-width="10" stroke-linecap="square" stroke-linejoin="miter" />
+  
+  <!-- Corchete derecho "]" -->
+  <path d="M 124 52 L 142 52 L 142 140 L 124 140" fill="none" stroke="#1A1917" stroke-width="10" stroke-linecap="square" stroke-linejoin="miter" />
+  
+  <!-- Punto central (linotipia / nodo semilla) en tinta almagre -->
+  <circle cx="96" cy="96" r="10" fill="#8B2500" />
+</svg>

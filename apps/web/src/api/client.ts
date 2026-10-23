@@ -59,6 +59,39 @@ export interface MergeSessionResponse {
   }
 }
 
+export interface UserStatsResponse {
+  userId: string
+  email: string | null
+  displayName: string | null
+  streakCurrent: number
+  streakMax: number
+  totalPlays: number
+  totalWins: number
+  winRate: number
+}
+
+export interface UserHistoryItem {
+  sessionId: string
+  puzzleId: string
+  editionNumber: number | null
+  publishDate: string | null
+  quoteAuthor: string | null
+  quoteWork: string | null
+  score: number | null
+  rankAchieved: string | null
+  durationMs: number | null
+  mistakesCount: number
+  hintsCount: number
+  isComplete: boolean
+  completedAt: string | null
+  startedAt: string
+}
+
+export interface UserHistoryResponse {
+  userId: string
+  history: UserHistoryItem[]
+}
+
 
 export class ApiClientError extends Error {
   statusCode?: number
@@ -217,5 +250,113 @@ export const apiClient = {
 
     return (await res.json()) as MergeSessionResponse
   },
+
+  /**
+   * Obtiene las estadísticas acumuladas y racha del usuario (GET /api/user/:userId/stats)
+   */
+  async getUserStats(userId: string): Promise<UserStatsResponse> {
+    const res = await fetch(`${getBaseUrl()}/api/user/${encodeURIComponent(userId)}/stats`, {
+      method: 'GET',
+    })
+
+    if (!res.ok) {
+      throw new ApiClientError(
+        `Error al obtener estadísticas del usuario: ${res.statusText}`,
+        res.status,
+      )
+    }
+
+    return (await res.json()) as UserStatsResponse
+  },
+
+  /**
+   * Obtiene el historial de crónicas y ediciones jugadas (GET /api/user/:userId/history)
+   */
+  async getUserHistory(userId: string): Promise<UserHistoryResponse> {
+    const res = await fetch(`${getBaseUrl()}/api/user/${encodeURIComponent(userId)}/history`, {
+      method: 'GET',
+    })
+
+    if (!res.ok) {
+      throw new ApiClientError(
+        `Error al obtener historial del usuario: ${res.statusText}`,
+        res.status,
+      )
+    }
+
+    return (await res.json()) as UserHistoryResponse
+  },
+
+  /**
+   * Crea un nuevo reto de la comunidad (POST /api/community/create)
+   */
+  async createCommunityPuzzle(
+    data: CreateCommunityPuzzlePayload,
+  ): Promise<CreateCommunityPuzzleResponse> {
+    const res = await fetch(`${getBaseUrl()}/api/community/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}))
+      throw new ApiClientError(
+        errorData.message || `Error al crear el reto de la comunidad: ${res.statusText}`,
+        res.status,
+      )
+    }
+
+    return (await res.json()) as CreateCommunityPuzzleResponse
+  },
+
+  /**
+   * Obtiene un reto de la comunidad por su ID corto (GET /api/community/:shortId)
+   */
+  async getCommunityPuzzle(shortId: string): Promise<CommunityPuzzleResponse> {
+    const res = await fetch(`${getBaseUrl()}/api/community/${encodeURIComponent(shortId)}`, {
+      method: 'GET',
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}))
+      throw new ApiClientError(
+        errorData.message || `Error al obtener el reto de la comunidad: ${res.statusText}`,
+        res.status,
+      )
+    }
+
+    return (await res.json()) as CommunityPuzzleResponse
+  },
 }
+
+export interface CreateCommunityPuzzlePayload {
+  markup: string
+  creatorAlias?: string
+  quoteAuthor?: string
+  quoteWork?: string
+  quoteYear?: number
+  editorialNote?: string
+  nodes?: {
+    id: string
+    solution: string
+    type?: string
+  }[]
+}
+
+export interface CreateCommunityPuzzleResponse {
+  shortId: string
+  url: string
+  creatorAlias: string
+}
+
+export interface CommunityPuzzleResponse {
+  id: string
+  creatorAlias: string
+  clientPayload: ClientPayload
+  playsCount: number
+  createdAt: string
+}
+
+
 

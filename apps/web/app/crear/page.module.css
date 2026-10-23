@@ -1,0 +1,461 @@
+/* ── Taller de Creación de Retos UGC (Página /crear) ──────────────────────── */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-paper, #F7F4EF);
+  color: var(--color-ink, #1A1917);
+  font-family: var(--font-newsreader, 'Georgia', serif);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+/* ── Cabecera ────────────────────────────────────────────────────────────── */
+
+.navHeader {
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border, #C8C4BB);
+  margin-bottom: 24px;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.85rem;
+}
+
+.backLink {
+  color: var(--color-ink, #1A1917);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  transition: opacity 0.15s ease;
+}
+
+.backLink:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+.workshopTag {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-accent-ink, #8B2500);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.titleArea {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.mainTitle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  line-height: 1.15;
+}
+
+.subtitle {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--color-ink-secondary, #4A4742);
+  margin: 0;
+}
+
+.dividerDouble {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 18px auto 0;
+  max-width: 320px;
+}
+
+.ruleThick {
+  height: 2px;
+  background-color: var(--color-ink, #1A1917);
+}
+
+.ruleThin {
+  height: 1px;
+  background-color: var(--color-ink, #1A1917);
+}
+
+/* ── Layout en dos columnas ──────────────────────────────────────────────── */
+
+.workshopGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .workshopGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ── Columna Izquierda: Formulario de edición ────────────────────────────── */
+
+.editorSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formCard {
+  background-color: var(--color-paper-card, #EDE8E0);
+  border: 1px solid var(--color-border, #C8C4BB);
+  padding: 24px;
+  border-radius: 2px;
+}
+
+.sectionHeader {
+  font-size: 0.8rem;
+  font-family: var(--font-inter, sans-serif);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-ink, #8B2500);
+  margin: 0 0 12px;
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+}
+
+.instructionText {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-ink-secondary, #4A4742);
+  margin: 0 0 16px;
+}
+
+.instructionCode {
+  font-family: var(--font-jetbrains, monospace);
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  font-size: 0.85em;
+  border-radius: 2px;
+}
+
+.markupTextarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 14px;
+  font-family: var(--font-newsreader, 'Georgia', serif);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  background-color: var(--color-paper, #F7F4EF);
+  color: var(--color-ink, #1A1917);
+  border: 1px solid var(--color-border, #C8C4BB);
+  border-radius: 2px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.markupTextarea:focus {
+  outline: 2px solid var(--color-ink, #1A1917);
+  outline-offset: 1px;
+}
+
+/* ── Nodos detectados ────────────────────────────────────────────────────── */
+
+.nodesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.nodeCard {
+  background-color: var(--color-paper, #F7F4EF);
+  border: 1px solid var(--color-border, #C8C4BB);
+  padding: 16px;
+  border-left: 4px solid var(--color-ink, #1A1917);
+}
+
+.nodeCardHeader {
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.nodeBadge {
+  font-family: var(--font-jetbrains, monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-ink, #1A1917);
+}
+
+.nodeCluePreview {
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--color-ink-secondary, #4A4742);
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+
+.nodeInputGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 500px) {
+  .nodeInputGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inputLabel {
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--color-ink-secondary, #4A4742);
+}
+
+.textInput,
+.selectInput {
+  padding: 8px 10px;
+  border: 1px solid var(--color-border, #C8C4BB);
+  background-color: #FFFFFF;
+  color: var(--color-ink, #1A1917);
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.88rem;
+  border-radius: 2px;
+}
+
+.textInput:focus,
+.selectInput:focus {
+  outline: 2px solid var(--color-ink, #1A1917);
+  outline-offset: 1px;
+}
+
+/* ── Metadatos del reto ──────────────────────────────────────────────────── */
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 550px) {
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Columna Derecha: Vista previa ───────────────────────────────────────── */
+
+.previewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 24px;
+}
+
+.previewCard {
+  background-color: var(--color-paper, #F7F4EF);
+  border: 1px solid var(--color-ink, #1A1917);
+  padding: 24px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.previewHeader {
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-ink-secondary, #4A4742);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--color-border, #C8C4BB);
+  display: flex;
+  justifyContent: space-between;
+}
+
+.quoteDisplay {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--color-ink, #1A1917);
+  margin: 0 0 16px;
+}
+
+.previewBracket {
+  border-bottom: 2px solid var(--color-ink, #1A1917);
+  padding: 0 4px;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-accent-ink, #8B2500);
+}
+
+.attributionDisplay {
+  font-size: 0.9rem;
+  color: var(--color-ink-secondary, #4A4742);
+  text-align: right;
+  margin: 0;
+  font-style: italic;
+}
+
+.errorBanner {
+  background-color: #FDF2F0;
+  border: 1px solid #E57373;
+  color: var(--color-accent-ink, #8B2500);
+  padding: 12px 16px;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.85rem;
+  border-radius: 2px;
+}
+
+.statsRow {
+  display: flex;
+  justifyContent: space-between;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.8rem;
+  color: var(--color-ink-secondary, #4A4742);
+  padding: 10px 0;
+  border-top: 1px solid var(--color-border, #C8C4BB);
+}
+
+/* ── Botón de publicar ───────────────────────────────────────────────────── */
+
+.publishBtn {
+  background-color: var(--color-ink, #1A1917);
+  color: #FFFFFF;
+  border: none;
+  padding: 14px 24px;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.publishBtn:hover:not(:disabled) {
+  background-color: #333330;
+}
+
+.publishBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Certificado / Éxito al publicar ─────────────────────────────────────── */
+
+.successCard {
+  background-color: #FAF6ED;
+  border: 2px double var(--color-accent-ink, #8B2500);
+  padding: 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.successStamp {
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent-ink, #8B2500);
+}
+
+.successTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.successDesc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-ink-secondary, #4A4742);
+  margin: 0;
+}
+
+.linkBox {
+  display: flex;
+  gap: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border, #C8C4BB);
+  padding: 10px 14px;
+  border-radius: 2px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.urlText {
+  font-family: var(--font-jetbrains, monospace);
+  font-size: 0.9rem;
+  color: var(--color-ink, #1A1917);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copyBtn {
+  background-color: var(--color-ink, #1A1917);
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 14px;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.copyBtnDone {
+  background-color: #2E6B34;
+}
+
+.successActionRow {
+  display: flex;
+  gap: 12px;
+  justifyContent: center;
+  margin-top: 8px;
+}
+
+.playBtn {
+  background-color: var(--color-accent-ink, #8B2500);
+  color: #FFFFFF;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.newChallengeBtn {
+  background: none;
+  border: 1px solid var(--color-ink, #1A1917);
+  color: var(--color-ink, #1A1917);
+  padding: 10px 20px;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}

@@ -43,3 +43,33 @@ input {
   font: inherit;
   color: inherit;
 }
+
+/* ─── Accesibilidad WCAG 2.1 AA ─── */
+
+/* Enlace accesible para saltar al contenido principal */
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: 16px;
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  padding: 10px 18px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: underline;
+  z-index: 10000;
+  border: 2px solid var(--color-paper);
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+/* Indicadores de foco visibles de alto contraste para navegación por teclado */
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+

@@ -324,6 +324,77 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
       fastify.log.warn({ err }, 'Error al calcular percentil con Redis')
     }
 
+    // 4. Si la sesión pertenece a un usuario registrado, actualizar su racha y estadísticas
+    let userStats: {
+      streakCurrent: number
+      streakMax: number
+      totalPlays: number
+      totalWins: number
+    } | null = null
+
+    const effectiveUserId = session?.userId
+    if (effectiveUserId) {
+      if (fastify.db) {
+        try {
+          const userSessions = await fastify.db
+            .select()
+            .from(playSessions)
+            .where(eq(playSessions.userId, effectiveUserId))
+
+          const totalPlays = userSessions.length
+          const totalWins = userSessions.filter((s) => s.isComplete).length
+          const completedDates: string[] = []
+          for (const s of userSessions) {
+            if (s.isComplete && s.completedAt) {
+              completedDates.push(s.completedAt.toISOString().slice(0, 10))
+            }
+          }
+
+          const streak = calculateStreak(completedDates, today)
+          userStats = {
+            totalPlays,
+            totalWins,
+            streakCurrent: streak.streakCurrent,
+            streakMax: streak.streakMax,
+          }
+
+          await fastify.db
+            .update(users)
+            .set({
+              streakCurrent: userStats.streakCurrent,
+              streakMax: userStats.streakMax,
+              totalPlays: userStats.totalPlays,
+              totalWins: userStats.totalWins,
+            })
+            .where(eq(users.id, effectiveUserId))
+        } catch (err) {
+          fastify.log.warn({ err }, 'Error al actualizar racha y stats del usuario en PostgreSQL')
+        }
+      }
+
+      if (!fastify.db) {
+        const userSessions = Array.from(memorySessions.values()).filter(
+          (s) => s.userId === effectiveUserId,
+        )
+        const totalPlays = userSessions.length
+        const totalWins = userSessions.filter((s) => s.isComplete).length
+        const completedDates: string[] = []
+        for (const s of userSessions) {
+          if (s.isComplete && s.completedAt) {
+            completedDates.push(s.completedAt.toISOString().slice(0, 10))
+          }
+        }
+
+        const streak = calculateStreak(completedDates, today)
+        userStats = {
+          totalPlays,
+          totalWins,
+          streakCurrent: streak.streakCurrent,
+          streakMax: streak.streakMax,
+        }
+      }
+    }
+
     return reply.send({
       success: true,
       sessionId,
@@ -331,6 +402,7 @@ export const sessionRoutes: FastifyPluginAsync = async (fastify) => {
       score,
       rankAchieved,
       percentile,
+      ...(userStats ? { userStats } : {}),
     })
   }
 

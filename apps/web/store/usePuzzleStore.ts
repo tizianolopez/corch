@@ -225,7 +225,7 @@ export const usePuzzleStore = create<GameStore>()(
           puzzleState: nextState,
           lastAnswerWrong: true,
         })
-        setTimeout(() => set({ lastAnswerWrong: false }), 600)
+        setTimeout(() => set({ lastAnswerWrong: false }), 2000)
       }
 
       return result

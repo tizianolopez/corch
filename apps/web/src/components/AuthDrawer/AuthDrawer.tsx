@@ -15,7 +15,7 @@ import {
   getCurrentUser,
   onAuthStateChange,
 } from '../../lib/supabase'
-import { apiClient } from '../../api/client'
+import { apiClient, type UserHistoryItem } from '../../api/client'
 import { getOrCreateAnonymousId } from '../../lib/anonymousSession'
 import styles from './AuthDrawer.module.css'
 
@@ -39,12 +39,15 @@ export function AuthDrawer({
   onUserChange,
 }: AuthDrawerProps): ReactElement | null {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [activeTab, setActiveTab] = useState<'stats' | 'history'>('stats')
   const [userStats, setUserStats] = useState<{
     totalPlays: number
     totalWins: number
     streakCurrent: number
     streakMax: number
   } | null>(null)
+  const [userHistory, setUserHistory] = useState<UserHistoryItem[]>([])
+  const [loadingHistory, setLoadingHistory] = useState(false)
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [statusMessage, setStatusMessage] = useState<{
@@ -81,10 +84,27 @@ export function AuthDrawer({
           .catch((err) => {
             console.warn('Error al fusionar sesión anónima:', err)
           })
+
+        setLoadingHistory(true)
+        void apiClient
+          .getUserHistory(u.id)
+          .then((hRes) => {
+            if (mounted) {
+              setUserHistory(hRes.history)
+            }
+          })
+          .catch((err) => {
+            console.warn('Error al cargar historial del usuario:', err)
+          })
+          .finally(() => {
+            if (mounted) setLoadingHistory(false)
+          })
       } else {
         setUserStats(null)
+        setUserHistory([])
       }
     }
+
 
     void getCurrentUser().then(syncUserAndMerge)
 
@@ -193,6 +213,7 @@ export function AuthDrawer({
       } else {
         setCurrentUser(null)
         setUserStats(null)
+        setUserHistory([])
         onUserChange?.(null)
       }
     } finally {
@@ -246,20 +267,94 @@ export function AuthDrawer({
                 Tus crónicas y estadísticas quedan asociadas a esta dirección.
               </p>
 
-              {userStats && (
-                <div className={styles.statsSummary}>
-                  <div className={styles.statItem}>
-                    <span className={styles.statNumber}>{userStats.streakCurrent}</span>
-                    <span className={styles.statLabel}>Racha actual</span>
+              {/* Selector de pestañas */}
+              <div className={styles.tabs} role="tablist">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === 'stats'}
+                  className={`${styles.tabButton} ${activeTab === 'stats' ? styles.tabButtonActive : ''}`}
+                  onClick={() => setActiveTab('stats')}
+                >
+                  Estadísticas
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === 'history'}
+                  className={`${styles.tabButton} ${activeTab === 'history' ? styles.tabButtonActive : ''}`}
+                  onClick={() => setActiveTab('history')}
+                >
+                  Crónicas pasadas
+                </button>
+              </div>
+
+              {/* Pestaña: Estadísticas */}
+              {activeTab === 'stats' && (
+                userStats ? (
+                  <div className={styles.statsSummary}>
+                    <div className={styles.statItem}>
+                      <span className={styles.statNumber}>{userStats.streakCurrent}</span>
+                      <span className={styles.statLabel}>Racha actual</span>
+                    </div>
+                    <div className={styles.statItem}>
+                      <span className={styles.statNumber}>{userStats.streakMax}</span>
+                      <span className={styles.statLabel}>Racha máxima</span>
+                    </div>
+                    <div className={styles.statItem}>
+                      <span className={styles.statNumber}>{userStats.totalPlays}</span>
+                      <span className={styles.statLabel}>Partidas</span>
+                    </div>
+                    <div className={styles.statItem}>
+                      <span className={styles.statNumber}>{userStats.totalWins}</span>
+                      <span className={styles.statLabel}>Victorias</span>
+                    </div>
                   </div>
-                  <div className={styles.statItem}>
-                    <span className={styles.statNumber}>{userStats.streakMax}</span>
-                    <span className={styles.statLabel}>Racha máxima</span>
-                  </div>
-                  <div className={styles.statItem}>
-                    <span className={styles.statNumber}>{userStats.totalWins}</span>
-                    <span className={styles.statLabel}>Victorias</span>
-                  </div>
+                ) : (
+                  <p className={styles.emptyHistory}>Cargando estadísticas…</p>
+                )
+              )}
+
+              {/* Pestaña: Historial de crónicas */}
+              {activeTab === 'history' && (
+                <div className={styles.historyList}>
+                  {loadingHistory ? (
+                    <p className={styles.emptyHistory}>Cargando crónicas…</p>
+                  ) : userHistory.length === 0 ? (
+                    <p className={styles.emptyHistory}>
+                      Aún no has completado ninguna crónica. ¡Resuelve el puzle de hoy para comenzar tu racha!
+                    </p>
+                  ) : (
+                    userHistory.map((item) => (
+                      <article key={item.sessionId} className={styles.historyItem}>
+                        <div className={styles.historyMeta}>
+                          <span>
+                            {item.editionNumber ? `N.º ${String(item.editionNumber).padStart(5, '0')}` : 'EDICIÓN'}
+                          </span>
+                          <time>{item.publishDate || (item.completedAt ? item.completedAt.slice(0, 10) : '')}</time>
+                        </div>
+                        {(item.quoteAuthor || item.quoteWork) && (
+                          <p className={styles.historyQuote}>
+                            {item.quoteWork ? `«${item.quoteWork}»` : ''}
+                            {item.quoteAuthor ? ` — ${item.quoteAuthor}` : ''}
+                          </p>
+                        )}
+                        <div className={styles.historyResult}>
+                          <span className={styles.historyScore}>
+                            {item.score !== null ? `${item.score} pts` : 'Incompleto'}
+                          </span>
+                          <span className={styles.historyRank}>
+                            {item.rankAchieved || (item.isComplete ? 'Completado' : 'En curso')}
+                          </span>
+                        </div>
+                        <div className={styles.historyDetails}>
+                          <span>
+                            {item.durationMs ? `${Math.floor(item.durationMs / 1000)}s` : '—'} · {item.mistakesCount} errores · {item.hintsCount} pistas
+                          </span>
+                        </div>
+                      </article>
+                    ))
+                  )}
                 </div>
               )}
 

@@ -13,6 +13,9 @@ export type {
   CompleteSessionPayload,
   CompleteSessionResponse,
   MergeSessionResponse,
+  UserStatsResponse,
+  UserHistoryItem,
+  UserHistoryResponse,
 } from './api/client'
 
 export { AuthDrawer } from './components/AuthDrawer'

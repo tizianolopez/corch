@@ -1,0 +1,131 @@
+/* ── Estilos para la partida de reto de la comunidad (/r/[shortId]) ──────── */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-paper, #F7F4EF);
+  color: var(--color-ink, #1A1917);
+  font-family: var(--font-newsreader, 'Georgia', serif);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+/* ── Cabecera de navegación ──────────────────────────────────────────────── */
+
+.navHeader {
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border, #C8C4BB);
+  margin-bottom: 20px;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.85rem;
+}
+
+.navLink {
+  color: var(--color-ink, #1A1917);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.15s ease;
+}
+
+.navLink:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
+/* ── Banner de partida informal ──────────────────────────────────────────── */
+
+.informalBanner {
+  background-color: var(--color-paper-card, #EDE8E0);
+  border: 1px solid var(--color-border, #C8C4BB);
+  padding: 10px 16px;
+  display: flex;
+  justifyContent: space-between;
+  align-items: center;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.8rem;
+  color: var(--color-ink-secondary, #4A4742);
+  margin-bottom: 24px;
+  border-radius: 2px;
+}
+
+.informalBadge {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-accent-ink, #8B2500);
+}
+
+.creatorFmt {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-ink, #1A1917);
+}
+
+/* ── Indicador de pista activa ───────────────────────────────────────────── */
+
+.hintBar {
+  text-align: center;
+  margin: 16px 0;
+  font-size: 1.05rem;
+  color: var(--color-ink-secondary, #4A4742);
+  line-height: 1.5;
+}
+
+.hintBar strong {
+  color: var(--color-ink, #1A1917);
+}
+
+.errorFeedback {
+  text-align: center;
+  color: var(--color-accent-ink, #8B2500);
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.88rem;
+  margin-top: 8px;
+}
+
+.loadingArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--color-ink-secondary, #4A4742);
+}
+
+.errorArea {
+  background-color: #FDF2F0;
+  border: 1px solid #E57373;
+  color: var(--color-accent-ink, #8B2500);
+  padding: 24px;
+  text-align: center;
+  margin: 40px auto;
+  max-width: 600px;
+}
+
+.actionRow {
+  display: flex;
+  gap: 16px;
+  justifyContent: center;
+  margin-top: 24px;
+}
+
+.actionBtn {
+  background-color: var(--color-ink, #1A1917);
+  color: #FFFFFF;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-family: var(--font-inter, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+}

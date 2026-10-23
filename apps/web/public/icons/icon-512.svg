@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Fondo de papel verjurado -->
+  <rect width="512" height="512" rx="64" fill="#F7F4EF" />
+  
+  <!-- Filete exterior grueso -->
+  <rect x="28" y="28" width="456" height="456" rx="42" fill="none" stroke="#1A1917" stroke-width="7" />
+  <!-- Filete interior fino -->
+  <rect x="42" y="42" width="428" height="428" rx="32" fill="none" stroke="#C8C4BB" stroke-width="2.5" />
+  
+  <!-- Tipografía de corchetes de imprenta: Corchete izquierdo "[" -->
+  <path d="M 180 130 L 132 130 L 132 382 L 180 382" fill="none" stroke="#1A1917" stroke-width="28" stroke-linecap="square" stroke-linejoin="miter" />
+  
+  <!-- Corchete derecho "]" -->
+  <path d="M 332 130 L 380 130 L 380 382 L 332 382" fill="none" stroke="#1A1917" stroke-width="28" stroke-linecap="square" stroke-linejoin="miter" />
+  
+  <!-- Nodo central en tinta almagre (#8B2500) -->
+  <circle cx="256" cy="256" r="28" fill="#8B2500" />
+</svg>

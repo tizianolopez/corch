@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import type { Metadata, Viewport } from 'next'
 import { Newsreader, Inter, JetBrains_Mono } from 'next/font/google'
+import { ServiceWorkerRegistration } from '../src/components/ServiceWorkerRegistration'
+import { JsonLd } from '../src/components/JsonLd'
 import './globals.css'
 
 const newsreader = Newsreader({
@@ -28,6 +30,40 @@ export const metadata: Metadata = {
     'El pasatiempo diario que se resuelve de dentro hacia afuera. Reconstruye citas célebres de la literatura en español descifrando pistas jerárquicas anidadas entre corchetes.',
   authors: [{ name: 'Corchetes' }],
   keywords: ['juego de palabras', 'pasatiempo', 'literatura', 'crucigrama', 'corchetes'],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://corchetes.es'),
+  openGraph: {
+    title: 'Corchetes — El juego de reconstrucción léxica',
+    description:
+      'El pasatiempo diario que se resuelve de dentro hacia afuera. Reconstruye citas célebres de la literatura en español descifrando pistas jerárquicas anidadas entre corchetes.',
+    url: 'https://corchetes.es',
+    siteName: 'Corchetes',
+    locale: 'es_ES',
+    type: 'website',
+    images: [
+      {
+        url: '/api/og/today',
+        width: 1200,
+        height: 630,
+        alt: 'Corchetes — Ficha hemerográfica de la edición diaria',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Corchetes — El juego de reconstrucción léxica',
+    description:
+      'El pasatiempo diario que se resuelve de dentro hacia afuera. Reconstruye citas célebres de la literatura en español.',
+    images: ['/api/og/today'],
+  },
+  manifest: '/manifest.webmanifest',
+  alternates: {
+    canonical: '/',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Corchetes',
+  },
 }
 
 export const viewport: Viewport = {
@@ -74,8 +110,15 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <JsonLd />
       </head>
-      <body>{children}</body>
+      <body>
+        <a href="#main-content" className="skip-link">
+          Saltar al contenido principal
+        </a>
+        {children}
+        <ServiceWorkerRegistration />
+      </body>
     </html>
   )
 }

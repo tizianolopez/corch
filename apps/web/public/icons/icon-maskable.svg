@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Fondo completo sin esquinas redondeadas para permitir recorte adaptativo -->
+  <rect width="512" height="512" fill="#F7F4EF" />
+  
+  <!-- Filete circular/cuadrado en zona segura (centro 80%) -->
+  <rect x="70" y="70" width="372" height="372" fill="none" stroke="#1A1917" stroke-width="6" />
+  
+  <!-- Corchetes centrados dentro de la zona segura de máscara -->
+  <path d="M 195 160 L 155 160 L 155 352 L 195 352" fill="none" stroke="#1A1917" stroke-width="24" stroke-linecap="square" stroke-linejoin="miter" />
+  <path d="M 317 160 L 357 160 L 357 352 L 317 352" fill="none" stroke="#1A1917" stroke-width="24" stroke-linecap="square" stroke-linejoin="miter" />
+  
+  <!-- Semilla central -->
+  <circle cx="256" cy="256" r="22" fill="#8B2500" />
+</svg>

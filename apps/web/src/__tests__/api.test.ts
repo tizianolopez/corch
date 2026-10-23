@@ -281,5 +281,142 @@ describe('Conexión apps/web con apps/api (Fase 2.5)', () => {
     expect(res.mergedSessionsCount).toBe(3)
     expect(res.stats.streakCurrent).toBe(2)
   })
+
+  it('apiClient.getUserStats obtiene las estadísticas acumuladas del usuario', async () => {
+    const mockStats = {
+      userId: 'usr-123',
+      email: 'lector@corchetes.es',
+      displayName: 'Lector',
+      streakCurrent: 5,
+      streakMax: 7,
+      totalPlays: 12,
+      totalWins: 10,
+      winRate: 0.83,
+    }
+
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockStats,
+    } as Response)
+
+    const res = await apiClient.getUserStats('usr-123')
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining('/api/user/usr-123/stats'),
+      expect.objectContaining({ method: 'GET' }),
+    )
+    expect(res.streakCurrent).toBe(5)
+    expect(res.streakMax).toBe(7)
+    expect(res.totalWins).toBe(10)
+  })
+
+  it('apiClient.getUserHistory obtiene la lista de crónicas jugadas', async () => {
+    const mockHistory = {
+      userId: 'usr-123',
+      history: [
+        {
+          sessionId: 'sess-1',
+          puzzleId: 'puz-1',
+          editionNumber: 142,
+          publishDate: '2026-10-23',
+          quoteAuthor: 'Cervantes',
+          quoteWork: 'Quijote',
+          score: 100,
+          rankAchieved: 'Gran Maestro',
+          durationMs: 95000,
+          mistakesCount: 0,
+          hintsCount: 0,
+          isComplete: true,
+          completedAt: '2026-10-23T08:30:00.000Z',
+          startedAt: '2026-10-23T08:28:25.000Z',
+        },
+      ],
+    }
+
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockHistory,
+    } as Response)
+
+    const res = await apiClient.getUserHistory('usr-123')
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining('/api/user/usr-123/history'),
+      expect.objectContaining({ method: 'GET' }),
+    )
+    expect(res.history.length).toBe(1)
+    expect(res.history[0]?.editionNumber).toBe(142)
+    expect(res.history[0]?.rankAchieved).toBe('Gran Maestro')
+  })
+
+  it('apiClient.createCommunityPuzzle envía POST /api/community/create y devuelve shortId y url', async () => {
+    const mockRes = {
+      shortId: 'x8k9p2m1',
+      url: '/r/x8k9p2m1',
+      creatorAlias: 'Lector Test',
+    }
+
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockRes,
+    } as Response)
+
+    const payload = {
+      markup: 'En un [lugar|sitio] de la Mancha',
+      creatorAlias: 'Lector Test',
+      nodes: [{ id: 'n1', solution: 'lugar' }],
+    }
+
+    const result = await apiClient.createCommunityPuzzle(payload)
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining('/api/community/create'),
+      expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }),
+    )
+    expect(result.shortId).toBe('x8k9p2m1')
+    expect(result.url).toBe('/r/x8k9p2m1')
+  })
+
+  it('apiClient.getCommunityPuzzle envía GET /api/community/:shortId y devuelve el reto', async () => {
+    const mockPuzzle = {
+      id: 'x8k9p2m1',
+      creatorAlias: 'Lector Test',
+      clientPayload: {
+        puzzleId: 'x8k9p2m1',
+        editionNumber: 0,
+        publishDate: '2026-10-23',
+        rootTemplate: 'En un {{n1}} de la Mancha',
+        dailySalt: 'salt-x8k9p2m1',
+        nodes: {},
+        quoteAuthor: 'Cervantes',
+        quoteWork: 'Quijote',
+        quoteYear: 1605,
+        editorialNote: '',
+      },
+      playsCount: 3,
+      createdAt: '2026-10-23T08:00:00.000Z',
+    }
+
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockPuzzle,
+    } as Response)
+
+    const result = await apiClient.getCommunityPuzzle('x8k9p2m1')
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining('/api/community/x8k9p2m1'),
+      expect.objectContaining({ method: 'GET' }),
+    )
+    expect(result.id).toBe('x8k9p2m1')
+    expect(result.creatorAlias).toBe('Lector Test')
+    expect(result.playsCount).toBe(3)
+  })
 })
+
+
 
