@@ -1,0 +1,510 @@
+{
+  "anagrama": [
+    {
+      "clue": "Han enderrocat Roma com a gest de devoció",
+      "solution": "amor",
+      "depth": 0
+    },
+    {
+      "clue": "El noi més extrem ha vingut girat",
+      "solution": "Lop",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret una poda massiva, del revés un avió o un mussol",
+      "solution": "talà",
+      "depth": 0
+    },
+    {
+      "clue": "La lletra que a Empòrion s'hi sentia com a casa, però que a Tarraco no hi pintava res, al revés que la seva germana.",
+      "solution": "y",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret ens dona raïm, del revés un adolescent castellà ho dirà quan alguna cosa li encanta",
+      "solution": "cep",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret adverbi d'intensificació o comparació, del revés nascut",
+      "solution": "tan",
+      "depth": 0
+    },
+    {
+      "clue": "Les dues primeres lletres de l'abecedari si l'ordenem del revés",
+      "solution": "zy",
+      "depth": 0
+    },
+    {
+      "clue": "S’ha regirat el nombre de nans de la Blancaneus i existeixes",
+      "solution": "ets",
+      "depth": 2
+    },
+    {
+      "clue": "El dret em dic, del revés hi visc",
+      "solution": "nom",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret, invertit; del revés, rigorós",
+      "solution": "revés",
+      "depth": 1
+    },
+    {
+      "clue": "Del dret preguen mentre del revés ell veu Roma cremar-se",
+      "solution": "oren",
+      "depth": 1
+    },
+    {
+      "clue": "Soroll que fan els pirates, que del revés és el deu del sol",
+      "solution": "ar",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret pertany a algú; del revés il·lumina molt econòmicament.",
+      "solution": "del",
+      "depth": 0
+    },
+    {
+      "clue": "Un català li dona les gràcies a un francès, o al revés, no ho sé",
+      "solution": "merci",
+      "depth": 1
+    },
+    {
+      "clue": "Del dret, l'anglès hi entra; del revés, li falta la \"T\" per ser estelada.",
+      "solution": "in",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret és un regne, del revés, un pòster",
+      "solution": "animal",
+      "depth": 1
+    },
+    {
+      "clue": "Signe d'un alfabet antic, o pedres d'un edifici enderrocat",
+      "solution": "r una",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret no acaba de ser ben bé això... i de l'inrevés et bull els macarrons",
+      "solution": "Allò",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret, una paraula; del revés, persegueix en Jerry",
+      "solution": "mot",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret, al cap; del revés, udola",
+      "solution": "poll",
+      "depth": 1
+    },
+    {
+      "clue": "Del dret el buit; del revés existir",
+      "solution": "res",
+      "depth": 0
+    },
+    {
+      "clue": "Vinga, aclotem amb caos per arribar a la taula rodona!",
+      "solution": "Camelot",
+      "depth": 1
+    },
+    {
+      "clue": "Del dret òrgan central, del revés només una pedra",
+      "solution": "cor",
+      "depth": 0
+    },
+    {
+      "clue": "Del dret l'anglès ha tret una notassa, i de l'inrevés el català ho deixa polit",
+      "solution": "ten",
+      "depth": 0
+    },
+    {
+      "clue": "Sigles ianquis, o dels Emirats barrejats",
+      "solution": "EUA",
+      "depth": 1
+    }
+  ],
+  "telescopica": [
+    {
+      "clue": "La diabètica sempre acaba parlant de la moral",
+      "solution": "ètica",
+      "depth": 0
+    },
+    {
+      "clue": "Ora en aquell racó de Manresa",
+      "solution": "resa",
+      "depth": 0
+    },
+    {
+      "clue": "La senyera no vol pols",
+      "solution": "seny",
+      "depth": 0
+    },
+    {
+      "clue": "La capital del Pallars Jussà no té fi",
+      "solution": "trem",
+      "depth": 1
+    },
+    {
+      "clue": "Trobes bones idees quan acabes l'aliment",
+      "solution": "Ment",
+      "depth": 0
+    },
+    {
+      "clue": "Corrent d'aigua que pots trobar a Júpiter o a Waterloo",
+      "solution": "Ter",
+      "depth": 2
+    },
+    {
+      "clue": "Si el teu grup d'amics té aquest nombre de persones o menys no podeu fer l'amic invisible i que realment sigui invisible",
+      "solution": "tres",
+      "depth": 1
+    },
+    {
+      "clue": "Aquest \"bro\" probablement té Bitcoins",
+      "solution": "cripto",
+      "depth": 1
+    },
+    {
+      "clue": "La part de la ciència que subjecta les dents, a Espanya i Llatinoamèrica",
+      "solution": "ència",
+      "depth": 1
+    },
+    {
+      "clue": "El riu més estimat per l'Ester, el porter i el fruiter.",
+      "solution": "ter",
+      "depth": 0
+    },
+    {
+      "clue": "Aquell làctic que s'assembla molt més en francès i en italià que en castellà, que no té res a veure",
+      "solution": "formatge",
+      "depth": 2
+    },
+    {
+      "clue": "Amb una \"g\" ens parlaria de massa, però com que no en té cap, ens parla de temperatura",
+      "solution": "K",
+      "depth": 0
+    },
+    {
+      "clue": "Un atac d'ira descontrolada et porta a la costa gallega",
+      "solution": "ria",
+      "depth": 0
+    },
+    {
+      "clue": "La mare d'en Bernat encara està embarassada",
+      "solution": "ber",
+      "depth": 0
+    },
+    {
+      "clue": "Té branques i és irracional",
+      "solution": "pi",
+      "depth": 1
+    },
+    {
+      "clue": "Al final les ha unit l'anell però una de la parella se n'ha anat",
+      "solution": "anel",
+      "depth": 0
+    },
+    {
+      "clue": "Com va dir el mestre Yoda: La por porta a la ira, la ira porta a l'___, i aquest porta al sofriment",
+      "solution": "odi",
+      "depth": 0
+    },
+    {
+      "clue": "Quan soc al metro de Londres miro Youtube sense tu",
+      "solution": "tube",
+      "depth": 1
+    },
+    {
+      "clue": "La vam veure pel centre de Gelida",
+      "solution": "Eli",
+      "depth": 0
+    },
+    {
+      "clue": "Té el costum de vestir-se de monja",
+      "solution": "habit",
+      "depth": 2
+    },
+    {
+      "clue": "La pila dels afores d'Agramunt",
+      "solution": "munt",
+      "depth": 0
+    },
+    {
+      "clue": "Pots practicar aquest esport al centre de Montesquiu",
+      "solution": "esqui",
+      "depth": 1
+    },
+    {
+      "clue": "Aguaita i té fe",
+      "solution": "espera",
+      "depth": 0
+    },
+    {
+      "clue": "Porta a sobre el pes de l'augment de la bateria",
+      "solution": "carrega",
+      "depth": 2
+    },
+    {
+      "clue": "Com Déu el va portar al mon",
+      "solution": "nu",
+      "depth": 1
+    }
+  ],
+  "charada": [
+    {
+      "clue": "En necessites una per estendre la roba o per fer mitja",
+      "solution": "agulla",
+      "depth": 1
+    },
+    {
+      "clue": "Fa mitja volta a la baguette",
+      "solution": "ap",
+      "depth": 1
+    },
+    {
+      "clue": "La Jennifer López va haver de desmentir que s'hagués assegurat aquesta part del cos (tot i que la Kim Kardashian sí que ho ha fet per 10 milions)",
+      "solution": "cul",
+      "depth": 1
+    },
+    {
+      "clue": "El cable aux s'ha liat, ara el principi va al final!",
+      "solution": "uxa",
+      "depth": 0
+    },
+    {
+      "clue": "Primera persona del plural del present d'indicatiu de tenir",
+      "solution": "tenim",
+      "depth": 0
+    },
+    {
+      "clue": "Es parteix com l'Ebre o el Ter",
+      "solution": "riu",
+      "depth": 1
+    },
+    {
+      "clue": "Allò que comparteixen aquell antic porter del Barça i l'escriptor dels Miserables",
+      "solution": "Víctor",
+      "depth": 0
+    },
+    {
+      "clue": "Si t'ho diuen acompanyat d'\"escac\", ja pots donar la partida per acabada.",
+      "solution": "mat",
+      "depth": 1
+    },
+    {
+      "clue": "Opines com aquell cap",
+      "solution": "Creus",
+      "depth": 0
+    },
+    {
+      "clue": "Amb accent, atribut intrínsec de les partícules elementals, sense, col·loca la mercaderia al camió",
+      "solution": "carrega",
+      "depth": 1
+    },
+    {
+      "clue": "Al final l'establiment que han escollit no és estranger",
+      "solution": "local",
+      "depth": 1
+    },
+    {
+      "clue": "Nom que comparteixen dues Spice Girls",
+      "solution": "mel",
+      "depth": 2
+    },
+    {
+      "clue": "Part del cos que et grates quan no n’hi ha ni un",
+      "solution": "cap",
+      "depth": 0
+    },
+    {
+      "clue": "En un avió la primera acostuma a ser més còmoda i cara que la segona",
+      "solution": "classe",
+      "depth": 2
+    },
+    {
+      "clue": "La primera lletra que aprenen a Grècia",
+      "solution": "alfa",
+      "depth": 1
+    },
+    {
+      "clue": "Com la Seu de Lleida o l'Andorra capital",
+      "solution": "vella",
+      "depth": 1
+    },
+    {
+      "clue": "Connexions mòbils entre motos amb tubs d'escapament antireglamentaris",
+      "solution": "Trucades",
+      "depth": 1
+    },
+    {
+      "clue": "Abans se n'encarregaven les bugaderes, i ara aquestes màquines que ocupen mitja cuina",
+      "solution": "rentadores",
+      "depth": 1
+    },
+    {
+      "clue": "El que hauries de dir cap al final del famós joc de cartes si es tingués en compte que carta és femení",
+      "solution": "Una",
+      "depth": 0
+    },
+    {
+      "clue": "N'ets capaç! De posar-hi conserves, com a mínim",
+      "solution": "Pots",
+      "depth": 1
+    },
+    {
+      "clue": "Capital de Letònia",
+      "solution": "riga",
+      "depth": 0
+    },
+    {
+      "clue": "Ho repetia Edith Piaf tot i que no és cap cosa",
+      "solution": "rien",
+      "depth": 0
+    },
+    {
+      "clue": "N'hi ha en pastilla i en gel, i pot ser de cap i de cos",
+      "solution": "sabo",
+      "depth": 0
+    },
+    {
+      "clue": "Aquest antic president dels EUA comparteix cognom amb una marca de cotxes",
+      "solution": "ford",
+      "depth": 1
+    },
+    {
+      "clue": "Dotzena part de la cinquena part d’un lustre",
+      "solution": "més",
+      "depth": 1
+    }
+  ],
+  "doble_sentido_o_referencia": [
+    {
+      "clue": "D'aquestes histories, somnis de poetes, no en sabíem més, teníem quinze anys",
+      "solution": "amor",
+      "depth": 0
+    },
+    {
+      "clue": "Aquest dia de maig va començar el moviment dels indignats",
+      "solution": "quinze",
+      "depth": 1
+    },
+    {
+      "clue": "En Pedri trontolla i fa que el seu equip caigui derrotat",
+      "solution": "perdi",
+      "depth": 0
+    },
+    {
+      "clue": "Precedeix pàtria, terra o dels ous",
+      "solution": "mare",
+      "depth": 0
+    },
+    {
+      "clue": "La Patrícia s'oblida del complement indirecte quan parla de la seva terra",
+      "solution": "pàtria",
+      "depth": 1
+    },
+    {
+      "clue": "Si en veus un a X, no necessites agulla",
+      "solution": "Fil",
+      "depth": 0
+    },
+    {
+      "clue": "Icònic protagonista de la pel·lícula el pòster de la qual mostra una bicicleta amb la lluna de fons",
+      "solution": "et",
+      "depth": 0
+    },
+    {
+      "clue": "sedaztilemarac semop bma sècnarf sitsap",
+      "solution": "nitat",
+      "depth": 0
+    },
+    {
+      "clue": "La ruta comercial d'aquest material va ser impulsada per la Dinastia Han",
+      "solution": "seda",
+      "depth": 1
+    },
+    {
+      "clue": "Hi treballa un actor o un paleta",
+      "solution": "Obra",
+      "depth": 0
+    },
+    {
+      "clue": "Placa de fusta on l'artista hi posa i barreja la pintura",
+      "solution": "paleta",
+      "depth": 1
+    },
+    {
+      "clue": "Ciutat coneguda com el cor de Catalunya on se celebra la Festa de la Llum",
+      "solution": "Manresa",
+      "depth": 1
+    },
+    {
+      "clue": "La de gas és una forma de manipulació que busca sembrar llavors de dubtes en un individu",
+      "solution": "Llum",
+      "depth": 2
+    },
+    {
+      "clue": "Al Maresme n'hi ha de mar i de munt",
+      "solution": "Arenys",
+      "depth": 0
+    },
+    {
+      "clue": "El volen lliure i tropical!",
+      "solution": "Maresme",
+      "depth": 1
+    },
+    {
+      "clue": "Vic està a prop dels 500 metres sobre el nivell d'aquest",
+      "solution": "Mar",
+      "depth": 0
+    },
+    {
+      "clue": "D fora de Roma",
+      "solution": "500",
+      "depth": 1
+    },
+    {
+      "clue": "La freda també es diu dana",
+      "solution": "gota",
+      "depth": 0
+    },
+    {
+      "clue": "Això et crida algú que sap on és allò que busques quan estàs ben lluny",
+      "solution": "fred",
+      "depth": 1
+    },
+    {
+      "clue": "Pot ser àcida o d'estels",
+      "solution": "pluja",
+      "depth": 0
+    },
+    {
+      "clue": "+Què et sembla llençar el residu al verd?  -Esbojarradament \"diver\"!",
+      "solution": "Vidre",
+      "depth": 0
+    },
+    {
+      "clue": "No recomano ser-ho, però hi ha qui ho està com un carreter o com una carbonera",
+      "solution": "fumat",
+      "depth": 0
+    },
+    {
+      "clue": "alucsàb al bma orusem",
+      "solution": "osep",
+      "depth": 0
+    },
+    {
+      "clue": "L'Estrella Damm apta per a celíacs",
+      "solution": "daura",
+      "depth": 0
+    },
+    {
+      "clue": "La vida d'aquesta Cruz és un Carnaval",
+      "solution": "celía",
+      "depth": 1
+    }
+  ]
+}

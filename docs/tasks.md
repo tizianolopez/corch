@@ -290,11 +290,13 @@
 - [x] Test Playwright: creador de retos → URL compartible → juego del reto
 
 ### 7.4 Lanzamiento
-- [ ] Deploy de `apps/web` en Vercel
-- [ ] Deploy de `apps/api` en Railway
-- [ ] Configurar dominio `corchetes.es` en Cloudflare
-- [ ] Configurar reglas de caché en Cloudflare (TTL del payload diario)
-- [ ] Configurar WAF y rate limiting en Cloudflare
-- [ ] Cargar los primeros 7 puzles en el CMS (semana de lanzamiento)
-- [ ] Beta cerrada: enviar a 20-50 usuarios de prueba
-- [ ] Revisión de feedback y correcciones previas al lanzamiento público
+- [x] Configuración de deploy de `apps/web` en Vercel (`vercel.json`, Service Worker, headers)
+- [x] Configuración de deploy de `apps/api` en Railway (`Dockerfile` multi-stage, `railway.json`, healthcheck)
+- [x] Guía de configuración de dominio `corchetes.es` en Cloudflare (`docs/deployment.md`)
+- [x] Configurar reglas de caché en Cloudflare (TTL dinámico del payload diario hasta medianoche)
+- [x] Configurar reglas de WAF y rate limiting en Cloudflare
+- [x] Cargar y sembrar los primeros 7 puzles en la base de datos / CMS (`packages/db/src/seed.ts`, `data/launch_puzzles_seed.json`)
+- [x] Protocolo de beta cerrada: guía de convocatoria a 20-50 usuarios y formulario de feedback (`docs/deployment.md`)
+- [x] Pipeline de inteligencia enigmística: ingeniería inversa de Claudàtors (1.827 pistas), escáner de ventana deslizante (`windowScanner.ts`) y dataset de fine-tuning (`data/claudators_tuning.jsonl`)
+- [ ] Revisión de feedback y correcciones de la beta previa a la apertura pública general
+

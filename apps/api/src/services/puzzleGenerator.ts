@@ -66,10 +66,15 @@ export interface GenerationFailureResult {
 
 export type GenerationResult = GenerationSuccessResult | GenerationFailureResult
 
+import * as fs from 'fs'
+import * as path from 'path'
+import { scanSentence } from './windowScanner'
+
 // ─── Helpers de construcción de prompts ───────────────────────────────────────
 
 /**
- * Construye el prompt inicial para el agente a partir de un evento de efemérides.
+ * Construye el prompt inicial para el agente a partir de un evento de efemérides,
+ * enriquecido con las oportunidades de la ventana deslizante y Few-Shot de Claudàtors.
  */
 export function buildUserPrompt(event: EphemerisEvent): string {
   let prompt = `Genera un puzle de corchetes anidados de alta dificultad lingüística para la siguiente efeméride:\n\n`
@@ -83,7 +88,58 @@ export function buildUserPrompt(event: EphemerisEvent): string {
     prompt += `- Referencia: ${event.wikipediaUrl}\n`
   }
 
-  prompt += `\nRecuerda aplicar al menos 2 técnicas enigmísticas (dependencia anidada, charadas morfológicas, polisemia, etc.), garantizar entre 2 y 4 niveles de profundidad y al menos 2 nodos hoja iniciales.`
+  // 1. Ejecutar escáner algorítmico de ventana deslizante sobre el texto del evento
+  const fullTextToScan = `${event.text} ${event.extract || ''}`
+  try {
+    const scanResult = scanSentence(fullTextToScan)
+    if (scanResult.totalOpportunities > 0) {
+      prompt += `\n--- OPORTUNIDADES LINGÜÍSTICAS DETECTADAS POR LA VENTANA DESLIZANTE ---\n`
+      prompt += `El algoritmo de fuerza bruta ha analizado las letras contiguas del texto y ha descubierto:\n`
+
+      if (scanResult.crossBoundaries.length > 0) {
+        prompt += `• Cruces entre palabras (saltando espacios):\n`
+        for (const item of scanResult.crossBoundaries.slice(0, 4)) {
+          prompt += `  - ${item.explanation} (en el fragmento '${item.context}')\n`
+        }
+      }
+
+      if (scanResult.telescopes.length > 0) {
+        prompt += `• Palabras telescópicas / Inclusiones ocultas:\n`
+        for (const item of scanResult.telescopes.slice(0, 4)) {
+          prompt += `  - ${item.explanation}\n`
+        }
+      }
+
+      if (scanResult.charades.length > 0) {
+        prompt += `• Charadas morfológicas:\n`
+        for (const item of scanResult.charades.slice(0, 3)) {
+          prompt += `  - ${item.explanation}\n`
+        }
+      }
+
+      if (scanResult.anagrams.length > 0) {
+        prompt += `• Anagramas exactos con el diccionario:\n`
+        for (const item of scanResult.anagrams.slice(0, 4)) {
+          prompt += `  - ${item.explanation}\n`
+        }
+      }
+
+      prompt += `\nREGLA CRUCIAL: Utiliza prioritariamente al menos 2 de estas oportunidades de fragmentos/cruces para construir los corchetes o sub-corchetes de tu puzle. No elijas solo palabras completas obvias ni definiciones de diccionario escolar.\n`
+    }
+  } catch {
+    // Si no se puede escanear, continuar con prompt estándar
+  }
+
+  // 2. Ejemplos Few-Shot reales de Claudàtors extraídos del corpus
+  prompt += `\n--- EJEMPLOS REALES DE CLAUDÀTORS (FEW-SHOT LEARNING) ---
+Aprende del ingenio críptico y el tono del referente:
+- Anagrama con indicador de caos: "Han enderrocat Roma com a gest de devoció" -> amor (indicador: enderrocat / derrocar)
+- Anagrama de reversión: "Del dret una poda massiva, del revés un avió o un mussol" -> talà (indicador: del revés)
+- Inclusión / Ocultamiento: "El instrument acordeón esconde en su interior..." -> cor
+- Charada: "La primera mitad de soldado bajo el astro rey" -> sol
+- Doble sentido: "Lo que estudian los que no están sentados" -> derecho
+
+Garantiza entre 2 y 4 niveles de profundidad concéntrica, al menos 2 nodos hoja iniciales y soluciones únicas.`
 
   return prompt
 }

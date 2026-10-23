@@ -1,0 +1,688 @@
+[
+  {
+    "editionNumber": 1,
+    "publishDate": "2026-10-23",
+    "rawMarkup": "En un lugar de la [región histórica donde cabalgaba el [hidalgo que desafió a los [gigantes con aspas de viento]]], de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un caballero con su [escudo de cuero de forma ovalada] y lanza en astillero.",
+    "compiledAst": {
+      "n3": {
+        "id": "n3",
+        "clueText": "gigantes con aspas de viento",
+        "children": [],
+        "parent": "n2"
+      },
+      "n2": {
+        "id": "n2",
+        "clueText": "hidalgo que desafió a los {{n3}}",
+        "children": [
+          "n3"
+        ],
+        "parent": "n1"
+      },
+      "n1": {
+        "id": "n1",
+        "clueText": "región histórica donde cabalgaba el {{n2}}",
+        "children": [
+          "n2"
+        ],
+        "parent": null
+      },
+      "n4": {
+        "id": "n4",
+        "clueText": "escudo de cuero de forma ovalada",
+        "children": [],
+        "parent": null
+      }
+    },
+    "clientPayload": {
+      "puzzleId": "corchetes-daily-2026-10-23",
+      "editionNumber": 1,
+      "publishDate": "2026-10-23",
+      "rootTemplate": "En un lugar de la {{n1}}, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un caballero con su {{n2}} y lanza en astillero.",
+      "nodes": {
+        "n3": {
+          "id": "n3",
+          "clueText": "gigantes con aspas de viento",
+          "children": [],
+          "parent": "n2",
+          "type": "definition",
+          "solutionHash": "4240fbb270ba7dd7a1b1a5ac6e91d897e78b04e77fc1e4a23a171068a0a95d5e",
+          "solutionCipher": "9f3a93fe8923b4e57b147910:AzPfK5Ts0vqTDt5HITSu9qckeLQDFJQ="
+        },
+        "n2": {
+          "id": "n2",
+          "clueText": "hidalgo que desafió a los {{n3}}",
+          "children": [
+            "n3"
+          ],
+          "parent": "n1",
+          "type": "reference",
+          "solutionHash": "f4c20dbfdaf42fc5b88305c62cbcdea6331deaa7386d08cc2970a4ec49db1ceb",
+          "solutionCipher": "0cb72bf9f53aa86cd8339d2f:wZ2wunHba4HpTlYTx8/GkHQyccMgSKA="
+        },
+        "n1": {
+          "id": "n1",
+          "clueText": "región histórica donde cabalgaba el {{n2}}",
+          "children": [
+            "n2"
+          ],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "168bef050aed2d54e3a532fc36d0cfef40e987b7d2c47703de8f050a974e45fd",
+          "solutionCipher": "828607f6fa65ba2b5e3a27b9:jKrJ1s6u+n2DB088gxm4Yq6gewhYfA=="
+        },
+        "n4": {
+          "id": "n4",
+          "clueText": "escudo de cuero de forma ovalada",
+          "children": [],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "b30a8e33413f4d4eac779f9a68216fa50006c18ad635a5376bad8d1978b5c4e6",
+          "solutionCipher": "85bbc37cc52f31d6e415bb62:s0JHU+jxO4r0M7YH9xn+IGqBIVtf+g=="
+        }
+      },
+      "dailySalt": "salt-2026-10-23",
+      "quoteAuthor": "Miguel de Cervantes",
+      "quoteWork": "Don Quijote de la Mancha",
+      "quoteYear": 1605,
+      "editorialNote": "Edición inaugural: el hidalgo manchego y su geografía literaria en la obra cumbre de la novela moderna."
+    },
+    "quoteAuthor": "Miguel de Cervantes",
+    "quoteWork": "Don Quijote de la Mancha",
+    "quoteYear": 1605,
+    "editorialNote": "Edición inaugural: el hidalgo manchego y su geografía literaria en la obra cumbre de la novela moderna.",
+    "difficultyScore": 3.5,
+    "maxDepth": 3,
+    "totalNodes": 4,
+    "initialLeaves": 2,
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-23T00:00:00.000Z"
+  },
+  {
+    "editionNumber": 2,
+    "publishDate": "2026-10-24",
+    "rawMarkup": "[Tono de la esperanza que baña el [soplo de aire invisible]] que te quiero verde. El [navío de madera que navega la [inmensidad salina]] y el corcel en la montaña.",
+    "compiledAst": {
+      "n2": {
+        "id": "n2",
+        "clueText": "soplo de aire invisible",
+        "children": [],
+        "parent": "n1"
+      },
+      "n1": {
+        "id": "n1",
+        "clueText": "Tono de la esperanza que baña el {{n2}}",
+        "children": [
+          "n2"
+        ],
+        "parent": null
+      },
+      "n4": {
+        "id": "n4",
+        "clueText": "inmensidad salina",
+        "children": [],
+        "parent": "n3"
+      },
+      "n3": {
+        "id": "n3",
+        "clueText": "navío de madera que navega la {{n4}}",
+        "children": [
+          "n4"
+        ],
+        "parent": null
+      }
+    },
+    "clientPayload": {
+      "puzzleId": "corchetes-daily-2026-10-24",
+      "editionNumber": 2,
+      "publishDate": "2026-10-24",
+      "rootTemplate": "{{n1}} que te quiero verde. El {{n2}} y el corcel en la montaña.",
+      "nodes": {
+        "n2": {
+          "id": "n2",
+          "clueText": "soplo de aire invisible",
+          "children": [],
+          "parent": "n1",
+          "type": "definition",
+          "solutionHash": "e7e50028b0b962b14aa94012cf0c41db03ad0513c81cff383e8a94d8b78091f1",
+          "solutionCipher": "a34bd93d5a94faeeda2a3716:wHayuy1XQCG9fLvx/gUy+muCPYFqJg=="
+        },
+        "n1": {
+          "id": "n1",
+          "clueText": "Tono de la esperanza que baña el {{n2}}",
+          "children": [
+            "n2"
+          ],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "6768227a46ddf743d82ba1682b62fe776f846685b973df90310304a6c4c41e9c",
+          "solutionCipher": "16bd4131710d7972c396a7ec:ZgkCK+Zz0MzE+0AiHiJyA7D387kV"
+        },
+        "n4": {
+          "id": "n4",
+          "clueText": "inmensidad salina",
+          "children": [],
+          "parent": "n3",
+          "type": "definition",
+          "solutionHash": "b37323d088d94db76f8816a2442940b5b7418f87ed37b6e83e6f1e954510cd33",
+          "solutionCipher": "aea01f87835b4be7a988867b:E7Mv0YKLv6AIaqZ2uiIurUt47w=="
+        },
+        "n3": {
+          "id": "n3",
+          "clueText": "navío de madera que navega la {{n4}}",
+          "children": [
+            "n4"
+          ],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "f691c5ca0708ae5121e1cfb6ed05932df5dcb00152e875b29d3af95086eaab03",
+          "solutionCipher": "2ac1c4622d65b10e15bd3217:/kMiCvgwsQ1WF5+FB2xjHfItJDAn"
+        }
+      },
+      "dailySalt": "salt-2026-10-24",
+      "quoteAuthor": "Federico García Lorca",
+      "quoteWork": "Romance Sonámbulo",
+      "quoteYear": 1928,
+      "editorialNote": "El lirismo gitano y surrealista de Lorca condensado en sus versos más universales de verde y mar."
+    },
+    "quoteAuthor": "Federico García Lorca",
+    "quoteWork": "Romance Sonámbulo",
+    "quoteYear": 1928,
+    "editorialNote": "El lirismo gitano y surrealista de Lorca condensado en sus versos más universales de verde y mar.",
+    "difficultyScore": 3.8,
+    "maxDepth": 2,
+    "totalNodes": 4,
+    "initialLeaves": 2,
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-24T00:00:00.000Z"
+  },
+  {
+    "editionNumber": 3,
+    "publishDate": "2026-10-25",
+    "rawMarkup": "Vi el populoso mar, vi el [primer resplandor del día antes de que [despunte el astro rey]] y la tarde, vi en el [monumento funerario de Egipto de [color del carbón]] una plateada telaraña.",
+    "compiledAst": {
+      "n2": {
+        "id": "n2",
+        "clueText": "despunte el astro rey",
+        "children": [],
+        "parent": "n1"
+      },
+      "n1": {
+        "id": "n1",
+        "clueText": "primer resplandor del día antes de que {{n2}}",
+        "children": [
+          "n2"
+        ],
+        "parent": null
+      },
+      "n4": {
+        "id": "n4",
+        "clueText": "color del carbón",
+        "children": [],
+        "parent": "n3"
+      },
+      "n3": {
+        "id": "n3",
+        "clueText": "monumento funerario de Egipto de {{n4}}",
+        "children": [
+          "n4"
+        ],
+        "parent": null
+      }
+    },
+    "clientPayload": {
+      "puzzleId": "corchetes-daily-2026-10-25",
+      "editionNumber": 3,
+      "publishDate": "2026-10-25",
+      "rootTemplate": "Vi el populoso mar, vi el {{n1}} y la tarde, vi en el {{n2}} una plateada telaraña.",
+      "nodes": {
+        "n2": {
+          "id": "n2",
+          "clueText": "despunte el astro rey",
+          "children": [],
+          "parent": "n1",
+          "type": "charade",
+          "solutionHash": "6516220e773efd11c9af51e361f787b779f298b64b462151d1272235ae8c8280",
+          "solutionCipher": "f6ed51e0bcac27aa29888752:Y5y77Il8AH/yyeQuvhZvjg2axA7nGB/J"
+        },
+        "n1": {
+          "id": "n1",
+          "clueText": "primer resplandor del día antes de que {{n2}}",
+          "children": [
+            "n2"
+          ],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "5f08a74d3e66c0bf9e57435576e012503b93079622c3e35efe9bc8094148ae1a",
+          "solutionCipher": "06afa112f2426ed394790e6c:FvMigeRZw66wdKwUVLfGM+Jv7zI="
+        },
+        "n4": {
+          "id": "n4",
+          "clueText": "color del carbón",
+          "children": [],
+          "parent": "n3",
+          "type": "definition",
+          "solutionHash": "07c9aade0e04f279b1d785281844835dfc5af8e2ed1c5478a727bf7c948065c6",
+          "solutionCipher": "bb4bb438a2d3d6d62e77fc59:hYLkJyyyJK4U+x+UpSZoEuG0aOGg"
+        },
+        "n3": {
+          "id": "n3",
+          "clueText": "monumento funerario de Egipto de {{n4}}",
+          "children": [
+            "n4"
+          ],
+          "parent": null,
+          "type": "reference",
+          "solutionHash": "4abfe3e135d29a6aa7a07d1d643199998b3b3beb2ada2d9e265c3ba10df64fd3",
+          "solutionCipher": "e66c1dc1c9af2aadc47d7589:NOUOaUwwIGvTpFBwKrGISRwwMPJtvchG/Q=="
+        }
+      },
+      "dailySalt": "salt-2026-10-25",
+      "quoteAuthor": "Jorge Luis Borges",
+      "quoteWork": "El Aleph",
+      "quoteYear": 1949,
+      "editorialNote": "El punto del espacio que contiene todos los puntos del universo según el gran maestro de la literatura fantástica."
+    },
+    "quoteAuthor": "Jorge Luis Borges",
+    "quoteWork": "El Aleph",
+    "quoteYear": 1949,
+    "editorialNote": "El punto del espacio que contiene todos los puntos del universo según el gran maestro de la literatura fantástica.",
+    "difficultyScore": 4.2,
+    "maxDepth": 2,
+    "totalNodes": 4,
+    "initialLeaves": 2,
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-25T00:00:00.000Z"
+  },
+  {
+    "editionNumber": 4,
+    "publishDate": "2026-10-26",
+    "rawMarkup": "[Aquel que recorre a pie la [senda que conduce al [santuario gallego de Compostela]]], son tus huellas el camino y nada más; caminante, no hay camino, se hace camino al [desplazar los pasos con el movimiento].",
+    "compiledAst": {
+      "n3": {
+        "id": "n3",
+        "clueText": "santuario gallego de Compostela",
+        "children": [],
+        "parent": "n2"
+      },
+      "n2": {
+        "id": "n2",
+        "clueText": "senda que conduce al {{n3}}",
+        "children": [
+          "n3"
+        ],
+        "parent": "n1"
+      },
+      "n1": {
+        "id": "n1",
+        "clueText": "Aquel que recorre a pie la {{n2}}",
+        "children": [
+          "n2"
+        ],
+        "parent": null
+      },
+      "n4": {
+        "id": "n4",
+        "clueText": "desplazar los pasos con el movimiento",
+        "children": [],
+        "parent": null
+      }
+    },
+    "clientPayload": {
+      "puzzleId": "corchetes-daily-2026-10-26",
+      "editionNumber": 4,
+      "publishDate": "2026-10-26",
+      "rootTemplate": "{{n1}}, son tus huellas el camino y nada más; caminante, no hay camino, se hace camino al {{n2}}.",
+      "nodes": {
+        "n3": {
+          "id": "n3",
+          "clueText": "santuario gallego de Compostela",
+          "children": [],
+          "parent": "n2",
+          "type": "reference",
+          "solutionHash": "a326000fe9ae68b7cb0c16dd1a0e3caac03bdde68d447f9aa9b6f3db8effb101",
+          "solutionCipher": "af5591ca35ec278cdd7d2155:1mbmHWE11KNk2U+MP9vhf3oa4TXf8p2p7g=="
+        },
+        "n2": {
+          "id": "n2",
+          "clueText": "senda que conduce al {{n3}}",
+          "children": [
+            "n3"
+          ],
+          "parent": "n1",
+          "type": "definition",
+          "solutionHash": "a51da8e136d620ce3af9f35d5986eee3e819e3dd3dfd1cb061ec638fa54440a9",
+          "solutionCipher": "f5be101b369006c48b68ea38:IdYNsXsoo7hVVV7LW6mPQeE1bJw="
+        },
+        "n1": {
+          "id": "n1",
+          "clueText": "Aquel que recorre a pie la {{n2}}",
+          "children": [
+            "n2"
+          ],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "7e8cb522513b8a15e49672f3988862e0217679f337d35a1e9757c346b1bc1234",
+          "solutionCipher": "d543ffb9a17d1ba270cf0f4b:jN0BVo19CmNzcohNA+b1XdPGcijJ2qth5A=="
+        },
+        "n4": {
+          "id": "n4",
+          "clueText": "desplazar los pasos con el movimiento",
+          "children": [],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "3df9ff923e043de2caebf18fdc30b5de27f5c94d676757288521396a37e1660a",
+          "solutionCipher": "a3859672511300b12bdd0aec:DHzaKxWY5or9/98Z6l33mzyUtPNf"
+        }
+      },
+      "dailySalt": "salt-2026-10-26",
+      "quoteAuthor": "Antonio Machado",
+      "quoteWork": "Campos de Castilla (Proverbios y cantares)",
+      "quoteYear": 1912,
+      "editorialNote": "La meditación filosófica sobre el tiempo, el destino y la creación del propio camino a través del paso."
+    },
+    "quoteAuthor": "Antonio Machado",
+    "quoteWork": "Campos de Castilla (Proverbios y cantares)",
+    "quoteYear": 1912,
+    "editorialNote": "La meditación filosófica sobre el tiempo, el destino y la creación del propio camino a través del paso.",
+    "difficultyScore": 3.6,
+    "maxDepth": 3,
+    "totalNodes": 4,
+    "initialLeaves": 2,
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-26T00:00:00.000Z"
+  },
+  {
+    "editionNumber": 5,
+    "publishDate": "2026-10-27",
+    "rawMarkup": "Andábamos sin buscarnos pero sabiendo que [recorríamos las calles de la [capital francesa bañada por el [río que divide París]]] para encontrarnos. ¡Oh amor, [juego infantil de casillas dibujadas con tiza] sobre la acera!",
+    "compiledAst": {
+      "n3": {
+        "id": "n3",
+        "clueText": "río que divide París",
+        "children": [],
+        "parent": "n2"
+      },
+      "n2": {
+        "id": "n2",
+        "clueText": "capital francesa bañada por el {{n3}}",
+        "children": [
+          "n3"
+        ],
+        "parent": "n1"
+      },
+      "n1": {
+        "id": "n1",
+        "clueText": "recorríamos las calles de la {{n2}}",
+        "children": [
+          "n2"
+        ],
+        "parent": null
+      },
+      "n4": {
+        "id": "n4",
+        "clueText": "juego infantil de casillas dibujadas con tiza",
+        "children": [],
+        "parent": null
+      }
+    },
+    "clientPayload": {
+      "puzzleId": "corchetes-daily-2026-10-27",
+      "editionNumber": 5,
+      "publishDate": "2026-10-27",
+      "rootTemplate": "Andábamos sin buscarnos pero sabiendo que {{n1}} para encontrarnos. ¡Oh amor, {{n2}} sobre la acera!",
+      "nodes": {
+        "n3": {
+          "id": "n3",
+          "clueText": "río que divide París",
+          "children": [],
+          "parent": "n2",
+          "type": "reference",
+          "solutionHash": "1d1ad3a7f2f2d1153b89544bee9a474328f8dce3cdb071460b1eac70d9e9dba7",
+          "solutionCipher": "f659427be01b9a1aa9bebe0a:B7bGO5AZ7JCwlPbipRPGr68fb78="
+        },
+        "n2": {
+          "id": "n2",
+          "clueText": "capital francesa bañada por el {{n3}}",
+          "children": [
+            "n3"
+          ],
+          "parent": "n1",
+          "type": "definition",
+          "solutionHash": "4fd78fb662d662a7fdbed73e400a69d26a8e72d9789974803dc8194d031af7f6",
+          "solutionCipher": "fd456980c4299fdb495ef7af:PA5NjsJp/kf5BOyI2bW3jDTs2CjDcg=="
+        },
+        "n1": {
+          "id": "n1",
+          "clueText": "recorríamos las calles de la {{n2}}",
+          "children": [
+            "n2"
+          ],
+          "parent": null,
+          "type": "charade",
+          "solutionHash": "f7e3746bc293bb8502b208de724dacd99d580f747a0d3fd4b9cbf048dfc30fad",
+          "solutionCipher": "52dffbd70fdb091900fc45f3:kGzPwG28RFudYb+hYBTDheDl//wOquK8oNA8"
+        },
+        "n4": {
+          "id": "n4",
+          "clueText": "juego infantil de casillas dibujadas con tiza",
+          "children": [],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "87dae52d5127d474333fb38542843dfbd427f8beccf8f909a66753f21dafe44c",
+          "solutionCipher": "ab71dc1c86d8f2b91c59df30:odKw4/NpLHwc4yM62sOZ3v64fBIAmvc="
+        }
+      },
+      "dailySalt": "salt-2026-10-27",
+      "quoteAuthor": "Julio Cortázar",
+      "quoteWork": "Rayuela",
+      "quoteYear": 1963,
+      "editorialNote": "La búsqueda laberíntica de Oliveira y la Maga por los puentes y adoquines del París contracultural."
+    },
+    "quoteAuthor": "Julio Cortázar",
+    "quoteWork": "Rayuela",
+    "quoteYear": 1963,
+    "editorialNote": "La búsqueda laberíntica de Oliveira y la Maga por los puentes y adoquines del París contracultural.",
+    "difficultyScore": 4,
+    "maxDepth": 3,
+    "totalNodes": 4,
+    "initialLeaves": 2,
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-27T00:00:00.000Z"
+  },
+  {
+    "editionNumber": 6,
+    "publishDate": "2026-10-28",
+    "rawMarkup": "Madre, yo al [metal precioso y brillante codiciado por el [monarca con corona de [reino castellano]]] me humillo; que pues doblón o sencillo hace todo cuanto quiero, poderoso caballero es don [moneda de cambio universal].",
+    "compiledAst": {
+      "n3": {
+        "id": "n3",
+        "clueText": "reino castellano",
+        "children": [],
+        "parent": "n2"
+      },
+      "n2": {
+        "id": "n2",
+        "clueText": "monarca con corona de {{n3}}",
+        "children": [
+          "n3"
+        ],
+        "parent": "n1"
+      },
+      "n1": {
+        "id": "n1",
+        "clueText": "metal precioso y brillante codiciado por el {{n2}}",
+        "children": [
+          "n2"
+        ],
+        "parent": null
+      },
+      "n4": {
+        "id": "n4",
+        "clueText": "moneda de cambio universal",
+        "children": [],
+        "parent": null
+      }
+    },
+    "clientPayload": {
+      "puzzleId": "corchetes-daily-2026-10-28",
+      "editionNumber": 6,
+      "publishDate": "2026-10-28",
+      "rootTemplate": "Madre, yo al {{n1}} me humillo; que pues doblón o sencillo hace todo cuanto quiero, poderoso caballero es don {{n2}}.",
+      "nodes": {
+        "n3": {
+          "id": "n3",
+          "clueText": "reino castellano",
+          "children": [],
+          "parent": "n2",
+          "type": "reference",
+          "solutionHash": "9ee4bc807db2be8726fa4110a454ef66a0cdda877e376496cd5313353b60a88f",
+          "solutionCipher": "f9a7cbfb6e285d88261f9166:L2OgYflCQtS1Tx8+qZyXgllMivqasIma"
+        },
+        "n2": {
+          "id": "n2",
+          "clueText": "monarca con corona de {{n3}}",
+          "children": [
+            "n3"
+          ],
+          "parent": "n1",
+          "type": "reference",
+          "solutionHash": "b58ffba6a2fe2dcf18ae217ef27496ff436a77521a0cb62ec3288cbb96a1393c",
+          "solutionCipher": "e7ad0e309582b40efb14839c:NVtiolxGgpJuWZ3mJvJbO0UAMQ=="
+        },
+        "n1": {
+          "id": "n1",
+          "clueText": "metal precioso y brillante codiciado por el {{n2}}",
+          "children": [
+            "n2"
+          ],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "0e9d21e9b4d6557bccd2bea134d9438982e9760e7b2c349b0b27d0fea1eb410e",
+          "solutionCipher": "555b9ddb9793acd0271b2a04:L4fuDKa8CXnApQ1tZYJGv1UU7g=="
+        },
+        "n4": {
+          "id": "n4",
+          "clueText": "moneda de cambio universal",
+          "children": [],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "7aa353cedc053e783b0bb7b35e7b4a67c350a2961ef1e497569ab724f817a230",
+          "solutionCipher": "ab6858afa4754c83a2b7e455:8yyKRAgutPGiLf7lZDm+OzEiUd+QMQ=="
+        }
+      },
+      "dailySalt": "salt-2026-10-28",
+      "quoteAuthor": "Francisco de Quevedo",
+      "quoteWork": "Poderoso caballero es don Dinero",
+      "quoteYear": 1603,
+      "editorialNote": "La sátira conceptista del Siglo de Oro español sobre el poder corruptor de las riquezas y el oro colonial."
+    },
+    "quoteAuthor": "Francisco de Quevedo",
+    "quoteWork": "Poderoso caballero es don Dinero",
+    "quoteYear": 1603,
+    "editorialNote": "La sátira conceptista del Siglo de Oro español sobre el poder corruptor de las riquezas y el oro colonial.",
+    "difficultyScore": 4.4,
+    "maxDepth": 3,
+    "totalNodes": 4,
+    "initialLeaves": 2,
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-28T00:00:00.000Z"
+  },
+  {
+    "editionNumber": 7,
+    "publishDate": "2026-10-29",
+    "rawMarkup": "Las dos mujeres se miraron frente a frente en las [vías empedradas de la [capital del oso y el [árbol de frutos rojos silvestres]]], reconociéndose como dos [extremos geográficos del planeta] de una misma pasión.",
+    "compiledAst": {
+      "n3": {
+        "id": "n3",
+        "clueText": "árbol de frutos rojos silvestres",
+        "children": [],
+        "parent": "n2"
+      },
+      "n2": {
+        "id": "n2",
+        "clueText": "capital del oso y el {{n3}}",
+        "children": [
+          "n3"
+        ],
+        "parent": "n1"
+      },
+      "n1": {
+        "id": "n1",
+        "clueText": "vías empedradas de la {{n2}}",
+        "children": [
+          "n2"
+        ],
+        "parent": null
+      },
+      "n4": {
+        "id": "n4",
+        "clueText": "extremos geográficos del planeta",
+        "children": [],
+        "parent": null
+      }
+    },
+    "clientPayload": {
+      "puzzleId": "corchetes-daily-2026-10-29",
+      "editionNumber": 7,
+      "publishDate": "2026-10-29",
+      "rootTemplate": "Las dos mujeres se miraron frente a frente en las {{n1}}, reconociéndose como dos {{n2}} de una misma pasión.",
+      "nodes": {
+        "n3": {
+          "id": "n3",
+          "clueText": "árbol de frutos rojos silvestres",
+          "children": [],
+          "parent": "n2",
+          "type": "reference",
+          "solutionHash": "2244bcf5151c4b5b99d2581f7d15e4eabdd0a93113cad979b2407ebf73c26901",
+          "solutionCipher": "2ff2cc71cda41307f0633e62:fqMOgm2ve2+0S0TObelfon/z2ps1vnq+"
+        },
+        "n2": {
+          "id": "n2",
+          "clueText": "capital del oso y el {{n3}}",
+          "children": [
+            "n3"
+          ],
+          "parent": "n1",
+          "type": "definition",
+          "solutionHash": "45e1db031b767b45790d1211006839568e3c328ac5ce06c489f48561ec33b03f",
+          "solutionCipher": "19a64cf79cb4c7dc4a63ece5:+Y3xz1jhmwExTww/PMHURv8TaziC"
+        },
+        "n1": {
+          "id": "n1",
+          "clueText": "vías empedradas de la {{n2}}",
+          "children": [
+            "n2"
+          ],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "04795e978652d08ae110c0031e1da1b8c6caf14c32e0e0a1363bf544531332e4",
+          "solutionCipher": "8088ced678d1ecfbd23acac8:EBpU+8+xVrrlhoxyZu7Bc3VGFd5KvQ=="
+        },
+        "n4": {
+          "id": "n4",
+          "clueText": "extremos geográficos del planeta",
+          "children": [],
+          "parent": null,
+          "type": "definition",
+          "solutionHash": "a8fc58c3411cff6954293b857442dac365a2cc91ecf07627cb0afbe21cc2e677",
+          "solutionCipher": "a97132520693c09a51cd124c:uCyD0GmhMi19MFHVVRfsjtwo4MX7"
+        }
+      },
+      "dailySalt": "salt-2026-10-29",
+      "quoteAuthor": "Benito Pérez Galdós",
+      "quoteWork": "Fortunata y Jacinta",
+      "quoteYear": 1887,
+      "editorialNote": "El retrato realista y magistral del Madrid castizo y decimonónico a través del drama de dos mujeres inolvidables."
+    },
+    "quoteAuthor": "Benito Pérez Galdós",
+    "quoteWork": "Fortunata y Jacinta",
+    "quoteYear": 1887,
+    "editorialNote": "El retrato realista y magistral del Madrid castizo y decimonónico a través del drama de dos mujeres inolvidables.",
+    "difficultyScore": 3.9,
+    "maxDepth": 3,
+    "totalNodes": 4,
+    "initialLeaves": 2,
+    "status": "PUBLISHED",
+    "publishedAt": "2026-10-29T00:00:00.000Z"
+  }
+]

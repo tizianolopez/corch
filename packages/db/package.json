@@ -4,21 +4,29 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./seed": "./src/seed.ts"
   },
   "scripts": {
+    "test": "vitest run",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx src/seed.ts",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@corchetes/core": "*",
+    "@corchetes/crypto": "*",
+    "dotenv": "^18.0.8",
     "drizzle-orm": "^0.39.1",
     "postgres": "^3.4.5"
   },
   "devDependencies": {
     "drizzle-kit": "^0.30.2",
-    "typescript": "^5.7.2"
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.4"
   }
 }
