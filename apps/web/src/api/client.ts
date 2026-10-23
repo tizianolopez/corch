@@ -119,7 +119,7 @@ export const apiClient = {
   async getTodayPuzzle(): Promise<ClientPayload> {
     const res = await fetch(`${getBaseUrl()}/api/puzzle/today`, {
       method: 'GET',
-      headers: { credentials: 'omit' },
+      credentials: 'omit',
     })
 
     if (!res.ok) {

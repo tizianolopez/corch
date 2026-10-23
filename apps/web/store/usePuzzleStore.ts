@@ -78,6 +78,18 @@ export interface GameStore {
     percentile?: number | null,
   ) => void
 
+  /**
+   * Restaura un estado previo asegurando que cryptoCtx quede debidamente inicializado.
+   */
+  restorePuzzle: (
+    savedState: PuzzleState,
+    dailySalt: string,
+    hashFn: HashFn,
+    decryptFn: DecryptFn,
+    sessionId?: string | null,
+    percentile?: number | null,
+  ) => void
+
   /** Establece el sessionId de la partida */
   setSessionId: (sessionId: string | null) => void
 
@@ -159,6 +171,27 @@ export const usePuzzleStore = create<GameStore>()(
       set({
         puzzleState: withActive,
         cryptoCtx: { dailySalt: payload.dailySalt, hashFn, decryptFn },
+        sessionId: sessionId ?? null,
+        percentile: percentile ?? null,
+        selectedNodeId: firstActive,
+        justResolvedId: null,
+        justUnlockedId: null,
+        lastAnswerWrong: false,
+      })
+    },
+
+    // ── restorePuzzle ─────────────────────────────────────────────────────
+    restorePuzzle: (savedState, dailySalt, hashFn, decryptFn, sessionId, percentile) => {
+      const withActive = recalculateActiveNodes(savedState)
+      const activeNodes = getActiveNodes(withActive)
+      const currentSelected = Object.values(withActive.nodes).find(
+        (n) => n.isActive && n.id === get().selectedNodeId,
+      )?.id
+      const firstActive = currentSelected ?? activeNodes[0]?.id ?? null
+
+      set({
+        puzzleState: withActive,
+        cryptoCtx: { dailySalt, hashFn, decryptFn },
         sessionId: sessionId ?? null,
         percentile: percentile ?? null,
         selectedNodeId: firstActive,

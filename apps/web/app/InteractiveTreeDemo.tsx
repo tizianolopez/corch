@@ -127,6 +127,7 @@ export function InteractiveTreeDemo(): ReactElement {
     justUnlockedId,
     lastAnswerWrong,
     loadPuzzle,
+    restorePuzzle,
     submitAnswer,
     requestHint,
     setSelectedNode,
@@ -148,12 +149,19 @@ export function InteractiveTreeDemo(): ReactElement {
       // Ignorar fallo de red en sincronización de cookie
     }
 
-    // 1. Intentar restaurar sesión guardada de hoy
+    // 1. Obtener el puzle del día del backend (o fallback canónico demo)
+    let payload = DEMO_PAYLOAD
+    try {
+      payload = await apiClient.getTodayPuzzle()
+    } catch (err) {
+      console.warn('Usando puzle demo por indisponibilidad de la API:', err)
+    }
+
+    // 2. Intentar restaurar sesión guardada de hoy si coincide con el puzzleId actual
     const saved = restoreTodayState()
-    if (saved && saved.state) {
+    if (saved && saved.state && saved.state.puzzleId === payload.puzzleId) {
       let currentSessionId = saved.sessionId
 
-      // Si no tenía sessionId asignado (guardado previo), crear uno nuevo
       if (!currentSessionId) {
         try {
           const sessionRes = await apiClient.startSession(saved.state.puzzleId, anonId)
@@ -163,29 +171,27 @@ export function InteractiveTreeDemo(): ReactElement {
         }
       }
 
-      usePuzzleStore.setState({
-        puzzleState: saved.state,
-        sessionId: currentSessionId,
-        percentile: saved.percentile,
-        selectedNodeId: Object.values(saved.state.nodes).find((n) => n.isActive)?.id ?? null,
-      })
+      restorePuzzle(
+        saved.state,
+        payload.dailySalt,
+        appHashFn,
+        appDecryptFn,
+        currentSessionId,
+        saved.percentile,
+      )
 
-      // Si ya estaba completado pero no tenía percentil, intentar sincronizar
       if (saved.state.completedAt !== null && saved.percentile == null && currentSessionId) {
         void completeCurrentSession()
       }
       return
     }
 
-    // 2. Si no hay estado previo, obtener el puzle del día del backend
-    let payload = DEMO_PAYLOAD
-    try {
-      payload = await apiClient.getTodayPuzzle()
-    } catch (err) {
-      console.warn('Usando puzle demo por indisponibilidad de la API:', err)
+    // Si había un estado guardado antiguo con otro puzzleId, limpiarlo
+    if (saved && saved.state && saved.state.puzzleId !== payload.puzzleId) {
+      clearTodayState()
     }
 
-    // 3. Crear play_session en backend (POST /api/session/start)
+    // 3. Iniciar sesión nueva en backend
     let newSessionId: string | null = null
     try {
       const sessionRes = await apiClient.startSession(payload.puzzleId, anonId)
@@ -194,9 +200,9 @@ export function InteractiveTreeDemo(): ReactElement {
       console.warn('No se pudo iniciar sesión en backend:', err)
     }
 
-    // 4. Cargar puzle en el store
+    // 4. Cargar puzle nuevo en el store con contexto criptográfico
     loadPuzzle(payload, appHashFn, appDecryptFn, newSessionId)
-  }, [loadPuzzle, completeCurrentSession])
+  }, [loadPuzzle, restorePuzzle, completeCurrentSession])
 
   useEffect(() => {
     void initializeGame()
