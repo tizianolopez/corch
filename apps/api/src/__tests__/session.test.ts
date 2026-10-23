@@ -163,7 +163,7 @@ describe('Endpoints de Sesión (Tarea 2.3)', () => {
     expect(body.success).toBe(true)
     expect(body.hintType).toBe('reveal')
     expect(body.nodeId).toBe('n3')
-    expect(body.solution).toBe('molinos')
+    expect(body.solution).toBe('mundiales')
 
     // Verificar registro en hintsUsed
     const saved = memorySessions.get(sessionId)

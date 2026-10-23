@@ -21,47 +21,36 @@
   transition: opacity 150ms var(--ease-editorial), background-color 200ms var(--ease-editorial), color 200ms var(--ease-editorial);
 }
 
-/* Estado: BLOQUEADO (gris, pero seleccionable y resoluble en cualquier momento) */
+/* Estado: BLOQUEADO (gris, esperando a que se resuelvan sus pistas hijas) */
 .bracketBlocked {
   color: var(--color-ink-muted);
-  cursor: pointer;
+  cursor: default;
   user-select: none;
-  padding: 1px 2px;
-  border-radius: 3px;
-  transition: all 150ms var(--ease-editorial);
-}
-
-.bracketBlocked:hover,
-.bracketBlocked.selected {
-  color: var(--color-ink);
-  outline: 1px dashed var(--color-ink-muted);
-  outline-offset: 1px;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 /* Estado: ACTIVO (verde inglés, hoja resoluble) */
 .bracketActive {
   color: var(--color-active);
-  background-color: var(--color-active-bg);
   cursor: pointer;
-  padding: 1px 4px;
-  border-radius: 3px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
   user-select: none;
-  transition: all 150ms var(--ease-editorial);
+  font-size: inherit;
+  line-height: inherit;
+  padding: 0;
+  border-radius: 0;
+  border-bottom: 1.5px solid transparent;
+  transition: color 150ms var(--ease-editorial), border-color 150ms var(--ease-editorial);
 }
 
-.bracketActive:hover,
+.bracketActive:hover {
+  border-bottom: 1.5px solid var(--color-active);
+}
+
+/* Cuando está seleccionado como foco para la barra de entrada */
 .bracketActive.selected {
-  background-color: rgba(27, 77, 62, 0.16);
-  outline: 1px solid var(--color-active);
-  outline-offset: 1px;
-}
-
-/* Estado ACTIVO nocturno hover */
-:global([data-theme='night']) .bracketActive:hover,
-:global([data-theme='night']) .bracketActive.selected {
-  background-color: rgba(82, 183, 136, 0.22);
+  color: var(--color-active);
+  border-bottom: 2px solid var(--color-active);
 }
 
 /* Animación de destello al desbloquearse el padre (Cascade en 400ms) */

@@ -193,12 +193,11 @@ export async function generatePuzzleFromEvent(
   event: EphemerisEvent,
   options: PuzzleGeneratorOptions = {},
 ): Promise<GenerationResult> {
-  const {
-    apiKey = config.GEMINI_API_KEY,
-    modelName = config.GEMINI_MODEL,
-    temperature = 0.7,
-    maxAttempts = 3,
-  } = options
+  const apiKey =
+    'apiKey' in options ? options.apiKey : config.GEMINI_API_KEY
+  const modelName = options.modelName ?? config.GEMINI_MODEL
+  const temperature = options.temperature ?? 0.7
+  const maxAttempts = options.maxAttempts ?? 3
 
   // Si no se pasa un modelo inyectado, inicializar el modelo real de Gemini
   let model = options.model

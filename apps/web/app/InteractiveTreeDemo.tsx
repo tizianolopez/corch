@@ -101,6 +101,7 @@ export function InteractiveTreeDemo(): ReactElement {
 
   const [isAuthOpen, setIsAuthOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [revealedMatrices, setRevealedMatrices] = useState<Record<string, string>>({})
 
   // Escuchar estado del usuario autenticado
   useEffect(() => {
@@ -210,18 +211,40 @@ export function InteractiveTreeDemo(): ReactElement {
   )
 
   const handleMatrix = useCallback(async () => {
-    if (!selectedNodeId) return
+    if (!selectedNodeId || !puzzleState) return
 
+    let initialLetter = ''
     if (sessionId) {
       try {
-        await apiClient.requestHint(sessionId, selectedNodeId, 'matrix')
+        const res = await apiClient.requestHint(sessionId, selectedNodeId, 'matrix')
+        if (res.success && res.hintType === 'matrix' && res.initialLetter) {
+          initialLetter = res.initialLetter.toUpperCase()
+        }
       } catch (err) {
         console.warn('Error al registrar pista en backend:', err)
       }
     }
 
+    const canonical = CANONICAL_SOLUTIONS[selectedNodeId]
+    if (!initialLetter && canonical) {
+      initialLetter = canonical[0].toUpperCase()
+    }
+
+    const node = puzzleState.nodes[selectedNodeId]
+    const cleanClue = node ? node.clueText.replace(/{{[^}]+}}/g, '[…]') : ''
+    const lengthStr = canonical ? ` (${canonical.length} letras)` : ''
+
+    const hintMessage = initialLetter
+      ? `Inicial «${initialLetter}»${lengthStr} — ${cleanClue}`
+      : cleanClue
+
+    setRevealedMatrices((prev) => ({
+      ...prev,
+      [selectedNodeId]: hintMessage,
+    }))
+
     requestHint('matrix')
-  }, [requestHint, selectedNodeId, sessionId])
+  }, [requestHint, selectedNodeId, sessionId, puzzleState])
 
   const handleReveal = useCallback(async () => {
     if (!selectedNodeId || !puzzleState) return
@@ -251,6 +274,7 @@ export function InteractiveTreeDemo(): ReactElement {
 
   const handleReset = useCallback(() => {
     clearTodayState()
+    setRevealedMatrices({})
     resetGame()
     void initializeGame()
   }, [resetGame, initializeGame])
@@ -266,30 +290,42 @@ export function InteractiveTreeDemo(): ReactElement {
       <Masthead editionNumber={puzzleState.editionNumber ?? 1} />
 
       <section className={styles.quoteCard}>
-      {/* ── Barra de lector / Identificación ─────────────────────────── */}
+      {/* ── Barra de lector / Identificación y reinicio ───────────────── */}
       <div className={styles.readerBar}>
-        <Link
-          href="/crear"
-          className={styles.readerButton}
-          style={{ textDecoration: 'none' }}
-        >
-          [+ Crear reto propio]
-        </Link>
-        <button
-          type="button"
-          className={styles.readerButton}
-          onClick={() => setIsAuthOpen(true)}
-          aria-label={currentUser ? 'Ver perfil de lector' : 'Acceder o guardar racha'}
-        >
-          {currentUser ? (
-            <>
-              <span className={styles.readerActiveDot}>·</span>
-              <span>{currentUser.email}</span>
-            </>
-          ) : (
-            <span>[Guardar racha / Identifícate]</span>
-          )}
-        </button>
+        <div className={styles.readerBarLeft}>
+          <button
+            type="button"
+            className={styles.readerButton}
+            onClick={handleReset}
+            aria-label="Reiniciar árbol del puzle"
+          >
+            [↺ Reiniciar árbol]
+          </button>
+          <Link
+            href="/crear"
+            className={styles.readerButton}
+            style={{ textDecoration: 'none' }}
+          >
+            [+ Crear reto propio]
+          </Link>
+        </div>
+        <div className={styles.readerBarRight}>
+          <button
+            type="button"
+            className={styles.readerButton}
+            onClick={() => setIsAuthOpen(true)}
+            aria-label={currentUser ? 'Ver perfil de lector' : 'Acceder o guardar racha'}
+          >
+            {currentUser ? (
+              <>
+                <span className={styles.readerActiveDot}>·</span>
+                <span>{currentUser.email}</span>
+              </>
+            ) : (
+              <span>[Guardar racha / Identifícate]</span>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* ── ClueTree ──────────────────────────────────────────────────── */}
@@ -330,17 +366,18 @@ export function InteractiveTreeDemo(): ReactElement {
         </>
       ) : (
         <>
-          {/* Indicador del nodo seleccionado */}
-          {activeNode && (
-            <p className={styles.demoHint}>
-              <em>Pista activa: </em>
-              <strong>{activeNode.clueText.replace(/{{[^}]+}}/g, '[…]')}</strong>
-            </p>
+          <hr className={styles.inputDivider} />
+
+          {/* Notificación de Matriz revelada (solo si el jugador solicita matriz) */}
+          {activeNode && revealedMatrices[activeNode.id] && (
+            <div className={styles.matrixHintNotice} role="status">
+              <span className={styles.matrixHintLabel}>Matriz:</span>{' '}
+              {revealedMatrices[activeNode.id]}
+            </div>
           )}
 
           <InputBar
             placeholder="Escribe tu respuesta…"
-            expectedLength={activeNode ? undefined : undefined}
             disabled={isCompleted}
             isError={lastAnswerWrong}
             onSubmit={handleSubmit}
@@ -350,26 +387,11 @@ export function InteractiveTreeDemo(): ReactElement {
           />
 
           {lastAnswerWrong && (
-            <p className={styles.demoHint} role="alert" style={{ color: 'var(--color-alert)' }}>
+            <p className={styles.errorMessage} role="alert">
               ✗ Respuesta incorrecta. Inténtalo de nuevo.
             </p>
           )}
         </>
-      )}
-
-      {/* ── Controles auxiliares ─────────────────────────────────────── */}
-      {!isCompleted && (
-        <div className={styles.demoControls}>
-          <div className={styles.buttonGroup}>
-            <button
-              type="button"
-              className={styles.resetButton}
-              onClick={handleReset}
-            >
-              Reiniciar árbol
-            </button>
-          </div>
-        </div>
       )}
 
       {/* ── Drawer de identificación y guardado de racha ─────────────── */}

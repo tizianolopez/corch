@@ -376,12 +376,22 @@
   - Programar la ejecución dominical del extractor de efemérides + agente Gemini para mantener un colchón mínimo de 7 borradores revisables en el CMS.
 
 ### 8.7 Correcciones de Jugabilidad y Experiencia de Usuario (Beta Feedback)
-- [x] **Botón «Jugar de nuevo» funcional**:
+- [x] **Regla canónica de precedencia («De dentro hacia afuera»)**:
+  - `packages/core/src/engine.ts`: Restaurada la regla esencial de Corchetes. Solo los nodos en `getActiveNodes()` (hojas cuyos hijos están resueltos) pueden ser adivinados. Si se introduce la respuesta de un padre cuyos hijos siguen pendientes, falla con error y penalización.
+  - `ClueBracket.tsx`: Nodos bloqueados permanecen con `cursor: default`, indicando que están protegidos hasta resolver sus hojas.
+- [x] **Unificación tipográfica de corchetes activos**:
+  - `ClueTree.module.css`: Eliminados acolchados, píldoras y cambios de escala en `.bracketActive`. Las pistas activas mantienen exactamente el mismo tamaño de fuente y salto de línea (`font-size: inherit; line-height: inherit; padding: 0`), cambiando únicamente el color a verde inglés (`var(--color-active)`) con un elegante subrayado sutil.
+- [x] **Gestión limpia de pistas y matrices bajo demanda**:
+  - Eliminado el texto redundante y permanente `Pista activa:` debajo de la cita.
+  - La información de la matriz lingüística (letra inicial y longitud) se despliega únicamente cuando el jugador hace clic en `Solicitar matriz`.
+- [x] **Reorganización integral de la interfaz de juego**:
+  - **Barra superior unificada**: Botón `[↺ Reiniciar árbol]` reubicado junto a `[+ Crear reto propio]` en la cabecera del lector (`.readerBar`), compartiendo la misma tipografía monoespaciada entre corchetes.
+  - **Eliminación del marco blanco**: El contenedor `InputBar` pasa a tener fondo transparente, integrándose de forma limpia con la textura de la tarjeta de la cita.
+  - **Separador punteado**: Se añade la línea discontinua (`----------`) directamente debajo de la cita como frontera visual.
+  - **Entrada en la base**: Botones auxiliares (`Solicitar matriz` y `Revelar término`) situados en la parte superior del módulo de respuesta, dejando la caja de escritura (`Escribe tu respuesta…`) y el botón `Enviar` en la posición inferior definitiva.
+- [x] **Botón «Jugar de nuevo» y reinicio limpio**:
   - Implementado `clearTodayState()` en `apps/web/store/usePuzzlePersistence.ts` para purgar `localStorage` al reiniciar, evitando que `initializeGame()` restaure en bucle la partida terminada.
-- [x] **Resolución libre de pistas en cualquier momento**:
-  - `ClueBracket.tsx`: cualquier corchete sin resolver ahora es clickeable (`cursor: pointer`), permitiendo seleccionar y responder cualquier pista sin forzar un orden lineal estricto.
-  - `packages/core/src/engine.ts`: `onSubmit()` evalúa todas las pistas no resueltas del árbol (priorizando el nodo seleccionado). Si se resuelve un padre directamente, se resuelven en cascada sus hijos.
-- [x] **Eliminación de la cita duplicada y marcadores `{{n1}}`, `{{n2}}`, `{{n4}}`**:
+- [x] **Eliminación de la cita duplicada y marcadores crudos**:
   - `EndScreen.tsx`: incorporada la prop `hideQuote={true}` para no duplicar la cita ya renderizada con elegancia tipográfica por `<ClueTree />`.
   - Reconstrucción de texto limpio en `EndScreen`: si la cita se renderiza de forma aislada, `reconstructQuote()` reemplaza dinámicamente los placeholders por las soluciones reales, eliminando los identificadores de nodo crudos.
 - [x] **Protección total contra fugas de texto cifrado**:

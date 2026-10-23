@@ -163,6 +163,37 @@ export const InputBar = forwardRef<InputBarHandle, InputBarProps>(function Input
 
   return (
     <div ref={barRef} className={barClasses} data-testid="input-bar">
+      {(onHintMatrix || onHintReveal) && (
+        <div className={styles.helpRow}>
+          {onHintMatrix && (
+            <button
+              id="corchetes-hint-matrix-btn"
+              type="button"
+              className={styles.helpBtn}
+              onClick={onHintMatrix}
+              disabled={disabled}
+              aria-label="Solicitar matriz (letra inicial y longitud)"
+            >
+              Solicitar matriz
+            </button>
+          )}
+          {onHintReveal && (
+            <button
+              id="corchetes-hint-reveal-btn"
+              type="button"
+              className={[styles.helpBtn, styles.helpBtnReveal]
+                .filter(Boolean)
+                .join(' ')}
+              onClick={onHintReveal}
+              disabled={disabled}
+              aria-label="Revelar término con penalización"
+            >
+              Revelar término
+            </button>
+          )}
+        </div>
+      )}
+
       <div className={styles.inputRow}>
         <input
           ref={inputRef}
@@ -198,6 +229,7 @@ export const InputBar = forwardRef<InputBarHandle, InputBarProps>(function Input
 
         <button
           id="corchetes-submit-btn"
+          type="button"
           className={styles.submitBtn}
           onClick={handleSubmit}
           disabled={disabled || !value.trim()}
@@ -206,35 +238,6 @@ export const InputBar = forwardRef<InputBarHandle, InputBarProps>(function Input
           Enviar
         </button>
       </div>
-
-      {(onHintMatrix || onHintReveal) && (
-        <div className={styles.helpRow}>
-          {onHintMatrix && (
-            <button
-              id="corchetes-hint-matrix-btn"
-              className={styles.helpBtn}
-              onClick={onHintMatrix}
-              disabled={disabled}
-              aria-label="Solicitar pista de letra inicial"
-            >
-              Solicitar matriz
-            </button>
-          )}
-          {onHintReveal && (
-            <button
-              id="corchetes-hint-reveal-btn"
-              className={[styles.helpBtn, styles.helpBtnReveal]
-                .filter(Boolean)
-                .join(' ')}
-              onClick={onHintReveal}
-              disabled={disabled}
-              aria-label="Revelar término con penalización"
-            >
-              Revelar término
-            </button>
-          )}
-        </div>
-      )}
     </div>
   )
 })

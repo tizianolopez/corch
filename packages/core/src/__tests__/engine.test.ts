@@ -70,13 +70,12 @@ describe('onSubmit', () => {
     expect(newState.score).toBe(95)
   })
 
-  it('las pistas se pueden resolver en cualquier momento, incluso un padre directamente', async () => {
+  it('intento con la respuesta del padre cuando aún no está activo falla', async () => {
     const state = createTestState()
-    // 'padre' resuelve n1 directamente aunque n1 sea nodo padre
+    // 'padre' solo es válido para n1, pero n1 tiene isActive = false porque tiene hijos pendientes
     const [result, newState] = await onSubmit('padre', state, salt, mockHash, mockDecrypt)
-    expect(result.success).toBe(true)
-    expect(result.resolvedNodeId).toBe('n1')
-    expect(newState.nodes['n1']?.isResolved).toBe(true)
+    expect(result.success).toBe(false)
+    expect(newState.mistakesCount).toBe(1)
   })
 
   it('acierto de nodo hoja: lo resuelve, activa el padre en cascada', async () => {
