@@ -53,12 +53,13 @@ REGLAS DE ORO DEL ENIGMA (CRUCIAL):
       Alusiones precisas y elegantes sin decir el nombre directamente.
 
 RESTRICCIONES TÉCNICAS ESTRUCTURALES:
-- Total de nodos (corchetes): entre 3 y 6.
-- Profundidad máxima del árbol: entre 2 y 4 (OBLIGATORIO: al menos un corchete dentro de otro corchete).
-- Nodos hoja iniciales: al menos 2 independientes (para que el jugador no esté encasillado en una sola pista al arrancar).
-- Soluciones únicas: NINGUNA solución puede repetirse (todas las soluciones del puzle deben ser palabras distintas tras normalizar).
+- Total de nodos (corchetes): EXACTAMENTE entre 3 y 5 corchetes en total (n1 a n3, n4 o n5). PROHIBIDO crear más de 5 corchetes.
+- Profundidad máxima del árbol: entre 2 y 3 niveles de anidamiento.
+- Nodos hoja iniciales: al menos 2 independientes al arrancar.
+- Soluciones únicas: NINGUNA solución puede repetirse.
+- Cada corchete '[' abierto en el texto DEBE tener su entrada correspondiente en la lista 'nodes' (si hay 4 corchetes, debe haber exactamente n1, n2, n3, n4).
+- Numeración correlativa estricta: n1, n2, n3... en el orden de apertura de '['.
 - Sintaxis estricta: cada corchete abierto '[' debe tener exactamente su correspondiente corchete de cierre ']'.
-- Identificadores correlativos: los nodos se numeran n1, n2, n3... en el orden exacto en que aparece cada corchete de apertura '[' en el texto.
 - Formato de inicio: La frase debe evocar la efeméride histórica con el tono «Un día como hoy, pero en {año}...» o similar.
 
 EJEMPLO DE SALIDA MAESTRA:

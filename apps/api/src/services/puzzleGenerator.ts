@@ -137,9 +137,7 @@ Aprende del ingenio críptico y el tono del referente:
 - Anagrama de reversión: "Del dret una poda massiva, del revés un avió o un mussol" -> talà (indicador: del revés)
 - Inclusión / Ocultamiento: "El instrument acordeón esconde en su interior..." -> cor
 - Charada: "La primera mitad de soldado bajo el astro rey" -> sol
-- Doble sentido: "Lo que estudian los que no están sentados" -> derecho
-
-Garantiza entre 2 y 4 niveles de profundidad concéntrica, al menos 2 nodos hoja iniciales y soluciones únicas.`
+Garantiza EXACTAMENTE entre 3 y 5 corchetes en total (n1 a n3, n4 o n5), entre 2 y 3 niveles de profundidad, al menos 2 nodos hoja iniciales, y que la lista 'nodes' contenga una solución para cada corchete.`
 
   return prompt
 }

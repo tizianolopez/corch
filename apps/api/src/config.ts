@@ -52,7 +52,7 @@ export const envSchema = z.object({
   GEMINI_API_KEY: z.string().optional(),
 
   /** Modelo de Gemini a usar para la generación de puzles */
-  GEMINI_MODEL: z.string().default('gemini-2.0-flash'),
+  GEMINI_MODEL: z.string().default('gemini-3.5-flash-lite'),
 })
 
 export type AppConfig = z.infer<typeof envSchema>
