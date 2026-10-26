@@ -1,0 +1,192 @@
+{
+  "puzzleId": "corchetes-2026-10-26",
+  "editionNumber": 1,
+  "publishDate": "2026-10-26",
+  "rootTemplate": "Bajo el {{n1}} {{n4}} de Aravá, Isaac {{n7}}n y Abdel{{n10}}m al-{{n12}}i {{n14}} en 1994 la {{n16}} {{n18}}tiva {{n19}} Israel y {{n20}}ia.",
+  "nodes": {
+    "n3": {
+      "id": "n3",
+      "clueText": "Lo que todo lo cura sin recetar remedios",
+      "children": [],
+      "parent": "n2",
+      "type": "polysemy",
+      "solution": "tiempo"
+    },
+    "n2": {
+      "id": "n2",
+      "clueText": "Brota como consecuencia tras el paso del {{n3}}",
+      "children": [
+        "n3"
+      ],
+      "parent": "n1",
+      "type": "definition",
+      "solution": "resulta"
+    },
+    "n1": {
+      "id": "n1",
+      "clueText": "Sello menos formal que {{n2}} majestuoso y grave",
+      "children": [
+        "n2"
+      ],
+      "parent": null,
+      "type": "anagram",
+      "solution": "solemne"
+    },
+    "n6": {
+      "id": "n6",
+      "clueText": "Lejanos en el espacio y en la memoria",
+      "children": [],
+      "parent": "n5",
+      "type": "definition",
+      "solution": "aquellos"
+    },
+    "n5": {
+      "id": "n5",
+      "clueText": "Ocupan morada {{n6}} que residen en el mundo",
+      "children": [
+        "n6"
+      ],
+      "parent": "n4",
+      "type": "definition",
+      "solution": "habitan"
+    },
+    "n4": {
+      "id": "n4",
+      "clueText": "Techo azul donde {{n5}} las estrellas y las aves",
+      "children": [
+        "n5"
+      ],
+      "parent": null,
+      "type": "definition",
+      "solution": "cielo"
+    },
+    "n9": {
+      "id": "n9",
+      "clueText": "Inmune al profano roce de lo cotidiano",
+      "children": [],
+      "parent": "n8",
+      "type": "polysemy",
+      "solution": "Sagrado"
+    },
+    "n8": {
+      "id": "n8",
+      "clueText": "{{n9}} recinto donde se congregan los fieles hebreos",
+      "children": [
+        "n9"
+      ],
+      "parent": "n7",
+      "type": "reference",
+      "solution": "sinagoga"
+    },
+    "n7": {
+      "id": "n7",
+      "clueText": "Sabio hebreo leído al revés en la {{n8}}",
+      "children": [
+        "n8"
+      ],
+      "parent": null,
+      "type": "reverse",
+      "solution": "Rabi"
+    },
+    "n11": {
+      "id": "n11",
+      "clueText": "Brillan con luz propia los personajes célebres y memorables",
+      "children": [],
+      "parent": "n10",
+      "type": "polysemy",
+      "solution": "ilustres"
+    },
+    "n10": {
+      "id": "n10",
+      "clueText": "Espacio principal donde se recibe a las visitas {{n11}}",
+      "children": [
+        "n11"
+      ],
+      "parent": null,
+      "type": "definition",
+      "solution": "sala"
+    },
+    "n13": {
+      "id": "n13",
+      "clueText": "Fría piedra noble que inmortaliza al gran escultor",
+      "children": [],
+      "parent": "n12",
+      "type": "reference",
+      "solution": "mármol"
+    },
+    "n12": {
+      "id": "n12",
+      "clueText": "Maravilla de {{n13}} blanco que corona la India",
+      "children": [
+        "n13"
+      ],
+      "parent": null,
+      "type": "reference",
+      "solution": "Majal"
+    },
+    "n15": {
+      "id": "n15",
+      "clueText": "Validaron con su rúbrica el pacto definitivo y sellado",
+      "children": [],
+      "parent": "n14",
+      "type": "definition",
+      "solution": "firmaron"
+    },
+    "n14": {
+      "id": "n14",
+      "clueText": "Cierran con pacto firme lo que otros ya {{n15}}",
+      "children": [
+        "n15"
+      ],
+      "parent": null,
+      "type": "polysemy",
+      "solution": "sellan"
+    },
+    "n17": {
+      "id": "n17",
+      "clueText": "Profunda ausencia de sonido que habita en la calma",
+      "children": [],
+      "parent": "n16",
+      "type": "polysemy",
+      "solution": "Silencio"
+    },
+    "n16": {
+      "id": "n16",
+      "clueText": "{{n17}} anhelado que precede a las grandes treguas",
+      "children": [
+        "n17"
+      ],
+      "parent": null,
+      "type": "reference",
+      "solution": "paz"
+    },
+    "n18": {
+      "id": "n18",
+      "clueText": "Delimitó con precisión exacta los contornos del concepto",
+      "children": [],
+      "parent": null,
+      "type": "definition",
+      "solution": "defini"
+    },
+    "n19": {
+      "id": "n19",
+      "clueText": "En medio de dos mundos sin tocar ninguno",
+      "children": [],
+      "parent": null,
+      "type": "polysemy",
+      "solution": "entre"
+    },
+    "n20": {
+      "id": "n20",
+      "clueText": "Cauce sagrado donde el Bautista sumergió al Mesías",
+      "children": [],
+      "parent": null,
+      "type": "reference",
+      "solution": "Jordan"
+    }
+  },
+  "quoteAuthor": "",
+  "quoteWork": "Tratado de Paz de Aravá",
+  "quoteYear": 1994,
+  "editorialNote": "El 26 de octubre de 1994, Isaac Rabin y Abdelsalam al-Majali sellaron la paz histórica en el valle de Aravá, poniendo fin a 46 años de estado de beligerancia entre Israel y Jordania."
+}

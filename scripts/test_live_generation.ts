@@ -12,11 +12,11 @@ async function runLiveGeneration() {
   }
 
   console.log('Evento de efemérides (Hoy):', event.text)
-  console.log('Llamando a Gemini con modelo gemini-3.5-flash-lite...')
+  console.log('Llamando a Gemini con modelo:', process.env.GEMINI_MODEL || 'gemini-2.0-flash')
 
   const result = await generatePuzzleFromEvent(event, {
     apiKey: process.env.GEMINI_API_KEY,
-    modelName: 'gemini-3.5-flash-lite',
+    modelName: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
   })
 
   if (result.success) {

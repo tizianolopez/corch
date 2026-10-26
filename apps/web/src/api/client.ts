@@ -171,6 +171,7 @@ export const apiClient = {
     sessionId: string,
     nodeId: string,
     hintType: 'matrix' | 'reveal',
+    puzzleId?: string,
   ): Promise<HintResponse> {
     const res = await fetch(`${getBaseUrl()}/api/session/hint`, {
       method: 'POST',
@@ -181,6 +182,7 @@ export const apiClient = {
         sessionId,
         nodeId,
         hintType,
+        ...(puzzleId ? { puzzleId } : {}),
       }),
     })
 

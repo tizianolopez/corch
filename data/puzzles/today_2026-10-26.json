@@ -1,0 +1,213 @@
+{
+  "puzzleId": "corchetes-2026-10-26",
+  "editionNumber": 1,
+  "publishDate": "2026-10-26",
+  "rootTemplate": "Bajo el {{n1}} {{n4}} de Aravá, Isaac {{n7}}n y Abdel{{n10}}m al-{{n12}}i {{n14}} en 1994 la {{n16}} {{n18}}tiva {{n19}} Israel y {{n20}}ia.",
+  "nodes": {
+    "n3": {
+      "id": "n3",
+      "clueText": "Lo que todo lo cura sin recetar remedios",
+      "children": [],
+      "parent": "n2",
+      "type": "polysemy",
+      "solutionHash": "608d0087f4bf43deb81f03d0c2da68f40118f01a7a8acb182391a80b0aab13e6",
+      "solutionCipher": "fee9d4ffb8ab86ec58fbad8e:WHFyG5dLYrL2bLPDwpPN3igh5lgyLA=="
+    },
+    "n2": {
+      "id": "n2",
+      "clueText": "Brota como consecuencia tras el paso del {{n3}}",
+      "children": [
+        "n3"
+      ],
+      "parent": "n1",
+      "type": "definition",
+      "solutionHash": "94d6db782c34809c5a7cd1e5b462f6bae2171710c28400508d781bd92edb461b",
+      "solutionCipher": "7bbce2bc09f4566e239ef8aa:g6YA0eNSJetpGBym2YnaigEjfpVtFxE="
+    },
+    "n1": {
+      "id": "n1",
+      "clueText": "Sello menos formal que {{n2}} majestuoso y grave",
+      "children": [
+        "n2"
+      ],
+      "parent": null,
+      "type": "anagram",
+      "solutionHash": "f0eee972b7b89bae88323b399bddb054be17691f2292b5011ebcf0c3034e7e1c",
+      "solutionCipher": "a8e2fc34945cae9ac40b7e5a:n8cx4G0YfvIqE8DxAN6HDl9/8lpLvQ0="
+    },
+    "n6": {
+      "id": "n6",
+      "clueText": "Lejanos en el espacio y en la memoria",
+      "children": [],
+      "parent": "n5",
+      "type": "definition",
+      "solutionHash": "12eb61db726665046ac418a0b84a10d854d4f89ab4db2d5dc4b546fb8752957c",
+      "solutionCipher": "7a6207fb8ad445e01b9c5aed:hbYVF7mT8wBjx9MAvoDaw661Lv9AU+Cf"
+    },
+    "n5": {
+      "id": "n5",
+      "clueText": "Ocupan morada {{n6}} que residen en el mundo",
+      "children": [
+        "n6"
+      ],
+      "parent": "n4",
+      "type": "definition",
+      "solutionHash": "11a009b0a29ccce36b6ec2cc00015b868a6f8f6841e8de54fdf1b60fd06d53d2",
+      "solutionCipher": "e71fd99caeb6785b5a01c392:hQZchudVz1T3FewPAyjMq1AvuyiBrq8="
+    },
+    "n4": {
+      "id": "n4",
+      "clueText": "Techo azul donde {{n5}} las estrellas y las aves",
+      "children": [
+        "n5"
+      ],
+      "parent": null,
+      "type": "definition",
+      "solutionHash": "b991cf1fb5a2742a5179e535f7d89772967cad49b6387cc02d4432aef97e7211",
+      "solutionCipher": "dc2abd37c35255b279c6f814:SrRcLGiqHydmbpzTXSSQxi9xv8wz"
+    },
+    "n9": {
+      "id": "n9",
+      "clueText": "Inmune al profano roce de lo cotidiano",
+      "children": [],
+      "parent": "n8",
+      "type": "polysemy",
+      "solutionHash": "d6217ded422dcc64668392e7060119acc49374cfa1cde21874c7bc1289f0d28a",
+      "solutionCipher": "19ed76a29e95159daf5469c1:ALdnCK4zms90EVZtL7+GBb1sJdmBWnw="
+    },
+    "n8": {
+      "id": "n8",
+      "clueText": "{{n9}} recinto donde se congregan los fieles hebreos",
+      "children": [
+        "n9"
+      ],
+      "parent": "n7",
+      "type": "reference",
+      "solutionHash": "54c73cd1a83cf6a14e0bc7e952dac913bb1153ba01af8e157010615664951674",
+      "solutionCipher": "e95e3b4d01c2fb05a6975ffa:nB6gPhNYvvYF3QIWoElneWJx7vwhP9h8"
+    },
+    "n7": {
+      "id": "n7",
+      "clueText": "Sabio hebreo leído al revés en la {{n8}}",
+      "children": [
+        "n8"
+      ],
+      "parent": null,
+      "type": "reverse",
+      "solutionHash": "787a4adc2497b7a99a5cecd4243051e5ef0c45175fb096d2753a0a11c47da97f",
+      "solutionCipher": "9ebb1eb167287a318ebecff1:qvZqtgmcw4H1nesst3sLMQ5gsVY="
+    },
+    "n11": {
+      "id": "n11",
+      "clueText": "Brillan con luz propia los personajes célebres y memorables",
+      "children": [],
+      "parent": "n10",
+      "type": "polysemy",
+      "solutionHash": "58fc51d19f896fa395d2ce4bc7bb21a5756e7a705989da5f3de33656b4d4b66d",
+      "solutionCipher": "bc8bb1569aeb5fbd832dca98:GwomG4t70E5flp7tgjKbjAkEUVbCh3oB"
+    },
+    "n10": {
+      "id": "n10",
+      "clueText": "Espacio principal donde se recibe a las visitas {{n11}}",
+      "children": [
+        "n11"
+      ],
+      "parent": null,
+      "type": "definition",
+      "solutionHash": "dae386fbb0d854a1c44e5e6eea64da759722a8c9e5487ed04a7b214f2f99e679",
+      "solutionCipher": "c32a1427f30871a4f3e175c2:lbceF/p+SdiNvLWVRWIigBzvmY4="
+    },
+    "n13": {
+      "id": "n13",
+      "clueText": "Fría piedra noble que inmortaliza al gran escultor",
+      "children": [],
+      "parent": "n12",
+      "type": "reference",
+      "solutionHash": "1704ed47962c9e41993dac0b5fea0aae7ea0346d05ad8184f3d6ad199d56ce80",
+      "solutionCipher": "c5a9e235623b59b1b16bc78f:9zvQvv0mLgTXcQI+27zVdD5+c01cqdA="
+    },
+    "n12": {
+      "id": "n12",
+      "clueText": "Maravilla de {{n13}} blanco que corona la India",
+      "children": [
+        "n13"
+      ],
+      "parent": null,
+      "type": "reference",
+      "solutionHash": "e36452d749eaf00af68058b98a11616b4c4c5e9eb2cce04589b6b6b3e370dff8",
+      "solutionCipher": "ae750755a588bc0b5cc27bca:1ntkcYsArsWmiWdSn+z8ewJ5fiL4"
+    },
+    "n15": {
+      "id": "n15",
+      "clueText": "Validaron con su rúbrica el pacto definitivo y sellado",
+      "children": [],
+      "parent": "n14",
+      "type": "definition",
+      "solutionHash": "cac5e6ab887a3a3453fee97a1628eddae819d78f657aabf808546101541d816d",
+      "solutionCipher": "5b758f0bf2dda1d7d7418ed6:HNRqz3BieRm0pEpQByat4gzE84sHkiYw"
+    },
+    "n14": {
+      "id": "n14",
+      "clueText": "Cierran con pacto firme lo que otros ya {{n15}}",
+      "children": [
+        "n15"
+      ],
+      "parent": null,
+      "type": "polysemy",
+      "solutionHash": "0bd42a25e57bfbd6dcfebbc2685e842fd1c8816a1614eaa7d37abd0394e62dd9",
+      "solutionCipher": "b3f81463d466e72a64ac4bfe:2WiSEAeUNwoBa7WhBf2QLPLhfRKUZw=="
+    },
+    "n17": {
+      "id": "n17",
+      "clueText": "Profunda ausencia de sonido que habita en la calma",
+      "children": [],
+      "parent": "n16",
+      "type": "polysemy",
+      "solutionHash": "23334fe1c5b1c7ae1bf1700226aa8476075f8071ec19886bcae873e233a3025e",
+      "solutionCipher": "4d8329296a21dacb87ec9d0a:FBmG1aDPUIZ88uaCdH4HnvSl1TLsrRBb"
+    },
+    "n16": {
+      "id": "n16",
+      "clueText": "{{n17}} anhelado que precede a las grandes treguas",
+      "children": [
+        "n17"
+      ],
+      "parent": null,
+      "type": "reference",
+      "solutionHash": "2e433d222f2842e18bf18b50525c9e918b799e56a3df87f630cd25f9cbeae7df",
+      "solutionCipher": "c50c606b6f69d51862aba1a4:bk755Atq802tyF12RQCho5yXOg=="
+    },
+    "n18": {
+      "id": "n18",
+      "clueText": "Delimitó con precisión exacta los contornos del concepto",
+      "children": [],
+      "parent": null,
+      "type": "definition",
+      "solutionHash": "54dd386d0361437f37d3c178d80b79c48b13ac3de52030ffd5ee28dd265a878b",
+      "solutionCipher": "a494507ecfa9647007af1cb7:i2nfg6H10NNYXq6LtwJaFkoZaVUoqw=="
+    },
+    "n19": {
+      "id": "n19",
+      "clueText": "En medio de dos mundos sin tocar ninguno",
+      "children": [],
+      "parent": null,
+      "type": "polysemy",
+      "solutionHash": "bd7647cfac18b1ebea4ca2a4a26ee0bcf8abd36e7b0afa13acaa5deb7a5fdcda",
+      "solutionCipher": "e0470eed404b1c9231fb089e:rmlilP5mf54msGBehabPxEfC2Mzm"
+    },
+    "n20": {
+      "id": "n20",
+      "clueText": "Cauce sagrado donde el Bautista sumergió al Mesías",
+      "children": [],
+      "parent": null,
+      "type": "reference",
+      "solutionHash": "2a4189f6e84d0b6fe95cbb27295a2ddac2e453b3fe202b3268dac3e7ebbd2b30",
+      "solutionCipher": "d79af18c21889f01260c9b07:t+LBh9zCzWNQDWDd0Wm3LyIUd+Irdw=="
+    }
+  },
+  "dailySalt": "salt-2026-10-26",
+  "quoteAuthor": "",
+  "quoteWork": "Tratado de Paz de Aravá",
+  "quoteYear": 1994,
+  "editorialNote": "El 26 de octubre de 1994, Isaac Rabin y Abdelsalam al-Majali sellaron la paz histórica en el valle de Aravá, poniendo fin a 46 años de estado de beligerancia entre Israel y Jordania."
+}

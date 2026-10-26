@@ -13,66 +13,12 @@ import { getCurrentUser, onAuthStateChange } from '../src/lib/supabase'
 import { AuthDrawer } from '../src/components/AuthDrawer'
 import styles from './page.module.css'
 import type { ClientPayload } from '@corchetes/core'
-
-const CANONICAL_SOLUTIONS: Record<string, string> = {
-  n1: 'afuera',
-  n2: 'dentro',
-  n3: 'secreto',
-  n4: 'amor',
-}
-
-// ── Puzle Tutorial Didáctico (Edición 0: Cómo jugar) ─────────────────────────
-
-const DEMO_PAYLOAD: ClientPayload = {
-  puzzleId: 'corchetes-tutorial',
-  editionNumber: 0,
-  publishDate: '2026-10-23',
-  rootTemplate: 'En Corchetes se avanza siempre hacia {{n1}}, descifrando cada {{n3}} con {{n4}} por el lenguaje.',
-  dailySalt: 'salt-tutorial',
-  nodes: {
-    n1: {
-      id: 'n1',
-      clueText: 'el destino al que sales desde {{n2}}',
-      children: ['n2'],
-      parent: null,
-      type: 'reference',
-      solutionHash: 'f126f80b3601c4effbf6f0bf0a4ba8a33dfba60e8259f08b2a9b637f7e6ef65a',
-      solutionCipher: '67a6e0b3389fb73db1242e13:+RBwdYMGB9SrDbOM6c12nbf6+2l6kg==',
-    },
-    n2: {
-      id: 'n2',
-      clueText: 'lo contrario de fuera',
-      children: [],
-      parent: 'n1',
-      type: 'definition',
-      solutionHash: 'd369d51bfe8e83ed9d3903b7affad7aafd4145ef37232ebb058039faf3fa49d3',
-      solutionCipher: '5adfa928dbc759e6505a6d0f:hI5k5/rEdLP8GxZyGov5HRG2neD80A==',
-    },
-    n3: {
-      id: 'n3',
-      clueText: 'misterio que se guarda oculto',
-      children: [],
-      parent: null,
-      type: 'definition',
-      solutionHash: 'e96151def46afe4211366c1b10092937abc4cf74f37f13b801779ef3230cb4ac',
-      solutionCipher: '1fb97dd4f47506274c3ace72:Ev+YjG6pgcZYLzGXw3PhDPPJHv3HVvg=',
-    },
-    n4: {
-      id: 'n4',
-      clueText: 'el deshojado y revuelto RAMO',
-      children: [],
-      parent: null,
-      type: 'anagram',
-      solutionHash: '3199e42d0f6b656014a762ce0ccf8efe416a1d2c4bcb73d9a956e305b1963d5e',
-      solutionCipher: '67a5e88897642bb6c6a1cc11:rZrmjbJ+mT6lH66SkR1udkGK/UE=',
-    },
-  },
-  quoteAuthor: 'Guía del iniciado',
-  quoteWork: 'Cómo jugar a Corchetes',
-  quoteYear: 2026,
-  editorialNote:
-    '¡Enhorabuena! Has completado el tutorial. Recuerda: en Corchetes se resuelve de dentro hacia afuera. Al resolver «dentro», desbloqueaste la pista exterior para hallar «afuera».',
-}
+import {
+  TUTORIAL_PAYLOAD,
+  TODAY_PAYLOAD,
+  TUTORIAL_SOLUTIONS,
+  TODAY_SOLUTIONS,
+} from '../src/data/puzzles'
 
 // ── Funciones criptográficas seguras Web Crypto ─────────────────────────────
 
@@ -135,74 +81,103 @@ export function InteractiveTreeDemo(): ReactElement {
     completeCurrentSession,
   } = usePuzzleStore()
 
+  // ── Modo de puzle activo ('tutorial' o 'daily') ───────────────────────
+  const [activeEdition, setActiveEdition] = useState<'tutorial' | 'daily'>('tutorial')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isDone = localStorage.getItem('corchetes_tutorial_completed') === 'true'
+      if (isDone) {
+        setActiveEdition('daily')
+      }
+    }
+  }, [])
+
   // ── Inicializar puzle y sesión de juego ─────────────────────────────
-  const initializeGame = useCallback(async () => {
-    // Sincronizar identidad anónima en localStorage y cookie HttpOnly
-    const anonId = getOrCreateAnonymousId()
-    try {
-      void fetch('/api/auth/anonymous-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ anonymousId: anonId }),
-      })
-    } catch {
-      // Ignorar fallo de red en sincronización de cookie
-    }
+  const initializeGame = useCallback(
+    async (targetMode?: 'tutorial' | 'daily') => {
+      const mode =
+        targetMode ??
+        (typeof window !== 'undefined' &&
+        localStorage.getItem('corchetes_tutorial_completed') === 'true'
+          ? 'daily'
+          : 'tutorial')
 
-    // 1. Obtener el puzle del día del backend (o fallback canónico demo)
-    let payload = DEMO_PAYLOAD
-    try {
-      payload = await apiClient.getTodayPuzzle()
-    } catch (err) {
-      console.warn('Usando puzle demo por indisponibilidad de la API:', err)
-    }
+      setActiveEdition(mode)
 
-    // 2. Intentar restaurar sesión guardada de hoy si coincide con el puzzleId actual
-    const saved = restoreTodayState()
-    if (saved && saved.state && saved.state.puzzleId === payload.puzzleId) {
-      let currentSessionId = saved.sessionId
+      // Sincronizar identidad anónima en localStorage y cookie HttpOnly
+      const anonId = getOrCreateAnonymousId()
+      try {
+        void fetch('/api/auth/anonymous-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ anonymousId: anonId }),
+        })
+      } catch {
+        // Ignorar fallo de red en sincronización de cookie
+      }
 
-      if (!currentSessionId) {
+      // 1. Obtener el puzle correspondiente
+      let payload: ClientPayload = mode === 'tutorial' ? TUTORIAL_PAYLOAD : TODAY_PAYLOAD
+      if (mode === 'daily') {
         try {
-          const sessionRes = await apiClient.startSession(saved.state.puzzleId, anonId)
-          currentSessionId = sessionRes.sessionId
+          payload = await apiClient.getTodayPuzzle()
         } catch (err) {
-          console.warn('No se pudo registrar sesión para el estado restaurado:', err)
+          console.warn('Usando puzle diario canónico por indisponibilidad de la API:', err)
         }
       }
 
-      restorePuzzle(
-        saved.state,
-        payload.dailySalt,
-        appHashFn,
-        appDecryptFn,
-        currentSessionId,
-        saved.percentile,
-      )
+      // 2. Intentar restaurar sesión guardada si coincide con el puzzleId y template actuales
+      const saved = restoreTodayState()
+      const isTemplateCurrent =
+        saved?.state?.rootTemplate === payload.rootTemplate
 
-      if (saved.state.completedAt !== null && saved.percentile == null && currentSessionId) {
-        void completeCurrentSession()
+      if (saved && saved.state && saved.state.puzzleId === payload.puzzleId && isTemplateCurrent) {
+        let currentSessionId = saved.sessionId
+
+        if (!currentSessionId) {
+          try {
+            const sessionRes = await apiClient.startSession(saved.state.puzzleId, anonId)
+            currentSessionId = sessionRes.sessionId
+          } catch (err) {
+            console.warn('No se pudo registrar sesión para el estado restaurado:', err)
+          }
+        }
+
+        restorePuzzle(
+          saved.state,
+          payload.dailySalt,
+          appHashFn,
+          appDecryptFn,
+          currentSessionId,
+          saved.percentile,
+        )
+
+        if (saved.state.completedAt !== null && saved.percentile == null && currentSessionId) {
+          void completeCurrentSession()
+        }
+        return
       }
-      return
-    }
 
-    // Si había un estado guardado antiguo con otro puzzleId, limpiarlo
-    if (saved && saved.state && saved.state.puzzleId !== payload.puzzleId) {
-      clearTodayState()
-    }
+      // Si había un estado guardado desactualizado o con otro puzzleId, limpiarlo
+      if (saved && saved.state && (!isTemplateCurrent || saved.state.puzzleId !== payload.puzzleId)) {
+        clearTodayState()
+      }
 
-    // 3. Iniciar sesión nueva en backend
-    let newSessionId: string | null = null
-    try {
-      const sessionRes = await apiClient.startSession(payload.puzzleId, anonId)
-      newSessionId = sessionRes.sessionId
-    } catch (err) {
-      console.warn('No se pudo iniciar sesión en backend:', err)
-    }
+      // 3. Iniciar sesión nueva en backend
+      let newSessionId: string | null = null
+      try {
+        const sessionRes = await apiClient.startSession(payload.puzzleId, anonId)
+        newSessionId = sessionRes.sessionId
+      } catch (err) {
+        console.warn('No se pudo iniciar sesión en backend:', err)
+      }
 
-    // 4. Cargar puzle nuevo en el store con contexto criptográfico
-    loadPuzzle(payload, appHashFn, appDecryptFn, newSessionId)
-  }, [loadPuzzle, restorePuzzle, completeCurrentSession])
+      // 4. Cargar puzle nuevo en el store con contexto criptográfico
+      loadPuzzle(payload, appHashFn, appDecryptFn, newSessionId)
+    },
+    [loadPuzzle, restorePuzzle, completeCurrentSession],
+  )
 
   useEffect(() => {
     void initializeGame()
@@ -222,7 +197,12 @@ export function InteractiveTreeDemo(): ReactElement {
     let initialLetter = ''
     if (sessionId) {
       try {
-        const res = await apiClient.requestHint(sessionId, selectedNodeId, 'matrix')
+        const res = await apiClient.requestHint(
+          sessionId,
+          selectedNodeId,
+          'matrix',
+          puzzleState.puzzleId,
+        )
         if (res.success && res.hintType === 'matrix' && res.initialLetter) {
           initialLetter = res.initialLetter.toUpperCase()
         }
@@ -231,7 +211,9 @@ export function InteractiveTreeDemo(): ReactElement {
       }
     }
 
-    const canonical = CANONICAL_SOLUTIONS[selectedNodeId]
+    const currentSolutions =
+      puzzleState.editionNumber === 0 ? TUTORIAL_SOLUTIONS : TODAY_SOLUTIONS
+    const canonical = currentSolutions[selectedNodeId]
     if (!initialLetter && canonical) {
       initialLetter = canonical.charAt(0).toUpperCase()
     }
@@ -258,7 +240,12 @@ export function InteractiveTreeDemo(): ReactElement {
     // Solicitar solución en texto plano al backend (POST /api/session/hint)
     if (sessionId) {
       try {
-        const res = await apiClient.requestHint(sessionId, selectedNodeId, 'reveal')
+        const res = await apiClient.requestHint(
+          sessionId,
+          selectedNodeId,
+          'reveal',
+          puzzleState.puzzleId,
+        )
         if (res.success && res.hintType === 'reveal') {
           requestHint('reveal', res.solution)
           return
@@ -268,11 +255,13 @@ export function InteractiveTreeDemo(): ReactElement {
       }
     }
 
-    // Fallback limpio si la API no está disponible
+    // Fallback limpio con el diccionario de soluciones canónicas
     const node = puzzleState.nodes[selectedNodeId]
     if (node) {
+      const currentSolutions =
+        puzzleState.editionNumber === 0 ? TUTORIAL_SOLUTIONS : TODAY_SOLUTIONS
       const cleanFallback =
-        CANONICAL_SOLUTIONS[selectedNodeId] ||
+        currentSolutions[selectedNodeId] ||
         (node.solutionCipher.includes(':') ? node.clueText : node.solutionCipher)
       requestHint('reveal', cleanFallback)
     }
@@ -282,8 +271,8 @@ export function InteractiveTreeDemo(): ReactElement {
     clearTodayState()
     setRevealedMatrices({})
     resetGame()
-    void initializeGame()
-  }, [resetGame, initializeGame])
+    void initializeGame(activeEdition)
+  }, [resetGame, initializeGame, activeEdition])
 
   // ── Render ────────────────────────────────────────────────────────────
   if (!puzzleState) return <div>Cargando…</div>
@@ -299,117 +288,161 @@ export function InteractiveTreeDemo(): ReactElement {
       />
 
       <section className={styles.quoteCard}>
-      {/* ── Barra de lector / Identificación y reinicio ───────────────── */}
-      <div className={styles.readerBar}>
-        <div className={styles.readerBarLeft}>
-          <button
-            type="button"
-            className={styles.readerButton}
-            onClick={handleReset}
-            aria-label="Reiniciar árbol del puzle"
-          >
-            [↺ Reiniciar árbol]
-          </button>
-          <Link
-            href="/crear"
-            className={styles.readerButton}
-            style={{ textDecoration: 'none' }}
-          >
-            [+ Crear reto propio]
-          </Link>
-        </div>
-        <div className={styles.readerBarRight}>
-          <button
-            type="button"
-            className={styles.readerButton}
-            onClick={() => setIsAuthOpen(true)}
-            aria-label={currentUser ? 'Ver perfil de lector' : 'Acceder o guardar racha'}
-          >
-            {currentUser ? (
-              <>
-                <span className={styles.readerActiveDot}>·</span>
-                <span>{currentUser.email}</span>
-              </>
-            ) : (
-              <span>[Guardar racha / Identifícate]</span>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* ── ClueTree ──────────────────────────────────────────────────── */}
-      <ClueTree
-        rootTemplate={puzzleState.rootTemplate}
-        nodes={puzzleState.nodes}
-        quoteAuthor={puzzleState.quoteAuthor}
-        quoteWork={puzzleState.quoteWork}
-        quoteYear={puzzleState.quoteYear}
-        selectedNodeId={selectedNodeId}
-        justResolvedId={justResolvedId}
-        justUnlockedId={justUnlockedId}
-        onSelectNode={setSelectedNode}
-      />
-
-      {/* ── InputBar o EndScreen ──────────────────────────────────────── */}
-      {isCompleted ? (
-        <>
-          <EndScreen state={puzzleState} percentile={percentile} hideQuote />
-          <div className={styles.buttonGroup}>
+        {/* ── Barra de lector / Selector de edición e identificación ─── */}
+        <div className={styles.readerBar}>
+          <div className={styles.readerBarLeft}>
             <button
               type="button"
-              className={styles.resetButton}
-              onClick={handleReset}
+              className={`${styles.readerButton} ${puzzleState.editionNumber === 0 ? styles.readerButtonActive : ''}`}
+              onClick={() => {
+                clearTodayState()
+                setRevealedMatrices({})
+                resetGame()
+                void initializeGame('tutorial')
+              }}
+              aria-label="Jugar modo tutorial"
             >
-              Jugar de nuevo
+              📖 Tutorial: Cómo jugar
             </button>
-            {!currentUser && (
-              <button
-                type="button"
-                className={styles.demoButton}
-                onClick={() => setIsAuthOpen(true)}
-              >
-                Guardar racha en tu cuenta
-              </button>
-            )}
+            <button
+              type="button"
+              className={`${styles.readerButton} ${puzzleState.editionNumber !== 0 ? styles.readerButtonActive : ''}`}
+              onClick={() => {
+                clearTodayState()
+                setRevealedMatrices({})
+                resetGame()
+                void initializeGame('daily')
+              }}
+              aria-label="Jugar puzle oficial de hoy"
+            >
+              ⭐ Puzle de hoy (26 de Octubre)
+            </button>
+            <button
+              type="button"
+              className={styles.readerButton}
+              onClick={handleReset}
+              aria-label="Reiniciar árbol del puzle actual"
+            >
+              [↺ Reiniciar]
+            </button>
+            <Link
+              href="/crear"
+              className={styles.readerButton}
+              style={{ textDecoration: 'none' }}
+            >
+              [+ Crear reto]
+            </Link>
           </div>
-        </>
-      ) : (
-        <>
-          <hr className={styles.inputDivider} />
+          <div className={styles.readerBarRight}>
+            <button
+              type="button"
+              className={styles.readerButton}
+              onClick={() => setIsAuthOpen(true)}
+              aria-label={currentUser ? 'Ver perfil de lector' : 'Acceder o guardar racha'}
+            >
+              {currentUser ? (
+                <>
+                  <span className={styles.readerActiveDot}>·</span>
+                  <span>{currentUser.email}</span>
+                </>
+              ) : (
+                <span>[Guardar racha / Identifícate]</span>
+              )}
+            </button>
+          </div>
+        </div>
 
-          {/* Notificación de Matriz revelada (solo si el jugador solicita matriz) */}
-          {activeNode && revealedMatrices[activeNode.id] && (
-            <div className={styles.matrixHintNotice} role="status">
-              <span className={styles.matrixHintLabel}>Matriz:</span>{' '}
-              {revealedMatrices[activeNode.id]}
+        {/* ── ClueTree ──────────────────────────────────────────────────── */}
+        <ClueTree
+          rootTemplate={puzzleState.rootTemplate}
+          nodes={puzzleState.nodes}
+          quoteAuthor={puzzleState.quoteAuthor}
+          quoteWork={puzzleState.quoteWork}
+          quoteYear={puzzleState.quoteYear}
+          selectedNodeId={selectedNodeId}
+          justResolvedId={justResolvedId}
+          justUnlockedId={justUnlockedId}
+          onSelectNode={setSelectedNode}
+        />
+
+        {/* ── InputBar o EndScreen ──────────────────────────────────────── */}
+        {isCompleted ? (
+          <>
+            <EndScreen state={puzzleState} percentile={percentile} hideQuote />
+            <div className={styles.buttonGroup}>
+              {puzzleState.editionNumber === 0 ? (
+                <button
+                  type="button"
+                  className={styles.primaryActionButton}
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      localStorage.setItem('corchetes_tutorial_completed', 'true')
+                    }
+                    clearTodayState()
+                    setRevealedMatrices({})
+                    resetGame()
+                    void initializeGame('daily')
+                  }}
+                >
+                  Comenzar la Edición de Hoy (26 de Octubre) →
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.resetButton}
+                  onClick={handleReset}
+                >
+                  Jugar de nuevo
+                </button>
+              )}
+              {!currentUser && (
+                <button
+                  type="button"
+                  className={styles.demoButton}
+                  onClick={() => setIsAuthOpen(true)}
+                >
+                  Guardar racha en tu cuenta
+                </button>
+              )}
             </div>
-          )}
+          </>
+        ) : (
+          <>
+            <hr className={styles.inputDivider} />
 
-          <InputBar
-            placeholder="Escribe tu respuesta…"
-            disabled={isCompleted}
-            isError={lastAnswerWrong}
-            onSubmit={handleSubmit}
-            onHintMatrix={handleMatrix}
-            onHintReveal={handleReveal}
-            sticky
-          />
+            {/* Notificación de Matriz revelada (solo si el jugador solicita matriz) */}
+            {activeNode && revealedMatrices[activeNode.id] && (
+              <div className={styles.matrixHintNotice} role="status">
+                <span className={styles.matrixHintLabel}>Matriz:</span>{' '}
+                {revealedMatrices[activeNode.id]}
+              </div>
+            )}
 
-          {lastAnswerWrong && (
-            <p className={styles.errorMessage} role="alert">
-              ✗ Respuesta incorrecta. Inténtalo de nuevo.
-            </p>
-          )}
-        </>
-      )}
+            <InputBar
+              placeholder="Escribe tu respuesta…"
+              disabled={isCompleted}
+              isError={lastAnswerWrong}
+              onSubmit={handleSubmit}
+              onHintMatrix={handleMatrix}
+              onHintReveal={handleReveal}
+              sticky
+            />
 
-      {/* ── Drawer de identificación y guardado de racha ─────────────── */}
-      <AuthDrawer
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-        onUserChange={setCurrentUser}
-      />
-    </section>
+            {lastAnswerWrong && (
+              <p className={styles.errorMessage} role="alert">
+                ✗ Respuesta incorrecta. Inténtalo de nuevo.
+              </p>
+            )}
+          </>
+        )}
+
+        {/* ── Drawer de identificación y guardado de racha ─────────────── */}
+        <AuthDrawer
+          isOpen={isAuthOpen}
+          onClose={() => setIsAuthOpen(false)}
+          onUserChange={setCurrentUser}
+        />
+      </section>
     </>
   )
 }

@@ -97,7 +97,7 @@ export function ClueTree({
       </blockquote>
 
       {/* Atribución de autor, obra y año */}
-      {(quoteAuthor || quoteWork) && (
+      {Boolean(quoteAuthor) && (
         <footer
           className={`${styles.authorAttribution} ${isTextDimmed ? styles.dimmed : ''}`.trim()}
         >

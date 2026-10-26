@@ -15,12 +15,15 @@ import { randomUUID } from 'node:crypto'
 import { normalize, type ClientPayload } from '@corchetes/core'
 import { compilePuzzlePayload, type RawPuzzle } from '@corchetes/crypto'
 import { puzzles, type DbClient } from '@corchetes/db'
+import { config } from '../config'
 import { getEphemerisEvents, type EphemerisEvent } from './ephemeris'
 import {
   generatePuzzleFromEvent,
   type ILlmModel,
   type GenerationResult,
 } from './puzzleGenerator'
+import { generateCascadePuzzle } from './cascadePuzzleGenerator'
+import { validatePuzzleDraft } from './puzzleValidator'
 import type { IRedisClient } from '../plugins/redis'
 
 // ─── Tipos e interfaces ───────────────────────────────────────────────────────
@@ -44,6 +47,8 @@ export interface PipelineOptions {
   model?: ILlmModel
   /** API key de Gemini */
   apiKey?: string
+  /** Total de nodos objetivo para el generador (por defecto 20 para Claudàtors, o 8 express) */
+  targetNodes?: number
 }
 
 export interface PipelineResultSuccess {
@@ -51,10 +56,10 @@ export interface PipelineResultSuccess {
   puzzleId: string
   editionNumber: number
   publishDate: string
-  status: 'DRAFT'
-  source: 'AI'
+  status: 'DRAFT' | 'PUBLISHED' | 'SCHEDULED' | 'ARCHIVED'
+  source: 'AI' | 'MANUAL'
   rawMarkup: string
-  compiledAst: RawPuzzle & { source: 'AI' }
+  compiledAst: RawPuzzle & { source: 'AI' | 'MANUAL' }
   clientPayload: ClientPayload
   meta: {
     maxDepth: number
@@ -116,11 +121,45 @@ export async function runGeneratePipeline(
     event = events[idx]!
   }
 
-  // 2. Generación con IA y validación determinista con reintentos
-  const genResult: GenerationResult = await generatePuzzleFromEvent(event, {
-    model,
-    apiKey,
-  })
+  // 2. Generación con IA y validación determinista
+  let genResult: GenerationResult
+  if (model) {
+    // Si se inyecta un modelo (p. ej. tests unitarios), usar el generador directo
+    genResult = await generatePuzzleFromEvent(event, {
+      model,
+      apiKey,
+    })
+  } else {
+    // Pipeline de producción en cascada recursiva (Claudàtors continuo)
+    try {
+      const draft = await generateCascadePuzzle(event, {
+        apiKey,
+        modelName: config.GEMINI_MODEL,
+        targetNodes: options.targetNodes ?? 20,
+      })
+      const validation = validatePuzzleDraft(draft, { maxNodes: 25 }, { editionNumber, publishDate })
+      if (!validation.valid) {
+        genResult = {
+          success: false,
+          errors: validation.errors,
+          attempts: 1,
+        }
+      } else {
+        genResult = {
+          success: true,
+          draft,
+          validation,
+          attempts: 1,
+        }
+      }
+    } catch (err: any) {
+      genResult = {
+        success: false,
+        errors: [err?.message || String(err)],
+        attempts: 1,
+      }
+    }
+  }
 
   if (!genResult.success) {
     return {

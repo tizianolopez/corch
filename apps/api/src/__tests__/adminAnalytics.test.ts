@@ -28,7 +28,7 @@ describe('Admin Analytics & Library (CMS Fase 4.5)', () => {
       rootTemplate: 'En {{n1}} la {{n2}} pisó la Luna.',
       nodes: {
         n1: { id: 'n1', clueText: '1969', children: [], parent: null, type: 'definition', solution: '1969' },
-        n2: { id: 'n2', clueText: 'misión {{n3}}', children: ['n3'], parent: null, type: 'charade', solution: 'espacial' },
+        n2: { id: 'n2', clueText: 'misión {{n3}}', children: ['n3'], parent: null, type: 'container', solution: 'espacial' },
         n3: { id: 'n3', clueText: 'Apolo', children: [], parent: 'n2', type: 'definition', solution: 'apolo' },
       },
       quoteAuthor: 'Neil Armstrong',

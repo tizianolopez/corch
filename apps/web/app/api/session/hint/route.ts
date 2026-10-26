@@ -1,27 +1,30 @@
 import { NextResponse } from 'next/server'
+import { TUTORIAL_SOLUTIONS, TODAY_SOLUTIONS } from '../../../../src/data/puzzles'
 
 export const dynamic = 'force-dynamic'
-
-const CANONICAL_SOLUTIONS: Record<string, { solution: string; initialLetter: string }> = {
-  n1: { solution: 'afuera', initialLetter: 'A' },
-  n2: { solution: 'dentro', initialLetter: 'D' },
-  n3: { solution: 'secreto', initialLetter: 'S' },
-  n4: { solution: 'amor', initialLetter: 'A' },
-}
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { nodeId, hintType } = body
+    const { nodeId, hintType, puzzleId } = body
 
-    const nodeData = CANONICAL_SOLUTIONS[nodeId]
+    const solutions =
+      puzzleId === 'corchetes-tutorial'
+        ? TUTORIAL_SOLUTIONS
+        : TODAY_SOLUTIONS
+
+    const solution =
+      solutions[nodeId] ||
+      (TODAY_SOLUTIONS[nodeId] ?? TUTORIAL_SOLUTIONS[nodeId])
+
+    const initialLetter = solution ? solution.charAt(0).toUpperCase() : '?'
 
     if (hintType === 'matrix') {
       return NextResponse.json({
         success: true,
         hintType: 'matrix',
         nodeId,
-        initialLetter: nodeData?.initialLetter || '?',
+        initialLetter,
       })
     }
 
@@ -30,7 +33,7 @@ export async function POST(request: Request) {
         success: true,
         hintType: 'reveal',
         nodeId,
-        solution: nodeData?.solution || '',
+        solution: solution || '',
       })
     }
 

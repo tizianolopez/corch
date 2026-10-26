@@ -129,8 +129,8 @@ export async function executePublishJob(
   // 2. Procesar en almacén en memoria (para tests o modo sin PostgreSQL)
   if (memoryStore) {
     for (const [id, puzzle] of memoryStore.entries()) {
-      if (puzzle.status === 'SCHEDULED' && puzzle.publishDate <= todayDate) {
-        puzzle.status = 'PUBLISHED' as unknown as 'DRAFT'
+      if ((puzzle.status as string) === 'SCHEDULED' && puzzle.publishDate <= todayDate) {
+        puzzle.status = 'PUBLISHED'
         if (!publishedIds.includes(id)) {
           publishedIds.push(id)
         }

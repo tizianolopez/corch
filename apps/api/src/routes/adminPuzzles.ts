@@ -482,7 +482,7 @@ export const adminPuzzlesRoutes: FastifyPluginAsync<AdminPuzzlesOptions> = async
     const draft = {
       originalQuote: data.originalQuote,
       markup: data.markup,
-      nodes: data.nodes,
+      nodes: data.nodes as any,
       quoteAuthor: data.quoteAuthor ?? 'Autoría manual',
       quoteWork: data.quoteWork ?? 'Creación editorial directa',
       quoteYear: data.quoteYear,

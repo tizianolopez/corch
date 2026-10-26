@@ -173,3 +173,28 @@
   background-color: var(--color-paper);
   color: var(--color-ink);
 }
+
+.readerButtonActive {
+  background-color: var(--color-ink) !important;
+  color: var(--color-paper) !important;
+  border-color: var(--color-ink) !important;
+  font-weight: 600;
+}
+
+.primaryActionButton {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  background-color: var(--color-active);
+  color: #ffffff;
+  border: none;
+  padding: var(--space-2) var(--space-4);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 150ms var(--ease-editorial), transform 150ms var(--ease-editorial);
+}
+
+.primaryActionButton:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}

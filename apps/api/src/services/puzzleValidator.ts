@@ -77,7 +77,7 @@ export interface ValidatorConstraints {
 
 const DEFAULT_CONSTRAINTS: Required<ValidatorConstraints> = {
   minNodes: 3,
-  maxNodes: 8,
+  maxNodes: 25,
   minDepth: 2,
   maxDepth: 5,
   minInitialLeaves: 2,
