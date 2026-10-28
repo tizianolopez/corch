@@ -62,7 +62,8 @@ describe('SEO y Accesibilidad (Fase 7.2)', () => {
     it('JsonLd genera marcado estructurado válido de WebApplication y Game', () => {
       const element = JsonLd()
       expect(element).toBeDefined()
-      const jsonString = (element.props as any).dangerouslySetInnerHTML.__html
+      const props = element.props as { dangerouslySetInnerHTML?: { __html?: string } }
+      const jsonString = props.dangerouslySetInnerHTML?.__html ?? ''
       expect(jsonString).toBeDefined()
 
       const data = JSON.parse(jsonString)
