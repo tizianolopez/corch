@@ -82,26 +82,12 @@ export function InteractiveTreeDemo(): ReactElement {
   } = usePuzzleStore()
 
   // ── Modo de puzle activo ('tutorial' o 'daily') ───────────────────────
-  const [activeEdition, setActiveEdition] = useState<'tutorial' | 'daily'>('tutorial')
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isDone = localStorage.getItem('corchetes_tutorial_completed') === 'true'
-      if (isDone) {
-        setActiveEdition('daily')
-      }
-    }
-  }, [])
+  const [activeEdition, setActiveEdition] = useState<'tutorial' | 'daily'>('daily')
 
   // ── Inicializar puzle y sesión de juego ─────────────────────────────
   const initializeGame = useCallback(
     async (targetMode?: 'tutorial' | 'daily') => {
-      const mode =
-        targetMode ??
-        (typeof window !== 'undefined' &&
-        localStorage.getItem('corchetes_tutorial_completed') === 'true'
-          ? 'daily'
-          : 'tutorial')
+      const mode = targetMode ?? 'daily'
 
       setActiveEdition(mode)
 
